@@ -1,4 +1,5 @@
 import { readdirSync, readFileSync } from "node:fs";
+import { join } from "node:path";
 import { MemorySaver } from "@langchain/langgraph";
 import { InMemoryStore } from "@langchain/langgraph-checkpoint";
 import {
@@ -23,6 +24,7 @@ import {
 } from "@taxxy/integrations";
 import { loadEnv } from "../config.js";
 import { type AppDeps, buildDeps } from "../deps.js";
+import { SKILLS_DIR } from "../memory.js";
 import { runTurn } from "../run.js";
 import { computeQuarterlyEstimate } from "../services/estimate.js";
 import { exchangePublicToken, syncItem } from "../services/plaid.js";
@@ -143,6 +145,25 @@ export interface Tier3Result {
 }
 
 const MONEY = /\$\s?(\d[\d,]*(?:\.\d{1,2})?)/g;
+
+/**
+ * Dollar figures written into the agent's own skill text (e.g. the $75 receipt threshold in
+ * review-queue/SKILL.md). Repeating them is not inventing a number, so the stray-figure gate
+ * allows them alongside engine lines, the user's transactions, and intake answers.
+ */
+function skillFigures(): number[] {
+  const out: number[] = [];
+  for (const name of readdirSync(SKILLS_DIR)) {
+    let text = "";
+    try {
+      text = readFileSync(join(SKILLS_DIR, name, "SKILL.md"), "utf8");
+    } catch {
+      continue;
+    }
+    for (const m of text.matchAll(MONEY)) out.push(Number((m[1] ?? "").replace(/,/g, "")));
+  }
+  return out;
+}
 
 function lineDiff(a: EstimateResult, b: EstimateResult): number {
   let max = Math.abs(a.installmentDue - b.installmentDue);
@@ -271,6 +292,7 @@ export async function runProfile(p: Tier3Profile, opts: Tier3Options = {}): Prom
     for (const t of p.transactions) allowed.add(Math.abs(t.amount));
     for (const v of Object.values(p.intake)) if (typeof v === "number") allowed.add(v);
     allowed.add(0);
+    for (const v of skillFigures()) allowed.add(v);
     const text = transcript.map((t) => t.split("\nTAXXY: ")[1] ?? "").join("\n");
     const stray = [...text.matchAll(MONEY)]
       .map((m) => Number((m[1] ?? "").replace(/,/g, "")))
