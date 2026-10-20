@@ -6,7 +6,7 @@ import type { Env } from "./config.js";
  * so it is only sent to older model strings that accept it.
  */
 export function acceptsTemperature(model: string): boolean {
-  return !/-5-5\b|-5\b|fable/.test(model);
+  return !/-5-5(?!\d)/.test(model);
 }
 
 export function chatModel(env: Env, model: string): ChatAnthropic {
