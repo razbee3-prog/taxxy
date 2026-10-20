@@ -1,0 +1,241 @@
+import {
+  connectGmailAccount,
+  currentCategorization,
+  getGmailAccount,
+  listCurrentCategorizations,
+  recordCategorization,
+  scoped,
+  upsertReceipt,
+  upsertTaxProfile,
+  withGmailRefreshToken,
+} from "@taxxy/db";
+import {
+  documentText,
+  extractPriorYearFields,
+  extractReceiptFields,
+  GMAIL_SCOPE,
+  type GmailClientLike,
+  type MessageSummary,
+  matchReceipts,
+  priorYearQuery,
+  receiptQuery,
+  withEvidence,
+} from "@taxxy/integrations";
+import type { AppDeps } from "../deps.js";
+
+export class GmailNotConnected extends Error {
+  constructor() {
+    super("Gmail is not connected for this user");
+    this.name = "GmailNotConnected";
+  }
+}
+
+export async function gmailClientFor(d: AppDeps, userId: string): Promise<GmailClientLike> {
+  const s = scoped(d.db, userId);
+  if (d.env.GMAIL_MODE === "fixture") {
+    if (!(await getGmailAccount(s))) throw new GmailNotConnected();
+    return d.gmailFor("fixture");
+  }
+  const c = await withGmailRefreshToken(s, d.vault, async (token) => d.gmailFor(token));
+  if (!c) throw new GmailNotConnected();
+  return c;
+}
+
+/** OAuth callback: tokens never reach the model; only the sealed refresh token is stored. */
+export async function connectGmail(
+  d: AppDeps,
+  userId: string,
+  tokens: { refresh_token: string; scope?: string },
+) {
+  const client = d.gmailFor(tokens.refresh_token);
+  const email = await client.profileEmail();
+  return connectGmailAccount(scoped(d.db, userId), d.vault, {
+    email,
+    refresh_token: tokens.refresh_token,
+    scope: tokens.scope ?? GMAIL_SCOPE,
+  });
+}
+
+export async function searchReceipts(
+  d: AppDeps,
+  userId: string,
+  from: string,
+  to: string,
+  query?: string,
+): Promise<MessageSummary[]> {
+  const g = await gmailClientFor(d, userId);
+  return g.search(receiptQuery(from, to, query));
+}
+
+/** Stores the attachment in object storage; returns a pointer, never bytes. */
+export async function fetchAttachment(
+  d: AppDeps,
+  userId: string,
+  messageId: string,
+  attachmentId: string,
+) {
+  const g = await gmailClientFor(d, userId);
+  const a = await g.getAttachment(messageId, attachmentId);
+  const stored = await d.files.put(userId, a.bytes, a.mime, a.filename);
+  return {
+    fileRef: stored.fileRef,
+    mime: a.mime,
+    filename: a.filename,
+    bytes: a.bytes.length,
+    sha256: stored.sha256,
+  };
+}
+
+export interface MatchSummary {
+  candidates: number;
+  receiptsFound: number;
+  matched: Array<{
+    transactionId: string;
+    receiptVendor: string | null;
+    total: number | null;
+    score: number;
+  }>;
+}
+
+/** receipt-matcher: business items ≥ $75 without evidence ↔ receipts in the window. */
+export async function matchReceiptsForPeriod(
+  d: AppDeps,
+  userId: string,
+  from: string,
+  to: string,
+): Promise<MatchSummary> {
+  const s = scoped(d.db, userId);
+  const rows = (
+    await listCurrentCategorizations(s, { statuses: ["auto", "uncertain", "accepted"] })
+  ).filter((r) => r.needs_receipt && r.txn.date >= from && r.txn.date <= to);
+  const txns = rows.map((r) => ({
+    id: r.txn.id,
+    amount: r.txn.amount,
+    date: r.txn.date,
+    description: r.txn.description,
+    merchant_key: r.txn.merchant_key,
+  }));
+  if (!txns.length) return { candidates: 0, receiptsFound: 0, matched: [] };
+  const g = await gmailClientFor(d, userId);
+  const messages = await g.search(receiptQuery(from, to), 50);
+  const receipts: Array<{
+    key: string;
+    vendor: string | null;
+    total: number | null;
+    date: string | null;
+    messageId: string;
+    attachmentId: string;
+    fileRef: string;
+  }> = [];
+  for (const m of messages) {
+    for (const a of m.attachments) {
+      const data = await g.getAttachment(m.id, a.id);
+      const stored = await d.files.put(userId, data.bytes, data.mime, data.filename);
+      const text = await documentText(data.bytes, data.mime).catch(() => "");
+      const f = await extractReceiptFields(text, d.extractionModel, {
+        from: m.from,
+        subject: m.subject,
+      });
+      const r = {
+        key: `${m.id}/${a.id}`,
+        vendor: f.vendor,
+        total: f.total,
+        date: f.date ?? m.date,
+        messageId: m.id,
+        attachmentId: a.id,
+        fileRef: stored.fileRef,
+      };
+      receipts.push(r);
+      await upsertReceipt(s, {
+        gmail_message_id: m.id,
+        attachment_id: a.id,
+        vendor: r.vendor,
+        total: r.total,
+        date: r.date,
+        file_ref: r.fileRef,
+        transaction: null,
+        match_score: null,
+      });
+    }
+  }
+  const matches = matchReceipts(receipts, txns);
+  const matched: MatchSummary["matched"] = [];
+  for (const mt of matches) {
+    const r = receipts.find((x) => x.key === mt.receiptKey);
+    if (!r) continue;
+    await upsertReceipt(s, {
+      gmail_message_id: r.messageId,
+      attachment_id: r.attachmentId,
+      vendor: r.vendor,
+      total: r.total,
+      date: r.date,
+      file_ref: r.fileRef,
+      transaction: mt.transactionId,
+      match_score: mt.score,
+    });
+    const cur = await currentCategorization(s, mt.transactionId);
+    if (cur) {
+      const confidence = withEvidence(cur.confidence);
+      await recordCategorization(s, {
+        transaction: mt.transactionId,
+        label: cur.label,
+        is_business: cur.is_business,
+        confidence,
+        source: cur.source,
+        status:
+          cur.status === "accepted"
+            ? "accepted"
+            : confidence >= d.env.CATEGORIZER_THRESHOLD
+              ? "auto"
+              : "uncertain",
+        rationale: `${cur.rationale ?? ""}; receipt matched (${mt.score})`.replace(/^; /, ""),
+        model: cur.model,
+        rule_id: cur.rule_id,
+        needs_receipt: false,
+      });
+    }
+    matched.push({
+      transactionId: mt.transactionId,
+      receiptVendor: r.vendor,
+      total: r.total,
+      score: mt.score,
+    });
+  }
+  return { candidates: txns.length, receiptsFound: receipts.length, matched };
+}
+
+/** Finds last year's 1040 in Gmail (or uses a given fileRef), extracts two numbers, stores them UNCONFIRMED. */
+export async function extractPriorYear1040(
+  d: AppDeps,
+  userId: string,
+  opts: { fileRef?: string; taxYear?: number },
+) {
+  const s = scoped(d.db, userId);
+  let fileRef = opts.fileRef;
+  let source = "upload";
+  if (!fileRef) {
+    const g = await gmailClientFor(d, userId);
+    const year = opts.taxYear ?? new Date().getUTCFullYear() - 1;
+    const msgs = await g.search(priorYearQuery(year), 10);
+    const hit = msgs.flatMap((m) =>
+      m.attachments
+        .filter((a) => /pdf/i.test(a.mime) || /1040/i.test(a.filename))
+        .map((a) => ({ m, a })),
+    )[0];
+    if (!hit) return { found: false as const, searched: msgs.length };
+    const stored = await fetchAttachment(d, userId, hit.m.id, hit.a.id);
+    fileRef = stored.fileRef;
+    source = `gmail:${hit.m.subject}`;
+  }
+  const file = await d.files.get(fileRef);
+  const text = await documentText(file.bytes, file.mime);
+  const f = await extractPriorYearFields(text, d.extractionModel);
+  if (f.agi !== null && f.totalTax !== null) {
+    await upsertTaxProfile(
+      s,
+      { prior_year: { total_tax: f.totalTax, agi: f.agi, confirmed: false } },
+      "agent",
+    );
+  }
+  return { found: true as const, fileRef, source, ...f, confirmed: false };
+}

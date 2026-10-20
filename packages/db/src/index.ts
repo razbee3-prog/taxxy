@@ -13,6 +13,7 @@ export * from "./repos/bankAccounts.js";
 export * from "./repos/bankItems.js";
 export * from "./repos/categorizations.js";
 export * from "./repos/estimates.js";
+export * from "./repos/gmail.js";
 export * from "./repos/merchantRules.js";
 export * from "./repos/payers.js";
 export * from "./repos/taxProfile.js";

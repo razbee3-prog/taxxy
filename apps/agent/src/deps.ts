@@ -10,8 +10,14 @@ import {
 } from "@taxxy/db";
 import {
   type Categorizer,
+  type FileStore,
+  type FixtureMailbox,
+  fixtureGmail,
   fixturePlaid,
+  type GmailClientLike,
+  gmailClient,
   llmCategorizer,
+  localFileStore,
   type PlaidClientLike,
   type PlaidFixture,
   plaidClient,
@@ -30,6 +36,37 @@ export interface AppDeps {
   /** LangGraph store (per-user filesystem: AGENTS.md, skills) and checkpointer. */
   store: BaseStore | null;
   checkpointer: BaseCheckpointSaver | null;
+  files: FileStore;
+  /** Builds a Gmail client for a user from their sealed refresh token (fixture mode ignores the token). */
+  gmailFor: (
+    refreshToken: string,
+    onRefresh?: (t: { access_token?: string }) => Promise<void>,
+  ) => GmailClientLike;
+  /** Model for document extraction (receipts, 1040); null = deterministic heuristics. */
+  extractionModel: ReturnType<typeof chatModel> | null;
+}
+
+export function loadMailboxFixture(): FixtureMailbox {
+  const url = new URL(
+    "../../../packages/integrations/test/fixtures/gmail-mailbox.json",
+    import.meta.url,
+  );
+  return JSON.parse(readFileSync(url, "utf8")) as FixtureMailbox;
+}
+
+export function buildGmailFactory(env: Env): AppDeps["gmailFor"] {
+  if (env.GMAIL_MODE === "live") {
+    if (!env.GOOGLE_CLIENT_ID || !env.GOOGLE_CLIENT_SECRET)
+      throw new Error("GMAIL_MODE=live needs GOOGLE_CLIENT_ID and GOOGLE_CLIENT_SECRET");
+    const g = {
+      GOOGLE_CLIENT_ID: env.GOOGLE_CLIENT_ID,
+      GOOGLE_CLIENT_SECRET: env.GOOGLE_CLIENT_SECRET,
+      GOOGLE_REDIRECT_URI: env.GOOGLE_REDIRECT_URI,
+    };
+    return (refresh_token, onRefresh) => gmailClient(g, { refresh_token }, onRefresh);
+  }
+  const box = loadMailboxFixture();
+  return () => fixtureGmail(box);
 }
 
 export function loadPlaidFixture(): PlaidFixture {
@@ -84,5 +121,13 @@ export async function buildDeps(env: Env, over: Partial<AppDeps> = {}): Promise<
     categorizer: over.categorizer === undefined ? buildCategorizer(env) : over.categorizer,
     store,
     checkpointer,
+    files: over.files ?? localFileStore(env.FILES_DIR),
+    gmailFor: over.gmailFor ?? buildGmailFactory(env),
+    extractionModel:
+      over.extractionModel === undefined
+        ? env.llmApiKey
+          ? chatModel(env, env.CATEGORIZER_MODEL)
+          : null
+        : over.extractionModel,
   };
 }

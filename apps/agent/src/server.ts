@@ -4,6 +4,7 @@ import { streamSSE } from "hono/streaming";
 import { z } from "zod";
 import { env } from "./config.js";
 import { type AppDeps, buildDeps } from "./deps.js";
+import { gmailRoutes } from "./routes/gmail.js";
 import { plaidRoutes } from "./routes/plaid.js";
 import { runTurn } from "./run.js";
 import { initTelemetry } from "./telemetry.js";
@@ -41,6 +42,7 @@ export function createApp(deps: AppDeps) {
   });
 
   app.route("/plaid", plaidRoutes(deps));
+  app.route("/gmail", gmailRoutes(deps));
   app.onError((err, c) => {
     console.error(err);
     return c.json({ error: err.message }, 500);

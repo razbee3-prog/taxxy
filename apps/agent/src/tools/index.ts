@@ -16,6 +16,7 @@ import { appendMemory } from "../memory.js";
 import { syncAll, syncItem } from "../services/plaid.js";
 import { requireUserId } from "./context.js";
 import { estimateTools } from "./estimate.js";
+import { gmailTools } from "./gmail.js";
 import { profileTools } from "./profile.js";
 
 const json = (v: unknown) => JSON.stringify(v);
@@ -197,6 +198,7 @@ export function buildTools(d: AppDeps) {
     get_categorization,
     ...profileTools(d),
     ...estimateTools(d),
+    ...gmailTools(d),
   ];
 }
 

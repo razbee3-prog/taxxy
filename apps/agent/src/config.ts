@@ -27,6 +27,11 @@ const envSchema = z.object({
     .string()
     .optional()
     .transform((v) => v === "true" || v === "1"),
+  GMAIL_MODE: z.enum(["live", "fixture"]).default("fixture"),
+  GOOGLE_CLIENT_ID: z.string().optional(),
+  GOOGLE_CLIENT_SECRET: z.string().optional(),
+  GOOGLE_REDIRECT_URI: z.string().default("http://localhost:8787/gmail/callback"),
+  FILES_DIR: z.string().default("data/files"),
   TAXXY_ENV: z.string().default("dev"),
 });
 
