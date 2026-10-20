@@ -33,6 +33,9 @@ const envSchema = z.object({
   GOOGLE_REDIRECT_URI: z.string().default("http://localhost:3000/gmail/callback"),
   FILES_DIR: z.string().default("data/files"),
   TAXXY_ENV: z.string().default("dev"),
+  APP_VERSION: z
+    .string()
+    .default(process.env.GIT_SHA?.slice(0, 12) ?? process.env.GITHUB_SHA?.slice(0, 12) ?? "local"),
 });
 
 export type Env = z.infer<typeof envSchema> & {

@@ -11,6 +11,12 @@ on:
       - "packages/integrations/src/categorize/**"
       - "packages/engine/src/constants/**"
       - "packages/evals/**"
+      - "apps/agent/experiments/**"
+
+permissions:
+  contents: read
+  pull-requests: write
+  actions: read
 
 jobs:
   evals:
@@ -36,8 +42,21 @@ jobs:
       - name: Tier 2 (live categorizer on fixture labels)
         run: pnpm --filter @taxxy/evals tier2
         continue-on-error: true
-      - name: Tier 3 deterministic (20 profiles)
+      - name: Tier 3 deterministic gate (no Langfuse needed)
         run: pnpm --filter @taxxy/agent tier3 deterministic
-      - name: Tier 3 agent mode (LLM in the loop)
-        if: env.ANTHROPIC_API_KEY != ''
-        run: pnpm --filter @taxxy/agent tier3 agent
+      - name: Sync Tier 3 dataset to Langfuse
+        if: env.LANGFUSE_SECRET_KEY != ''
+        run: pnpm --filter @taxxy/evals sync-datasets
+      - name: Tier 3 experiment gate (Langfuse experiment-action)
+        if: env.LANGFUSE_SECRET_KEY != ''
+        uses: langfuse/experiment-action@v1
+        env:
+          TIER3_MODE: ${{ github.event_name == 'pull_request' && 'deterministic' || 'agent' }}
+        with:
+          langfuse_public_key: ${{ secrets.LANGFUSE_PUBLIC_KEY }}
+          langfuse_secret_key: ${{ secrets.LANGFUSE_SECRET_KEY }}
+          langfuse_base_url: ${{ secrets.LANGFUSE_BASE_URL }}
+          experiment_path: apps/agent/experiments/tier3-gate.ts
+          dataset_name: taxxy-tier3-profiles
+          should_skip_sdk_installation: "true"
+          github_token: ${{ github.token }}

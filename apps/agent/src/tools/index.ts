@@ -13,6 +13,7 @@ import { MODEL_LABELS } from "@taxxy/integrations";
 import { z } from "zod";
 import type { AppDeps } from "../deps.js";
 import { appendMemory } from "../memory.js";
+import { recordOutcome } from "../scores.js";
 import { syncAll, syncItem } from "../services/plaid.js";
 import { requireUserId } from "./context.js";
 import { estimateTools } from "./estimate.js";
@@ -73,6 +74,7 @@ export function buildTools(d: AppDeps) {
     async ({ transactionId, category, isBusiness, note }, config) => {
       const userId = requireUserId(config);
       const s = scoped(d.db, userId);
+      const previous = await currentCategorization(s, transactionId);
       const row: CategorizationRow = await recordCategorization(s, {
         transaction: transactionId,
         label: category,
@@ -82,6 +84,17 @@ export function buildTools(d: AppDeps) {
         status: "accepted",
         rationale: note ?? "user decision",
       });
+      if (previous && previous.source !== "user" && previous.label !== category) {
+        recordOutcome(d.env, "review_label_overridden", {
+          threadId: (config as { configurable?: { thread_id?: string } }).configurable?.thread_id,
+          metadata: {
+            from: previous.label,
+            to: category,
+            previous_status: previous.status,
+            previous_confidence: previous.confidence,
+          },
+        });
+      }
       return json({
         id: row.id,
         transaction: row.transaction,

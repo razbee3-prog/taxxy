@@ -1,6 +1,8 @@
 import { threadId as makeThreadId } from "@taxxy/db";
+import { ENGINE_VERSION } from "@taxxy/engine";
 import { buildAgent } from "./agent.js";
 import type { AppDeps } from "./deps.js";
+import { flushScores } from "./scores.js";
 import { flushTelemetry, turnCallbacks } from "./telemetry.js";
 
 export interface TurnRequest {
@@ -36,7 +38,15 @@ export async function* runTurn(deps: AppDeps, req: TurnRequest): AsyncGenerator<
     configurable: { thread_id: threadId, user_id: req.userId, tax_year: taxYear, quarter },
     callbacks,
     runName: "taxxy-turn",
-    metadata: { tax_year: taxYear, quarter },
+    metadata: {
+      tax_year: taxYear,
+      quarter,
+      thread_id: threadId,
+      app_version: env.APP_VERSION,
+      orchestrator_model: env.ORCHESTRATOR_MODEL,
+      categorizer_model: env.CATEGORIZER_MODEL,
+      engine_version: ENGINE_VERSION,
+    },
     recursionLimit: 60,
   };
   try {
@@ -65,7 +75,7 @@ export async function* runTurn(deps: AppDeps, req: TurnRequest): AsyncGenerator<
   } catch (err) {
     yield { type: "error", error: err instanceof Error ? err.message : String(err), threadId };
   } finally {
-    await flushTelemetry();
+    await Promise.all([flushTelemetry(), flushScores()]);
   }
 }
 

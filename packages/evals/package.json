@@ -11,7 +11,8 @@
   "scripts": {
     "typecheck": "tsc -p tsconfig.json --noEmit",
     "test": "vitest run",
-    "tier2": "tsx src/scripts/tier2.ts"
+    "tier2": "tsx src/scripts/tier2.ts",
+    "sync-datasets": "tsx src/scripts/sync_datasets.ts"
   },
   "dependencies": {
     "@langchain/anthropic": "^1.5.12",

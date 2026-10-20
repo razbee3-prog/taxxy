@@ -3,6 +3,7 @@ import type { Quarter } from "@taxxy/engine";
 import { z } from "zod";
 import type { AppDeps } from "../deps.js";
 import { appendMemory } from "../memory.js";
+import { recordOutcome } from "../scores.js";
 import {
   acceptEstimate,
   computeQuarterlyEstimate,
@@ -68,6 +69,10 @@ export function estimateTools(d: AppDeps) {
     async ({ estimateId, edits }, config) => {
       const userId = requireUserId(config);
       const row = await acceptEstimate(d, userId, estimateId, edits);
+      recordOutcome(d.env, row.status === "edited" ? "estimate_edited" : "estimate_accepted", {
+        threadId: (config as { configurable?: { thread_id?: string } }).configurable?.thread_id,
+        metadata: { tax_year: row.tax_year, quarter: row.quarter, estimate_id: row.id },
+      });
       return json({
         estimateId: row.id,
         status: row.status,
