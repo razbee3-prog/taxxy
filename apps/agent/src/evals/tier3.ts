@@ -151,7 +151,7 @@ const MONEY = /\$\s?(\d[\d,]*(?:\.\d{1,2})?)/g;
  * review-queue/SKILL.md). Repeating them is not inventing a number, so the stray-figure gate
  * allows them alongside engine lines, the user's transactions, and intake answers.
  */
-function skillFigures(): number[] {
+export function skillFigures(): number[] {
   const out: number[] = [];
   for (const name of readdirSync(SKILLS_DIR)) {
     let text = "";

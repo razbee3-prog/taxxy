@@ -12,6 +12,7 @@ import { fixturePlaid } from "@taxxy/integrations";
 import { afterAll, beforeAll, describe, expect, it } from "vitest";
 import { loadEnv } from "../src/config.js";
 import { type AppDeps, buildDeps, loadPlaidFixture } from "../src/deps.js";
+import { skillFigures } from "../src/evals/tier3.js";
 import { readMemory } from "../src/memory.js";
 import { runTurn } from "../src/run.js";
 import { exchangePublicToken, syncItem } from "../src/services/plaid.js";
@@ -93,12 +94,19 @@ describe.skipIf(!up)("scripted conversation: intake → review → accepted esti
     const bankAmounts = new Set(
       (await listTransactions(s, { includePending: true })).map((t) => Math.abs(t.amount)),
     );
+    const skillNumbers = new Set(skillFigures());
     const stray: string[] = [];
     for (const turn of transcript) {
       const reply = turn.split("\nTAXXY: ")[1] ?? "";
       for (const m of reply.matchAll(MONEY)) {
         const n = Number((m[1] ?? "").replace(/,/g, ""));
-        if (!engineNumbers.has(n) && !USER_NUMBERS.has(n) && !bankAmounts.has(n)) stray.push(m[0]);
+        if (
+          !engineNumbers.has(n) &&
+          !USER_NUMBERS.has(n) &&
+          !bankAmounts.has(n) &&
+          !skillNumbers.has(n)
+        )
+          stray.push(m[0]);
       }
     }
     expect(stray, `dollar figures not from the engine:\n${transcript.join("\n\n")}`).toEqual([]);
