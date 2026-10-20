@@ -168,7 +168,7 @@ export function createWebApp(d: WebDeps) {
     const p = z
       .object({
         message: z.string().min(1).max(4000),
-        threadId: z.string().optional(),
+        threadId: z.string().nullable().optional(),
         taxYear: z.number().int().optional(),
         quarter: z.number().int().min(1).max(4).optional(),
       })
@@ -177,7 +177,7 @@ export function createWebApp(d: WebDeps) {
     const now = new Date();
     const taxYear = p.data.taxYear ?? now.getUTCFullYear();
     const quarter = p.data.quarter ?? Math.min(4, Math.floor(now.getUTCMonth() / 3) + 1);
-    const threadId = p.data.threadId ?? `${s.userId}:${taxYear}:${quarter}`;
+    const threadId = p.data.threadId || `${s.userId}:${taxYear}:${quarter}`;
     const r = await agent(`/threads/${encodeURIComponent(threadId)}/runs`, {
       userId: s.userId,
       message: p.data.message,

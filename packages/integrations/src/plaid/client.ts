@@ -109,7 +109,10 @@ function pageFrom(d: {
  * Offline Plaid: one fixture item. First sync returns the fixture, later syncs return whatever
  * was queued with `queueUpdate` (so tests can exercise modified/removed supersession).
  */
-export function fixturePlaid(fixture: PlaidFixture, opts: { pageSize?: number } = {}) {
+export function fixturePlaid(
+  fixture: PlaidFixture,
+  opts: { pageSize?: number; isolateLinks?: boolean } = {},
+) {
   const pageSize = opts.pageSize ?? 500;
   const queued: Array<{
     added: Transaction[];
@@ -117,6 +120,25 @@ export function fixturePlaid(fixture: PlaidFixture, opts: { pageSize?: number } 
     removed: RemovedTransaction[];
   }> = [];
   const accessToken = `access-fixture-${fixture.item_id}`;
+  // isolateLinks: every exchange gets its own item/account/transaction ids so several users (or re-links)
+  // can share the one fixture without colliding on the Plaid-id-derived record ids. Real Plaid ids are unique.
+  const suffixOf = (token: string): string | null => {
+    if (!opts.isolateLinks) return token === accessToken ? "" : null;
+    const m = /^access-fixture-link-([a-z0-9]+)$/.exec(token);
+    return m ? `-${m[1]}` : null;
+  };
+  const withSuffix = <T extends { account_id: string }>(t: T, sfx: string): T =>
+    sfx ? { ...t, account_id: `${t.account_id}${sfx}` } : t;
+  const txnWithSuffix = (t: Transaction, sfx: string): Transaction =>
+    sfx
+      ? {
+          ...withSuffix(t, sfx),
+          transaction_id: `${t.transaction_id}${sfx}`,
+          pending_transaction_id: t.pending_transaction_id
+            ? `${t.pending_transaction_id}${sfx}`
+            : t.pending_transaction_id,
+        }
+      : t;
   const client: PlaidClientLike & {
     queueUpdate: (u: (typeof queued)[number]) => void;
     accessToken: string;
@@ -131,18 +153,23 @@ export function fixturePlaid(fixture: PlaidFixture, opts: { pageSize?: number } 
     },
     async exchangePublicToken(publicToken) {
       if (!publicToken.startsWith("public-")) throw new Error("fixturePlaid: invalid public token");
+      const nonce = opts.isolateLinks ? Math.random().toString(36).slice(2, 10) : "";
+      const sfx = nonce ? `-${nonce}` : "";
       return {
-        itemId: fixture.item_id,
-        accessToken,
+        itemId: `${fixture.item_id}${sfx}`,
+        accessToken: nonce ? `access-fixture-link-${nonce}` : accessToken,
         institution: "Fixture Bank",
-        accounts: fixture.accounts.map(normalizeAccount),
+        accounts: fixture.accounts.map((a) => normalizeAccount(withSuffix(a, sfx))),
       };
     },
     async syncTransactions(token, cursor) {
-      if (token !== accessToken) throw new Error("fixturePlaid: unknown access token");
+      const sfx = suffixOf(token);
+      if (sfx === null) throw new Error("fixturePlaid: unknown access token");
       const offset = cursor ? Number(cursor.split(":")[1] ?? 0) : 0;
       if (!cursor || offset < fixture.added.length) {
-        const slice = fixture.added.slice(offset, offset + pageSize);
+        const slice = fixture.added
+          .slice(offset, offset + pageSize)
+          .map((t) => txnWithSuffix(t, sfx));
         const next = offset + slice.length;
         return pageFrom({
           added: slice,
@@ -154,9 +181,11 @@ export function fixturePlaid(fixture: PlaidFixture, opts: { pageSize?: number } 
       }
       const u = queued.shift();
       return pageFrom({
-        added: u?.added ?? [],
-        modified: u?.modified ?? [],
-        removed: u?.removed ?? [],
+        added: (u?.added ?? []).map((t) => txnWithSuffix(t, sfx)),
+        modified: (u?.modified ?? []).map((t) => txnWithSuffix(t, sfx)),
+        removed: (u?.removed ?? []).map((r) =>
+          sfx ? { ...r, transaction_id: `${r.transaction_id}${sfx}` } : r,
+        ),
         next_cursor: `fixture:${offset}:${Date.now()}`,
         has_more: false,
       });

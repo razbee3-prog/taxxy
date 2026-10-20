@@ -131,7 +131,7 @@ $("chatForm").addEventListener("submit", async (e) => {
   const r = await fetch("/api/chat", {
     method: "POST",
     headers: { "content-type": "application/json" },
-    body: JSON.stringify({ message: text, threadId }),
+    body: JSON.stringify({ message: text, threadId: threadId || undefined }),
   });
   if (!r.ok) {
     ai.textContent = `Error: ${(await r.json().catch(() => ({}))).error || r.statusText}`;

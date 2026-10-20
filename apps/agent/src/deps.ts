@@ -87,7 +87,7 @@ export function buildPlaid(env: Env): PlaidClientLike {
       PLAID_ENV: env.PLAID_ENV,
     });
   }
-  return fixturePlaid(loadPlaidFixture());
+  return fixturePlaid(loadPlaidFixture(), { isolateLinks: true });
 }
 
 export function buildCategorizer(env: Env): Categorizer | null {
