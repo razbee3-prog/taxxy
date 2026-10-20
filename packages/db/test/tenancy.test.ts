@@ -27,6 +27,7 @@ describe.skipIf(!up)("tenancy + app tables (SurrealDB)", () => {
       "001_init.surql",
       "002_needs_receipt.surql",
       "003_gmail.surql",
+      "004_credential.surql",
     ]);
     const { migrate } = await import("../src/migrate.js");
     expect(await migrate(t.db)).toEqual([]);

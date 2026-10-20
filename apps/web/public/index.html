@@ -1,0 +1,47 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Taxxy</title>
+<link rel="stylesheet" href="/styles.css">
+<script src="https://cdn.plaid.com/link/v2/stable/link-initialize.js"></script>
+</head>
+<body>
+<header><h1>Taxxy</h1><span class="muted">Quarterly estimated tax for sole proprietors</span><span id="who" class="right"></span></header>
+
+<section id="auth" class="card hidden">
+  <h2>Sign in</h2>
+  <form id="authForm">
+    <label>Email <input name="email" type="email" required autocomplete="email"></label>
+    <label>Password <input name="password" type="password" required minlength="10" autocomplete="current-password"></label>
+    <div class="row"><button type="submit" data-mode="login">Sign in</button><button type="submit" data-mode="signup" class="secondary">Create account</button></div>
+    <p id="authError" class="error"></p>
+  </form>
+</section>
+
+<main id="app" class="hidden">
+  <aside class="card">
+    <h2>Account</h2>
+    <div id="banks"></div>
+    <button type="button" id="linkBank">Link a bank</button>
+    <button type="button" id="syncBank" class="secondary">Sync now</button>
+    <h3>Gmail (read-only)</h3>
+    <div id="gmail"></div>
+    <button type="button" id="linkGmail" class="secondary">Connect Gmail</button>
+    <h3>Estimates</h3>
+    <div id="estimates"></div>
+    <button type="button" id="logout" class="secondary">Sign out</button>
+    <p class="muted small">Estimate, not tax advice. Taxxy never asks for your SSN or full account numbers.</p>
+  </aside>
+  <section class="card chat">
+    <div id="messages"></div>
+    <form id="chatForm">
+      <input id="chatInput" placeholder="Say hi to start intake, or ask for your quarterly estimate" autocomplete="off">
+      <button type="submit">Send</button>
+    </form>
+  </section>
+</main>
+<script src="/app.js"></script>
+</body>
+</html>

@@ -1,0 +1,141 @@
+:root {
+  font-family: system-ui, sans-serif;
+  color: #1b1b1f;
+  background: #f6f7f9;
+}
+body {
+  margin: 0;
+}
+header {
+  display: flex;
+  align-items: baseline;
+  gap: 12px;
+  padding: 14px 20px;
+  background: #fff;
+  border-bottom: 1px solid #e3e5ea;
+}
+header h1 {
+  margin: 0;
+  font-size: 20px;
+}
+.right {
+  margin-left: auto;
+}
+.muted {
+  color: #666;
+}
+.small {
+  font-size: 12px;
+}
+.error {
+  color: #b3261e;
+  min-height: 1em;
+}
+
+.card {
+  background: #fff;
+  border: 1px solid #e3e5ea;
+  border-radius: 10px;
+  padding: 16px;
+}
+#auth {
+  max-width: 380px;
+  margin: 60px auto;
+}
+label {
+  display: block;
+  margin: 10px 0;
+}
+input {
+  width: 100%;
+  padding: 8px;
+  box-sizing: border-box;
+  border: 1px solid #c9ccd3;
+  border-radius: 6px;
+}
+button {
+  padding: 8px 14px;
+  border-radius: 6px;
+  border: 0;
+  background: #1f6feb;
+  color: #fff;
+  cursor: pointer;
+  margin: 4px 4px 4px 0;
+}
+button.secondary {
+  background: #e8eaef;
+  color: #1b1b1f;
+}
+.row {
+  display: flex;
+  gap: 8px;
+}
+main {
+  display: grid;
+  grid-template-columns: 320px 1fr;
+  gap: 16px;
+  padding: 16px 20px;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+.chat {
+  display: flex;
+  flex-direction: column;
+  min-height: 70vh;
+}
+#messages {
+  flex: 1;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding-bottom: 10px;
+}
+.msg {
+  padding: 10px 12px;
+  border-radius: 10px;
+  max-width: 80%;
+  white-space: pre-wrap;
+  line-height: 1.4;
+}
+.msg.user {
+  align-self: flex-end;
+  background: #dbe7ff;
+}
+.msg.ai {
+  align-self: flex-start;
+  background: #f0f1f4;
+}
+.msg.interrupt {
+  align-self: stretch;
+  background: #fff4d6;
+  border: 1px solid #f0c36d;
+}
+#chatForm {
+  display: flex;
+  gap: 8px;
+}
+#chatForm input {
+  flex: 1;
+}
+.bank {
+  margin: 6px 0;
+}
+.pill {
+  display: inline-block;
+  font-size: 12px;
+  padding: 2px 8px;
+  border-radius: 999px;
+  background: #e8eaef;
+  margin-left: 6px;
+}
+@media (max-width: 800px) {
+  main {
+    grid-template-columns: 1fr;
+  }
+}
+#auth.hidden,
+#app.hidden,
+.hidden {
+  display: none;
+}
