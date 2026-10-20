@@ -114,7 +114,10 @@ export function buildPlaid(env: Env): PlaidClientLike {
 
 export function buildCategorizer(env: Env): Categorizer | null {
   if (!env.llmApiKey) return null;
-  return llmCategorizer(chatModel(env, env.CATEGORIZER_MODEL), env.CATEGORIZER_MODEL);
+  return llmCategorizer(
+    chatModel(env, env.CATEGORIZER_MODEL, { maxTokens: 8192 }),
+    env.CATEGORIZER_MODEL,
+  );
 }
 
 export async function buildDeps(env: Env, over: Partial<AppDeps> = {}): Promise<AppDeps> {

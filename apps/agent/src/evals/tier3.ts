@@ -159,6 +159,13 @@ export interface Tier3Options {
   keepTranscript?: boolean;
 }
 
+/**
+ * Gates that compare against the hand-labeled oracle. They decide `pass` in deterministic mode;
+ * in agent mode the live categorizer labels differently from the oracle (that accuracy is Tier 2's
+ * job), so they are still reported as scores but do not fail the profile.
+ */
+const ORACLE_GATES = new Set(["estimateMatchesOracle", "reviewQueueMatches"]);
+
 /** Runs one profile end to end in a fresh SurrealDB namespace; returns gate results. */
 export async function runProfile(p: Tier3Profile, opts: Tier3Options = {}): Promise<Tier3Result> {
   const mode = opts.mode ?? "deterministic";
@@ -294,7 +301,7 @@ export async function runProfile(p: Tier3Profile, opts: Tier3Options = {}): Prom
       profile: p.id,
       mode,
       gates,
-      pass: Object.values(gates).every(Boolean),
+      pass: Object.entries(gates).every(([k, v]) => v || (mode === "agent" && ORACLE_GATES.has(k))),
       accepted,
       edited,
       uncategorizedRateBefore,

@@ -72,6 +72,7 @@ export async function experiment(context: RunnerContext) {
   const result = await context.runExperiment({
     name: `Tier 3 gate (${mode})`,
     task: runTier3Profile,
+    maxConcurrency: 4,
     evaluators: [gateEvaluators],
     runEvaluators: [runEvaluators],
     metadata: { mode, git_sha: process.env.GITHUB_SHA ?? process.env.GIT_SHA ?? "local" },
