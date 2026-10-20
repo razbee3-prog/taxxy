@@ -1,0 +1,167 @@
+-- Taxxy app schema (namespace `taxxy`). Every row carries user, created_at, updated_at.
+-- Enforced in code too: all reads/writes go through scoped(db, userId).
+
+DEFINE TABLE IF NOT EXISTS user SCHEMAFULL;
+DEFINE FIELD IF NOT EXISTS email ON user TYPE string ASSERT string::is_email($value);
+DEFINE FIELD IF NOT EXISTS auth_provider_id ON user TYPE option<string>;
+DEFINE FIELD IF NOT EXISTS status ON user TYPE string DEFAULT 'active' ASSERT $value IN ['active', 'disabled', 'deleted'];
+DEFINE FIELD IF NOT EXISTS created_at ON user TYPE datetime DEFAULT time::now() READONLY;
+DEFINE FIELD IF NOT EXISTS updated_at ON user TYPE datetime VALUE time::now();
+DEFINE INDEX IF NOT EXISTS user_email ON user FIELDS email UNIQUE;
+
+DEFINE TABLE IF NOT EXISTS tax_profile SCHEMAFULL;
+DEFINE FIELD IF NOT EXISTS user ON tax_profile TYPE record<user>;
+DEFINE FIELD IF NOT EXISTS filing_status ON tax_profile TYPE string DEFAULT 'single' ASSERT $value IN ['single'];
+DEFINE FIELD IF NOT EXISTS state ON tax_profile TYPE option<string>;
+DEFINE FIELD IF NOT EXISTS business_description ON tax_profile TYPE option<string>;
+DEFINE FIELD IF NOT EXISTS naics ON tax_profile TYPE option<string>;
+DEFINE FIELD IF NOT EXISTS w2_wages ON tax_profile TYPE number DEFAULT 0;
+DEFINE FIELD IF NOT EXISTS w2_withholding_expected ON tax_profile TYPE number DEFAULT 0;
+DEFINE FIELD IF NOT EXISTS prior_year ON tax_profile TYPE option<object>;
+DEFINE FIELD IF NOT EXISTS prior_year.total_tax ON tax_profile TYPE number;
+DEFINE FIELD IF NOT EXISTS prior_year.agi ON tax_profile TYPE number;
+DEFINE FIELD IF NOT EXISTS prior_year.confirmed ON tax_profile TYPE bool DEFAULT false;
+DEFINE FIELD IF NOT EXISTS se_health_premiums ON tax_profile TYPE number DEFAULT 0;
+DEFINE FIELD IF NOT EXISTS sep_contribution ON tax_profile TYPE number DEFAULT 0;
+DEFINE FIELD IF NOT EXISTS home_office ON tax_profile TYPE bool DEFAULT false;
+DEFINE FIELD IF NOT EXISTS complete ON tax_profile TYPE bool DEFAULT false;
+DEFINE FIELD IF NOT EXISTS created_at ON tax_profile TYPE datetime DEFAULT time::now() READONLY;
+DEFINE FIELD IF NOT EXISTS updated_at ON tax_profile TYPE datetime VALUE time::now();
+DEFINE INDEX IF NOT EXISTS tax_profile_user ON tax_profile FIELDS user UNIQUE;
+
+DEFINE TABLE IF NOT EXISTS bank_item SCHEMAFULL;
+DEFINE FIELD IF NOT EXISTS user ON bank_item TYPE record<user>;
+DEFINE FIELD IF NOT EXISTS plaid_item_id ON bank_item TYPE string;
+DEFINE FIELD IF NOT EXISTS access_token_enc ON bank_item TYPE string;
+DEFINE FIELD IF NOT EXISTS cursor ON bank_item TYPE option<string>;
+DEFINE FIELD IF NOT EXISTS institution ON bank_item TYPE option<string>;
+DEFINE FIELD IF NOT EXISTS status ON bank_item TYPE string DEFAULT 'active' ASSERT $value IN ['active', 'login_required', 'removed'];
+DEFINE FIELD IF NOT EXISTS created_at ON bank_item TYPE datetime DEFAULT time::now() READONLY;
+DEFINE FIELD IF NOT EXISTS updated_at ON bank_item TYPE datetime VALUE time::now();
+DEFINE INDEX IF NOT EXISTS bank_item_plaid ON bank_item FIELDS plaid_item_id UNIQUE;
+
+DEFINE TABLE IF NOT EXISTS bank_account SCHEMAFULL;
+DEFINE FIELD IF NOT EXISTS user ON bank_account TYPE record<user>;
+DEFINE FIELD IF NOT EXISTS bank_item ON bank_account TYPE record<bank_item>;
+DEFINE FIELD IF NOT EXISTS plaid_account_id ON bank_account TYPE string;
+DEFINE FIELD IF NOT EXISTS name ON bank_account TYPE string;
+DEFINE FIELD IF NOT EXISTS mask ON bank_account TYPE option<string> ASSERT $value == NONE OR string::len($value) <= 4;
+DEFINE FIELD IF NOT EXISTS type ON bank_account TYPE string;
+DEFINE FIELD IF NOT EXISTS mostly_business ON bank_account TYPE bool DEFAULT false;
+DEFINE FIELD IF NOT EXISTS created_at ON bank_account TYPE datetime DEFAULT time::now() READONLY;
+DEFINE FIELD IF NOT EXISTS updated_at ON bank_account TYPE datetime VALUE time::now();
+DEFINE INDEX IF NOT EXISTS bank_account_plaid ON bank_account FIELDS plaid_account_id UNIQUE;
+
+DEFINE TABLE IF NOT EXISTS transaction SCHEMAFULL;
+DEFINE FIELD IF NOT EXISTS user ON transaction TYPE record<user>;
+DEFINE FIELD IF NOT EXISTS bank_account ON transaction TYPE record<bank_account>;
+DEFINE FIELD IF NOT EXISTS plaid_txn_id ON transaction TYPE string;
+DEFINE FIELD IF NOT EXISTS date ON transaction TYPE string;
+DEFINE FIELD IF NOT EXISTS amount ON transaction TYPE number;
+DEFINE FIELD IF NOT EXISTS description ON transaction TYPE string;
+DEFINE FIELD IF NOT EXISTS merchant_key ON transaction TYPE option<string>;
+DEFINE FIELD IF NOT EXISTS plaid_pfc ON transaction TYPE option<string>;
+DEFINE FIELD IF NOT EXISTS counterparties ON transaction TYPE array<string> DEFAULT [];
+DEFINE FIELD IF NOT EXISTS pending ON transaction TYPE bool DEFAULT false;
+DEFINE FIELD IF NOT EXISTS removed ON transaction TYPE bool DEFAULT false;
+DEFINE FIELD IF NOT EXISTS raw ON transaction TYPE option<object> FLEXIBLE;
+DEFINE FIELD IF NOT EXISTS created_at ON transaction TYPE datetime DEFAULT time::now() READONLY;
+DEFINE FIELD IF NOT EXISTS updated_at ON transaction TYPE datetime VALUE time::now();
+DEFINE INDEX IF NOT EXISTS transaction_plaid ON transaction FIELDS plaid_txn_id UNIQUE;
+DEFINE INDEX IF NOT EXISTS transaction_user_date ON transaction FIELDS user, date;
+
+DEFINE TABLE IF NOT EXISTS categorization SCHEMAFULL;
+DEFINE FIELD IF NOT EXISTS user ON categorization TYPE record<user>;
+DEFINE FIELD IF NOT EXISTS transaction ON categorization TYPE record<transaction>;
+DEFINE FIELD IF NOT EXISTS label ON categorization TYPE string;
+DEFINE FIELD IF NOT EXISTS is_business ON categorization TYPE bool;
+DEFINE FIELD IF NOT EXISTS confidence ON categorization TYPE number ASSERT $value >= 0 AND $value <= 1;
+DEFINE FIELD IF NOT EXISTS source ON categorization TYPE string ASSERT $value IN ['rule', 'llm', 'user'];
+DEFINE FIELD IF NOT EXISTS status ON categorization TYPE string ASSERT $value IN ['auto', 'uncertain', 'accepted'];
+DEFINE FIELD IF NOT EXISTS rationale ON categorization TYPE option<string>;
+DEFINE FIELD IF NOT EXISTS model ON categorization TYPE option<string>;
+DEFINE FIELD IF NOT EXISTS rule_id ON categorization TYPE option<string>;
+DEFINE FIELD IF NOT EXISTS superseded_by ON categorization TYPE option<record<categorization>>;
+DEFINE FIELD IF NOT EXISTS created_at ON categorization TYPE datetime DEFAULT time::now() READONLY;
+DEFINE FIELD IF NOT EXISTS updated_at ON categorization TYPE datetime VALUE time::now();
+DEFINE INDEX IF NOT EXISTS categorization_txn ON categorization FIELDS user, transaction;
+
+DEFINE TABLE IF NOT EXISTS merchant_rule SCHEMAFULL;
+DEFINE FIELD IF NOT EXISTS user ON merchant_rule TYPE record<user>;
+DEFINE FIELD IF NOT EXISTS merchant_key ON merchant_rule TYPE string;
+DEFINE FIELD IF NOT EXISTS label ON merchant_rule TYPE string;
+DEFINE FIELD IF NOT EXISTS is_business ON merchant_rule TYPE bool;
+DEFINE FIELD IF NOT EXISTS condition ON merchant_rule TYPE option<string>;
+DEFINE FIELD IF NOT EXISTS created_at ON merchant_rule TYPE datetime DEFAULT time::now() READONLY;
+DEFINE FIELD IF NOT EXISTS updated_at ON merchant_rule TYPE datetime VALUE time::now();
+DEFINE INDEX IF NOT EXISTS merchant_rule_key ON merchant_rule FIELDS user, merchant_key UNIQUE;
+
+DEFINE TABLE IF NOT EXISTS payer SCHEMAFULL;
+DEFINE FIELD IF NOT EXISTS user ON payer TYPE record<user>;
+DEFINE FIELD IF NOT EXISTS counterparty ON payer TYPE string;
+DEFINE FIELD IF NOT EXISTS is_income ON payer TYPE bool;
+DEFINE FIELD IF NOT EXISTS confirmed_at ON payer TYPE option<datetime>;
+DEFINE FIELD IF NOT EXISTS source ON payer TYPE string ASSERT $value IN ['plaid', 'user', 'agent'];
+DEFINE FIELD IF NOT EXISTS created_at ON payer TYPE datetime DEFAULT time::now() READONLY;
+DEFINE FIELD IF NOT EXISTS updated_at ON payer TYPE datetime VALUE time::now();
+DEFINE INDEX IF NOT EXISTS payer_key ON payer FIELDS user, counterparty UNIQUE;
+
+DEFINE TABLE IF NOT EXISTS receipt SCHEMAFULL;
+DEFINE FIELD IF NOT EXISTS user ON receipt TYPE record<user>;
+DEFINE FIELD IF NOT EXISTS gmail_message_id ON receipt TYPE string;
+DEFINE FIELD IF NOT EXISTS attachment_id ON receipt TYPE option<string>;
+DEFINE FIELD IF NOT EXISTS vendor ON receipt TYPE option<string>;
+DEFINE FIELD IF NOT EXISTS total ON receipt TYPE option<number>;
+DEFINE FIELD IF NOT EXISTS date ON receipt TYPE option<string>;
+DEFINE FIELD IF NOT EXISTS file_ref ON receipt TYPE option<string>;
+DEFINE FIELD IF NOT EXISTS transaction ON receipt TYPE option<record<transaction>>;
+DEFINE FIELD IF NOT EXISTS match_score ON receipt TYPE option<number>;
+DEFINE FIELD IF NOT EXISTS created_at ON receipt TYPE datetime DEFAULT time::now() READONLY;
+DEFINE FIELD IF NOT EXISTS updated_at ON receipt TYPE datetime VALUE time::now();
+DEFINE INDEX IF NOT EXISTS receipt_msg ON receipt FIELDS user, gmail_message_id, attachment_id UNIQUE;
+
+DEFINE TABLE IF NOT EXISTS estimate SCHEMAFULL;
+DEFINE FIELD IF NOT EXISTS user ON estimate TYPE record<user>;
+DEFINE FIELD IF NOT EXISTS tax_year ON estimate TYPE int;
+DEFINE FIELD IF NOT EXISTS quarter ON estimate TYPE int ASSERT $value IN [1, 2, 3, 4];
+DEFINE FIELD IF NOT EXISTS input_snapshot ON estimate TYPE object FLEXIBLE;
+DEFINE FIELD IF NOT EXISTS result ON estimate TYPE object FLEXIBLE;
+DEFINE FIELD IF NOT EXISTS engine_version ON estimate TYPE string;
+DEFINE FIELD IF NOT EXISTS constants_version ON estimate TYPE string;
+DEFINE FIELD IF NOT EXISTS status ON estimate TYPE string DEFAULT 'draft' ASSERT $value IN ['draft', 'accepted', 'edited'];
+DEFINE FIELD IF NOT EXISTS edits ON estimate TYPE option<object> FLEXIBLE;
+DEFINE FIELD IF NOT EXISTS created_at ON estimate TYPE datetime DEFAULT time::now() READONLY;
+DEFINE FIELD IF NOT EXISTS updated_at ON estimate TYPE datetime VALUE time::now();
+DEFINE INDEX IF NOT EXISTS estimate_user_period ON estimate FIELDS user, tax_year, quarter;
+
+DEFINE TABLE IF NOT EXISTS payment SCHEMAFULL;
+DEFINE FIELD IF NOT EXISTS user ON payment TYPE record<user>;
+DEFINE FIELD IF NOT EXISTS estimate ON payment TYPE option<record<estimate>>;
+DEFINE FIELD IF NOT EXISTS amount ON payment TYPE number;
+DEFINE FIELD IF NOT EXISTS method ON payment TYPE string ASSERT $value IN ['manual', 'browser'];
+DEFINE FIELD IF NOT EXISTS confirmation ON payment TYPE option<string>;
+DEFINE FIELD IF NOT EXISTS paid_at ON payment TYPE string;
+DEFINE FIELD IF NOT EXISTS created_at ON payment TYPE datetime DEFAULT time::now() READONLY;
+DEFINE FIELD IF NOT EXISTS updated_at ON payment TYPE datetime VALUE time::now();
+
+DEFINE TABLE IF NOT EXISTS audit_event SCHEMAFULL;
+DEFINE FIELD IF NOT EXISTS user ON audit_event TYPE record<user>;
+DEFINE FIELD IF NOT EXISTS actor ON audit_event TYPE string ASSERT $value IN ['user', 'agent', 'system'];
+DEFINE FIELD IF NOT EXISTS action ON audit_event TYPE string;
+DEFINE FIELD IF NOT EXISTS target ON audit_event TYPE string;
+DEFINE FIELD IF NOT EXISTS before ON audit_event TYPE option<object> FLEXIBLE;
+DEFINE FIELD IF NOT EXISTS after ON audit_event TYPE option<object> FLEXIBLE;
+DEFINE FIELD IF NOT EXISTS created_at ON audit_event TYPE datetime DEFAULT time::now() READONLY;
+DEFINE FIELD IF NOT EXISTS updated_at ON audit_event TYPE datetime VALUE time::now();
+DEFINE INDEX IF NOT EXISTS audit_user_time ON audit_event FIELDS user, created_at;
+
+DEFINE TABLE IF NOT EXISTS eval_label SCHEMAFULL;
+DEFINE FIELD IF NOT EXISTS user ON eval_label TYPE record<user>;
+DEFINE FIELD IF NOT EXISTS transaction ON eval_label TYPE record<transaction>;
+DEFINE FIELD IF NOT EXISTS label ON eval_label TYPE string;
+DEFINE FIELD IF NOT EXISTS is_business ON eval_label TYPE bool;
+DEFINE FIELD IF NOT EXISTS labeler ON eval_label TYPE string;
+DEFINE FIELD IF NOT EXISTS dataset ON eval_label TYPE string;
+DEFINE FIELD IF NOT EXISTS created_at ON eval_label TYPE datetime DEFAULT time::now() READONLY;
+DEFINE FIELD IF NOT EXISTS updated_at ON eval_label TYPE datetime VALUE time::now();
+DEFINE INDEX IF NOT EXISTS eval_label_key ON eval_label FIELDS dataset, transaction UNIQUE;

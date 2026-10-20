@@ -9,9 +9,21 @@
     ".": "./src/index.ts"
   },
   "scripts": {
-    "typecheck": "tsc -p tsconfig.json --noEmit"
+    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "test": "vitest run",
+    "migrate": "tsx src/scripts/migrate.ts"
+  },
+  "dependencies": {
+    "@langchain/langgraph": "^1.5.1",
+    "@langchain/langgraph-checkpoint": "^1.1.5",
+    "@surrealdb/langgraph": "^0.2.0",
+    "surrealdb": "^2.1.1",
+    "zod": "^4.3.6"
   },
   "devDependencies": {
-    "typescript": "^5.9.0"
+    "@types/node": "^22.0.0",
+    "tsx": "^4.20.0",
+    "typescript": "^5.9.0",
+    "vitest": "^3.2.0"
   }
 }

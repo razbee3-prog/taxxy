@@ -237,10 +237,35 @@ importers:
         version: 5.9.3
 
   packages/db:
+    dependencies:
+      '@langchain/langgraph':
+        specifier: ^1.5.1
+        version: 1.5.1(@langchain/core@1.2.18(@opentelemetry/api@1.9.1)(@opentelemetry/sdk-trace-base@2.12.0(@opentelemetry/api@1.9.1)))(zod@4.6.7)
+      '@langchain/langgraph-checkpoint':
+        specifier: ^1.1.5
+        version: 1.2.0(@langchain/core@1.2.18(@opentelemetry/api@1.9.1)(@opentelemetry/sdk-trace-base@2.12.0(@opentelemetry/api@1.9.1)))
+      '@surrealdb/langgraph':
+        specifier: ^0.2.0
+        version: 0.2.0(@langchain/core@1.2.18(@opentelemetry/api@1.9.1)(@opentelemetry/sdk-trace-base@2.12.0(@opentelemetry/api@1.9.1)))(@langchain/langgraph-checkpoint@1.2.0(@langchain/core@1.2.18(@opentelemetry/api@1.9.1)(@opentelemetry/sdk-trace-base@2.12.0(@opentelemetry/api@1.9.1))))(tslib@2.8.1)(typescript@5.9.3)
+      surrealdb:
+        specifier: ^2.1.1
+        version: 2.1.1(tslib@2.8.1)(typescript@5.9.3)
+      zod:
+        specifier: ^4.3.6
+        version: 4.6.7
     devDependencies:
+      '@types/node':
+        specifier: ^22.0.0
+        version: 22.20.5
+      tsx:
+        specifier: ^4.20.0
+        version: 4.23.15
       typescript:
         specifier: ^5.9.0
         version: 5.9.3
+      vitest:
+        specifier: ^3.2.0
+        version: 3.2.7(@types/node@22.20.5)(tsx@4.23.15)(yaml@2.9.1)
 
   packages/engine:
     devDependencies:
@@ -814,6 +839,32 @@ packages:
   '@standard-schema/spec@1.1.0':
     resolution: {integrity: sha512-l2aFy5jALhniG5HgqrD6jXLi/rUWrKvqN/qJx6yoJsgKhblVd+iqqU4RCXavm/jPityDo5TCvKMnpjKnOriy0w==}
 
+  '@surrealdb/cbor@2.0.0-alpha.4':
+    resolution: {integrity: sha512-l/hNZ3ZCOJq8rzwx1y5ZV/8b2bYCWdhGqRVY33Pu50NAHyAW5qLsMn3ZBkZow77mAKwNCsbDsRGnyYEuU95mjw==}
+    engines: {node: '>=18.0.0'}
+
+  '@surrealdb/langchain-core@0.2.0':
+    resolution: {integrity: sha512-rpCWK6k/p7Cpy60WCOPxssHrn2OsoJjyS0sMTi4LQiWQnBqdxJyNx/ZhkgtIZUgkAH2ubaMR44AgQW7SvL6CbA==}
+    engines: {bun: '>=1.0.0', node: '>=22'}
+
+  '@surrealdb/langgraph@0.2.0':
+    resolution: {integrity: sha512-nGHSQYc2uqOw3JBXihkimnlpU930n79Qn08wq0V3GEcyJzUfDd4BURIOFIeXgQ+DOg9jb0zBVNFcbHR7jveNAQ==}
+    engines: {bun: '>=1.0.0', node: '>=22'}
+    peerDependencies:
+      '@langchain/core': ^1.2.9
+      '@langchain/langgraph-checkpoint': ^1.1.5
+
+  '@surrealdb/memory@1.0.0-alpha.11':
+    resolution: {integrity: sha512-b+rCP1XQhQj3iYHhVik5M5T2XySlfrciQfa+/wqZZNd21Nv/AxjjV9We4LBDLUfG+i4rlWJULZS7NnBHD+jocg==}
+    peerDependencies:
+      typescript: ^5.0.0 || ^6.0.0
+
+  '@surrealdb/sqon@0.1.6':
+    resolution: {integrity: sha512-rUUxuKYQJxsPy2ezYe2qy28Cd+LYUcYX7Qhi+eWl7d0KFnqBUGXyIkt6y7UgGhVlZjn0OBiGdJkM3fTzl8Qjjw==}
+    peerDependencies:
+      tslib: ^2.6.3
+      typescript: ^5.0.0
+
   '@types/chai@5.2.3':
     resolution: {integrity: sha512-Mw558oeA9fFbv65/y4mHtXDs9bPnFMZAL/jxdPFUpOHHIXX91mcgEHbS5Lahr+pwZFR8A7GQleRWeI6cGFC2UA==}
 
@@ -1146,6 +1197,12 @@ packages:
   strip-literal@3.1.0:
     resolution: {integrity: sha512-8r3mkIM/2+PpjHoOtiAW8Rg3jJLHaV7xPwG+YRGrv6FP0wwk/toTpATxWYOW0BKdWwl82VT2tFYi5DlROa0Mxg==}
 
+  surrealdb@2.1.1:
+    resolution: {integrity: sha512-FlJue1x8bH3gdLemHIwq3pQnxVLv7sKMFnMvAqlPtY/ePFjEylbWcQUORfD4S2V1RgABb9By8KRxOCA4QU5hgA==}
+    peerDependencies:
+      tslib: ^2.6.3
+      typescript: ^5.0.0 || ^6.0.0
+
   tinybench@2.9.0:
     resolution: {integrity: sha512-0+DUvqWMValLmha6lr4kD8iAMK1HzV0/aKnCtWb9v9641TnP/MFb7Pc2bxoxQjTXAErryXVgUOfv2YqNllqGeg==}
 
@@ -1175,6 +1232,9 @@ packages:
   ts-algebra@2.0.0:
     resolution: {integrity: sha512-FPAhNPFMrkwz76P7cdjdmiShwMynZYN6SgOujD1urY4oNm80Ou9oMdmbR45LotcKOXoy7wSmHkRFE6Mxbrhefw==}
 
+  tslib@2.8.1:
+    resolution: {integrity: sha512-oJFu94HQb+KVduSUQL7wnpmqnfmLsOA/nAh6b6EH0wCEoK0/mPeXU6c3wKDV83MkOuHPRHtSXKKU99IBazS/2w==}
+
   tsx@4.23.15:
     resolution: {integrity: sha512-Yiex1Ovn8z2xPpOWckIiysV1SSyRMY9BkLF++q0yKiDxCqRhosKfMg3janKkiLBwZ5c/YryloKwGZcrEmtwxKw==}
     engines: {node: '>=18.0.0'}
@@ -1187,6 +1247,10 @@ packages:
 
   undici-types@6.21.0:
     resolution: {integrity: sha512-iwDZqg0QAGrg9Rav5H4n0M64c3mkR59cJ6wQp+7C4nI0gsmExaedaYLNO44eT4AtBBwjbTiGPMlt2Md0T9H9JQ==}
+
+  uuidv7@1.2.1:
+    resolution: {integrity: sha512-4kPkK3/XTQW9Hbm4CaqfICn+kY9LJtDVEOfgsRRra/+n2Ofg4NqzRFceAkxvQ/Ud/6BpHOPzj8cirqM7TzTN5Q==}
+    hasBin: true
 
   vite-node@3.2.4:
     resolution: {integrity: sha512-EbKSKh+bh1E1IFxeO0pg1n4dvoOTt0UDiXMd/qn++r98+jPO1xtJilvXldeuQ8giIB5IkpjCgMleHMNEsGH6pg==}
@@ -1655,6 +1719,37 @@ snapshots:
 
   '@standard-schema/spec@1.1.0': {}
 
+  '@surrealdb/cbor@2.0.0-alpha.4': {}
+
+  '@surrealdb/langchain-core@0.2.0(tslib@2.8.1)(typescript@5.9.3)':
+    dependencies:
+      '@surrealdb/memory': 1.0.0-alpha.11(typescript@5.9.3)
+      surrealdb: 2.1.1(tslib@2.8.1)(typescript@5.9.3)
+    transitivePeerDependencies:
+      - tslib
+      - typescript
+
+  '@surrealdb/langgraph@0.2.0(@langchain/core@1.2.18(@opentelemetry/api@1.9.1)(@opentelemetry/sdk-trace-base@2.12.0(@opentelemetry/api@1.9.1)))(@langchain/langgraph-checkpoint@1.2.0(@langchain/core@1.2.18(@opentelemetry/api@1.9.1)(@opentelemetry/sdk-trace-base@2.12.0(@opentelemetry/api@1.9.1))))(tslib@2.8.1)(typescript@5.9.3)':
+    dependencies:
+      '@langchain/core': 1.2.18(@opentelemetry/api@1.9.1)(@opentelemetry/sdk-trace-base@2.12.0(@opentelemetry/api@1.9.1))
+      '@langchain/langgraph-checkpoint': 1.2.0(@langchain/core@1.2.18(@opentelemetry/api@1.9.1)(@opentelemetry/sdk-trace-base@2.12.0(@opentelemetry/api@1.9.1)))
+      '@surrealdb/langchain-core': 0.2.0(tslib@2.8.1)(typescript@5.9.3)
+      surrealdb: 2.1.1(tslib@2.8.1)(typescript@5.9.3)
+    transitivePeerDependencies:
+      - tslib
+      - typescript
+
+  '@surrealdb/memory@1.0.0-alpha.11(typescript@5.9.3)':
+    dependencies:
+      typescript: 5.9.3
+
+  '@surrealdb/sqon@0.1.6(tslib@2.8.1)(typescript@5.9.3)':
+    dependencies:
+      '@surrealdb/cbor': 2.0.0-alpha.4
+      tslib: 2.8.1
+      typescript: 5.9.3
+      uuidv7: 1.2.1
+
   '@types/chai@5.2.3':
     dependencies:
       '@types/deep-eql': 4.0.2
@@ -1990,6 +2085,12 @@ snapshots:
     dependencies:
       js-tokens: 9.0.1
 
+  surrealdb@2.1.1(tslib@2.8.1)(typescript@5.9.3):
+    dependencies:
+      '@surrealdb/sqon': 0.1.6(tslib@2.8.1)(typescript@5.9.3)
+      tslib: 2.8.1
+      typescript: 5.9.3
+
   tinybench@2.9.0: {}
 
   tinyexec@0.3.2: {}
@@ -2011,6 +2112,8 @@ snapshots:
 
   ts-algebra@2.0.0: {}
 
+  tslib@2.8.1: {}
+
   tsx@4.23.15:
     dependencies:
       esbuild: 0.28.2
@@ -2020,6 +2123,8 @@ snapshots:
   typescript@5.9.3: {}
 
   undici-types@6.21.0: {}
+
+  uuidv7@1.2.1: {}
 
   vite-node@3.2.4(@types/node@22.20.5)(tsx@4.23.15)(yaml@2.9.1):
     dependencies:
