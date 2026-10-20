@@ -1,4 +1,3 @@
-import { tool } from "@langchain/core/tools";
 import { listBankAccounts, listEstimates, scoped } from "@taxxy/db";
 import type { Quarter } from "@taxxy/engine";
 import { z } from "zod";
@@ -10,6 +9,7 @@ import {
   ProfileIncompleteError,
 } from "../services/estimate.js";
 import { requireUserId } from "./context.js";
+import { gtool as tool } from "./guard.js";
 
 const json = (v: unknown) => JSON.stringify(v);
 

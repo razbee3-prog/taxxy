@@ -1,4 +1,3 @@
-import { tool } from "@langchain/core/tools";
 import { getGmailAccount, scoped } from "@taxxy/db";
 import { z } from "zod";
 import type { AppDeps } from "../deps.js";
@@ -10,6 +9,7 @@ import {
   searchReceipts,
 } from "../services/gmail.js";
 import { requireUserId } from "./context.js";
+import { gtool as tool } from "./guard.js";
 
 const json = (v: unknown) => JSON.stringify(v);
 const guard = async <T>(fn: () => Promise<T>) => {

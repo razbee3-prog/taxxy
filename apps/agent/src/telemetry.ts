@@ -2,6 +2,7 @@ import { createHash } from "node:crypto";
 import { CallbackHandler } from "@langfuse/langchain";
 import { LangfuseSpanProcessor } from "@langfuse/otel";
 import { NodeTracerProvider } from "@opentelemetry/sdk-trace-node";
+import { maskDeep } from "@taxxy/integrations";
 import type { Env } from "./config.js";
 
 let processor: LangfuseSpanProcessor | undefined;
@@ -18,6 +19,7 @@ export function initTelemetry(env: Env): boolean {
     secretKey: env.LANGFUSE_SECRET_KEY,
     baseUrl: env.LANGFUSE_BASE_URL,
     environment: env.TAXXY_ENV,
+    mask: ({ data }) => maskDeep(data),
   });
   new NodeTracerProvider({ spanProcessors: [processor] }).register();
   return true;

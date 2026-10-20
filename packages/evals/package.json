@@ -15,6 +15,7 @@
   },
   "dependencies": {
     "@langchain/anthropic": "^1.5.12",
+    "@langfuse/client": "^6.0.1",
     "@taxxy/integrations": "workspace:*",
     "zod": "^4.3.6"
   },

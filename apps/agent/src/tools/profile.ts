@@ -1,4 +1,3 @@
-import { tool } from "@langchain/core/tools";
 import {
   getTaxProfile,
   scoped,
@@ -11,6 +10,7 @@ import type { AppDeps } from "../deps.js";
 import { appendMemory } from "../memory.js";
 import { missingProfileFields } from "../services/estimate.js";
 import { requireUserId } from "./context.js";
+import { gtool as tool } from "./guard.js";
 
 const json = (v: unknown) => JSON.stringify(v);
 

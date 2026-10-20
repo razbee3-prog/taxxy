@@ -13,4 +13,5 @@ export * from "./plaid/client.js";
 export * from "./plaid/normalize.js";
 export * from "./plaid/types.js";
 export * from "./plaid/webhook.js";
+export * from "./security/redact.js";
 export * from "./storage/files.js";

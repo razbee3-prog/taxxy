@@ -1,4 +1,3 @@
-import { tool } from "@langchain/core/tools";
 import {
   type CategorizationRow,
   currentCategorization,
@@ -17,6 +16,7 @@ import { syncAll, syncItem } from "../services/plaid.js";
 import { requireUserId } from "./context.js";
 import { estimateTools } from "./estimate.js";
 import { gmailTools } from "./gmail.js";
+import { gtool as tool } from "./guard.js";
 import { profileTools } from "./profile.js";
 
 const json = (v: unknown) => JSON.stringify(v);
