@@ -1,0 +1,37 @@
+import type { TaxConstants } from "../types.js";
+
+/** Verified against Rev. Proc. 2025-32 (single filer). See docs/SPEC.md § 2026 constants. */
+export const CONSTANTS_2026: TaxConstants = {
+  taxYear: 2026,
+  constantsVersion: "2026.1",
+  filingStatus: "single",
+  seEarningsFactor: 0.9235,
+  socialSecurityRate: 0.124,
+  medicareRate: 0.029,
+  additionalMedicareRate: 0.009,
+  socialSecurityWageBase: 184_500,
+  additionalMedicareThreshold: 200_000,
+  seTaxFloor: 400,
+  standardDeduction: 16_100,
+  brackets: [
+    { upTo: 12_400, rate: 0.1 },
+    { upTo: 50_400, rate: 0.12 },
+    { upTo: 105_700, rate: 0.22 },
+    { upTo: 201_775, rate: 0.24 },
+    { upTo: 256_225, rate: 0.32 },
+    { upTo: 640_600, rate: 0.35 },
+    { upTo: null, rate: 0.37 },
+  ],
+  qbiRate: 0.2,
+  qbiThreshold: 201_750,
+  qbiMinimumDeduction: 400,
+  qbiMinimumDeductionFloor: 1_000,
+  currentYearSafeHarbor: 0.9,
+  priorYearSafeHarbor: 1.0,
+  priorYearHighIncomeSafeHarbor: 1.1,
+  priorYearHighIncomeAgi: 150_000,
+  estimateThreshold: 1_000,
+  dueDates: ["2026-04-15", "2026-06-15", "2026-09-15", "2027-01-15"],
+  periodEnds: ["2026-03-31", "2026-05-31", "2026-08-31", "2026-12-31"],
+  installmentFractions: [0.25, 0.5, 0.75, 1],
+};
