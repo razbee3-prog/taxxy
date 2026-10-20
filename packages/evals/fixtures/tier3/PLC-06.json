@@ -1,0 +1,3055 @@
+{
+  "_note": "PLACEHOLDER Tier 3 profile: fictional transactions; expected worksheet from @taxxy/engine, not an external oracle",
+  "id": "PLC-06",
+  "matrix": {
+    "income": 55000,
+    "mix": "separate",
+    "payers": 1,
+    "w2": true,
+    "prior": "100",
+    "receipts": false,
+    "edge": null
+  },
+  "intake": {
+    "business_description": "freelance consultant (placeholder profile)",
+    "state": "CA",
+    "w2_wages": 20000,
+    "w2_withholding_expected": 2000,
+    "prior_year": {
+      "total_tax": 7500,
+      "agi": 52000,
+      "confirmed": true
+    },
+    "se_health_premiums": 0,
+    "sep_contribution": 0,
+    "complete": true
+  },
+  "accounts": [
+    {
+      "plaid_account_id": "chk",
+      "name": "Checking",
+      "mask": "0001",
+      "type": "depository",
+      "mostly_business": false
+    },
+    {
+      "plaid_account_id": "biz",
+      "name": "Business Checking",
+      "mask": "0002",
+      "type": "depository",
+      "mostly_business": true
+    },
+    {
+      "plaid_account_id": "cc",
+      "name": "Credit Card",
+      "mask": "0003",
+      "type": "credit",
+      "mostly_business": false
+    }
+  ],
+  "payers": [
+    "Northwind Studio"
+  ],
+  "transactions": [
+    {
+      "plaid_txn_id": "plc-06-001",
+      "plaid_account_id": "biz",
+      "date": "2026-01-03",
+      "amount": -4583.33,
+      "description": "ACH CREDIT NORTHWIND STUDIO",
+      "normalized_description": "ACH CREDIT NORTHWIND STUDIO",
+      "merchant_key": "northwind_studio",
+      "plaid_pfc": "INCOME_OTHER_INCOME",
+      "counterparties": [
+        "Northwind Studio"
+      ],
+      "pending": false,
+      "pending_transaction_id": null,
+      "expected": {
+        "label": "income_1099",
+        "is_business": true,
+        "ambiguous": false
+      }
+    },
+    {
+      "plaid_txn_id": "plc-06-002",
+      "plaid_account_id": "biz",
+      "date": "2026-01-10",
+      "amount": 54.99,
+      "description": "ADOBE CREATIVE CLOUD",
+      "normalized_description": "ADOBE CREATIVE CLOUD",
+      "merchant_key": "adobe",
+      "plaid_pfc": "GENERAL_SERVICES_OTHER_GENERAL_SERVICES",
+      "counterparties": [
+        "ADOBE CREATIVE CLOUD"
+      ],
+      "pending": false,
+      "pending_transaction_id": null,
+      "expected": {
+        "label": "software_subscriptions",
+        "is_business": true,
+        "ambiguous": false
+      }
+    },
+    {
+      "plaid_txn_id": "plc-06-003",
+      "plaid_account_id": "biz",
+      "date": "2026-01-11",
+      "amount": 120,
+      "description": "OFFICE DEPOT",
+      "normalized_description": "OFFICE DEPOT",
+      "merchant_key": "office_depot",
+      "plaid_pfc": "GENERAL_MERCHANDISE_OFFICE_SUPPLIES",
+      "counterparties": [
+        "OFFICE DEPOT"
+      ],
+      "pending": false,
+      "pending_transaction_id": null,
+      "expected": {
+        "label": "supplies",
+        "is_business": true,
+        "ambiguous": false
+      }
+    },
+    {
+      "plaid_txn_id": "plc-06-004",
+      "plaid_account_id": "biz",
+      "date": "2026-01-12",
+      "amount": 250,
+      "description": "GOOGLE ADS",
+      "normalized_description": "GOOGLE ADS",
+      "merchant_key": "google_ads",
+      "plaid_pfc": "GENERAL_SERVICES_ADVERTISING",
+      "counterparties": [
+        "GOOGLE ADS"
+      ],
+      "pending": false,
+      "pending_transaction_id": null,
+      "expected": {
+        "label": "advertising",
+        "is_business": true,
+        "ambiguous": false
+      }
+    },
+    {
+      "plaid_txn_id": "plc-06-005",
+      "plaid_account_id": "biz",
+      "date": "2026-01-13",
+      "amount": 310,
+      "description": "HISCOX INSURANCE",
+      "normalized_description": "HISCOX INSURANCE",
+      "merchant_key": "hiscox",
+      "plaid_pfc": "GENERAL_SERVICES_INSURANCE",
+      "counterparties": [
+        "HISCOX INSURANCE"
+      ],
+      "pending": false,
+      "pending_transaction_id": null,
+      "expected": {
+        "label": "insurance",
+        "is_business": true,
+        "ambiguous": false
+      }
+    },
+    {
+      "plaid_txn_id": "plc-06-006",
+      "plaid_account_id": "biz",
+      "date": "2026-01-14",
+      "amount": 412.6,
+      "description": "UNITED AIRLINES",
+      "normalized_description": "UNITED AIRLINES",
+      "merchant_key": "united_airlines",
+      "plaid_pfc": "TRAVEL_FLIGHTS",
+      "counterparties": [
+        "UNITED AIRLINES"
+      ],
+      "pending": false,
+      "pending_transaction_id": null,
+      "expected": {
+        "label": "travel",
+        "is_business": true,
+        "ambiguous": false
+      }
+    },
+    {
+      "plaid_txn_id": "plc-06-007",
+      "plaid_account_id": "chk",
+      "date": "2026-01-20",
+      "amount": 123.4,
+      "description": "WHOLE FOODS",
+      "normalized_description": "WHOLE FOODS",
+      "merchant_key": "whole_foods",
+      "plaid_pfc": "FOOD_AND_DRINK_GROCERIES",
+      "counterparties": [
+        "WHOLE FOODS"
+      ],
+      "pending": false,
+      "pending_transaction_id": null,
+      "expected": {
+        "label": "personal",
+        "is_business": false,
+        "ambiguous": false
+      }
+    },
+    {
+      "plaid_txn_id": "plc-06-008",
+      "plaid_account_id": "chk",
+      "date": "2026-01-21",
+      "amount": 15.99,
+      "description": "NETFLIX",
+      "normalized_description": "NETFLIX",
+      "merchant_key": "netflix",
+      "plaid_pfc": "ENTERTAINMENT_TV_AND_MOVIES",
+      "counterparties": [
+        "NETFLIX"
+      ],
+      "pending": false,
+      "pending_transaction_id": null,
+      "expected": {
+        "label": "personal",
+        "is_business": false,
+        "ambiguous": false
+      }
+    },
+    {
+      "plaid_txn_id": "plc-06-009",
+      "plaid_account_id": "chk",
+      "date": "2026-01-22",
+      "amount": 45,
+      "description": "SHELL OIL",
+      "normalized_description": "SHELL OIL",
+      "merchant_key": "shell",
+      "plaid_pfc": "TRANSPORTATION_GAS",
+      "counterparties": [
+        "SHELL OIL"
+      ],
+      "pending": false,
+      "pending_transaction_id": null,
+      "expected": {
+        "label": "personal",
+        "is_business": false,
+        "ambiguous": true
+      }
+    },
+    {
+      "plaid_txn_id": "plc-06-010",
+      "plaid_account_id": "chk",
+      "date": "2026-01-23",
+      "amount": 2100,
+      "description": "RENT PAYMENT",
+      "normalized_description": "RENT PAYMENT",
+      "merchant_key": null,
+      "plaid_pfc": "RENT_AND_UTILITIES_RENT",
+      "counterparties": [],
+      "pending": false,
+      "pending_transaction_id": null,
+      "expected": {
+        "label": "personal",
+        "is_business": false,
+        "ambiguous": false
+      }
+    },
+    {
+      "plaid_txn_id": "plc-06-011",
+      "plaid_account_id": "biz",
+      "date": "2026-02-03",
+      "amount": -4583.33,
+      "description": "ACH CREDIT NORTHWIND STUDIO",
+      "normalized_description": "ACH CREDIT NORTHWIND STUDIO",
+      "merchant_key": "northwind_studio",
+      "plaid_pfc": "INCOME_OTHER_INCOME",
+      "counterparties": [
+        "Northwind Studio"
+      ],
+      "pending": false,
+      "pending_transaction_id": null,
+      "expected": {
+        "label": "income_1099",
+        "is_business": true,
+        "ambiguous": false
+      }
+    },
+    {
+      "plaid_txn_id": "plc-06-012",
+      "plaid_account_id": "biz",
+      "date": "2026-02-10",
+      "amount": 54.99,
+      "description": "ADOBE CREATIVE CLOUD",
+      "normalized_description": "ADOBE CREATIVE CLOUD",
+      "merchant_key": "adobe",
+      "plaid_pfc": "GENERAL_SERVICES_OTHER_GENERAL_SERVICES",
+      "counterparties": [
+        "ADOBE CREATIVE CLOUD"
+      ],
+      "pending": false,
+      "pending_transaction_id": null,
+      "expected": {
+        "label": "software_subscriptions",
+        "is_business": true,
+        "ambiguous": false
+      }
+    },
+    {
+      "plaid_txn_id": "plc-06-013",
+      "plaid_account_id": "biz",
+      "date": "2026-02-11",
+      "amount": 120,
+      "description": "OFFICE DEPOT",
+      "normalized_description": "OFFICE DEPOT",
+      "merchant_key": "office_depot",
+      "plaid_pfc": "GENERAL_MERCHANDISE_OFFICE_SUPPLIES",
+      "counterparties": [
+        "OFFICE DEPOT"
+      ],
+      "pending": false,
+      "pending_transaction_id": null,
+      "expected": {
+        "label": "supplies",
+        "is_business": true,
+        "ambiguous": false
+      }
+    },
+    {
+      "plaid_txn_id": "plc-06-014",
+      "plaid_account_id": "biz",
+      "date": "2026-02-12",
+      "amount": 250,
+      "description": "GOOGLE ADS",
+      "normalized_description": "GOOGLE ADS",
+      "merchant_key": "google_ads",
+      "plaid_pfc": "GENERAL_SERVICES_ADVERTISING",
+      "counterparties": [
+        "GOOGLE ADS"
+      ],
+      "pending": false,
+      "pending_transaction_id": null,
+      "expected": {
+        "label": "advertising",
+        "is_business": true,
+        "ambiguous": false
+      }
+    },
+    {
+      "plaid_txn_id": "plc-06-015",
+      "plaid_account_id": "biz",
+      "date": "2026-02-13",
+      "amount": 310,
+      "description": "HISCOX INSURANCE",
+      "normalized_description": "HISCOX INSURANCE",
+      "merchant_key": "hiscox",
+      "plaid_pfc": "GENERAL_SERVICES_INSURANCE",
+      "counterparties": [
+        "HISCOX INSURANCE"
+      ],
+      "pending": false,
+      "pending_transaction_id": null,
+      "expected": {
+        "label": "insurance",
+        "is_business": true,
+        "ambiguous": false
+      }
+    },
+    {
+      "plaid_txn_id": "plc-06-016",
+      "plaid_account_id": "biz",
+      "date": "2026-02-14",
+      "amount": 412.6,
+      "description": "UNITED AIRLINES",
+      "normalized_description": "UNITED AIRLINES",
+      "merchant_key": "united_airlines",
+      "plaid_pfc": "TRAVEL_FLIGHTS",
+      "counterparties": [
+        "UNITED AIRLINES"
+      ],
+      "pending": false,
+      "pending_transaction_id": null,
+      "expected": {
+        "label": "travel",
+        "is_business": true,
+        "ambiguous": false
+      }
+    },
+    {
+      "plaid_txn_id": "plc-06-017",
+      "plaid_account_id": "biz",
+      "date": "2026-02-15",
+      "amount": 96.2,
+      "description": "THE CAPITAL GRILLE",
+      "normalized_description": "THE CAPITAL GRILLE",
+      "merchant_key": "capital_grille",
+      "plaid_pfc": "FOOD_AND_DRINK_RESTAURANT",
+      "counterparties": [
+        "THE CAPITAL GRILLE"
+      ],
+      "pending": false,
+      "pending_transaction_id": null,
+      "expected": {
+        "label": "meals",
+        "is_business": true,
+        "ambiguous": true
+      }
+    },
+    {
+      "plaid_txn_id": "plc-06-018",
+      "plaid_account_id": "biz",
+      "date": "2026-02-16",
+      "amount": 85,
+      "description": "COMCAST BUSINESS",
+      "normalized_description": "COMCAST BUSINESS",
+      "merchant_key": "comcast",
+      "plaid_pfc": "RENT_AND_UTILITIES_INTERNET_AND_CABLE",
+      "counterparties": [
+        "COMCAST BUSINESS"
+      ],
+      "pending": false,
+      "pending_transaction_id": null,
+      "expected": {
+        "label": "utilities",
+        "is_business": true,
+        "ambiguous": false
+      }
+    },
+    {
+      "plaid_txn_id": "plc-06-019",
+      "plaid_account_id": "biz",
+      "date": "2026-02-17",
+      "amount": 64.3,
+      "description": "AMAZON MKTP",
+      "normalized_description": "AMAZON MKTP",
+      "merchant_key": "amazon",
+      "plaid_pfc": "GENERAL_MERCHANDISE_ONLINE_MARKETPLACES",
+      "counterparties": [
+        "AMAZON MKTP"
+      ],
+      "pending": false,
+      "pending_transaction_id": null,
+      "expected": {
+        "label": "supplies",
+        "is_business": true,
+        "ambiguous": true
+      }
+    },
+    {
+      "plaid_txn_id": "plc-06-020",
+      "plaid_account_id": "chk",
+      "date": "2026-02-20",
+      "amount": 123.4,
+      "description": "WHOLE FOODS",
+      "normalized_description": "WHOLE FOODS",
+      "merchant_key": "whole_foods",
+      "plaid_pfc": "FOOD_AND_DRINK_GROCERIES",
+      "counterparties": [
+        "WHOLE FOODS"
+      ],
+      "pending": false,
+      "pending_transaction_id": null,
+      "expected": {
+        "label": "personal",
+        "is_business": false,
+        "ambiguous": false
+      }
+    },
+    {
+      "plaid_txn_id": "plc-06-021",
+      "plaid_account_id": "chk",
+      "date": "2026-02-21",
+      "amount": 15.99,
+      "description": "NETFLIX",
+      "normalized_description": "NETFLIX",
+      "merchant_key": "netflix",
+      "plaid_pfc": "ENTERTAINMENT_TV_AND_MOVIES",
+      "counterparties": [
+        "NETFLIX"
+      ],
+      "pending": false,
+      "pending_transaction_id": null,
+      "expected": {
+        "label": "personal",
+        "is_business": false,
+        "ambiguous": false
+      }
+    },
+    {
+      "plaid_txn_id": "plc-06-022",
+      "plaid_account_id": "chk",
+      "date": "2026-02-22",
+      "amount": 45,
+      "description": "SHELL OIL",
+      "normalized_description": "SHELL OIL",
+      "merchant_key": "shell",
+      "plaid_pfc": "TRANSPORTATION_GAS",
+      "counterparties": [
+        "SHELL OIL"
+      ],
+      "pending": false,
+      "pending_transaction_id": null,
+      "expected": {
+        "label": "personal",
+        "is_business": false,
+        "ambiguous": true
+      }
+    },
+    {
+      "plaid_txn_id": "plc-06-023",
+      "plaid_account_id": "chk",
+      "date": "2026-02-23",
+      "amount": 2100,
+      "description": "RENT PAYMENT",
+      "normalized_description": "RENT PAYMENT",
+      "merchant_key": null,
+      "plaid_pfc": "RENT_AND_UTILITIES_RENT",
+      "counterparties": [],
+      "pending": false,
+      "pending_transaction_id": null,
+      "expected": {
+        "label": "personal",
+        "is_business": false,
+        "ambiguous": false
+      }
+    },
+    {
+      "plaid_txn_id": "plc-06-024",
+      "plaid_account_id": "biz",
+      "date": "2026-03-03",
+      "amount": -4583.33,
+      "description": "ACH CREDIT NORTHWIND STUDIO",
+      "normalized_description": "ACH CREDIT NORTHWIND STUDIO",
+      "merchant_key": "northwind_studio",
+      "plaid_pfc": "INCOME_OTHER_INCOME",
+      "counterparties": [
+        "Northwind Studio"
+      ],
+      "pending": false,
+      "pending_transaction_id": null,
+      "expected": {
+        "label": "income_1099",
+        "is_business": true,
+        "ambiguous": false
+      }
+    },
+    {
+      "plaid_txn_id": "plc-06-025",
+      "plaid_account_id": "biz",
+      "date": "2026-03-10",
+      "amount": 54.99,
+      "description": "ADOBE CREATIVE CLOUD",
+      "normalized_description": "ADOBE CREATIVE CLOUD",
+      "merchant_key": "adobe",
+      "plaid_pfc": "GENERAL_SERVICES_OTHER_GENERAL_SERVICES",
+      "counterparties": [
+        "ADOBE CREATIVE CLOUD"
+      ],
+      "pending": false,
+      "pending_transaction_id": null,
+      "expected": {
+        "label": "software_subscriptions",
+        "is_business": true,
+        "ambiguous": false
+      }
+    },
+    {
+      "plaid_txn_id": "plc-06-026",
+      "plaid_account_id": "biz",
+      "date": "2026-03-11",
+      "amount": 120,
+      "description": "OFFICE DEPOT",
+      "normalized_description": "OFFICE DEPOT",
+      "merchant_key": "office_depot",
+      "plaid_pfc": "GENERAL_MERCHANDISE_OFFICE_SUPPLIES",
+      "counterparties": [
+        "OFFICE DEPOT"
+      ],
+      "pending": false,
+      "pending_transaction_id": null,
+      "expected": {
+        "label": "supplies",
+        "is_business": true,
+        "ambiguous": false
+      }
+    },
+    {
+      "plaid_txn_id": "plc-06-027",
+      "plaid_account_id": "biz",
+      "date": "2026-03-12",
+      "amount": 250,
+      "description": "GOOGLE ADS",
+      "normalized_description": "GOOGLE ADS",
+      "merchant_key": "google_ads",
+      "plaid_pfc": "GENERAL_SERVICES_ADVERTISING",
+      "counterparties": [
+        "GOOGLE ADS"
+      ],
+      "pending": false,
+      "pending_transaction_id": null,
+      "expected": {
+        "label": "advertising",
+        "is_business": true,
+        "ambiguous": false
+      }
+    },
+    {
+      "plaid_txn_id": "plc-06-028",
+      "plaid_account_id": "biz",
+      "date": "2026-03-13",
+      "amount": 310,
+      "description": "HISCOX INSURANCE",
+      "normalized_description": "HISCOX INSURANCE",
+      "merchant_key": "hiscox",
+      "plaid_pfc": "GENERAL_SERVICES_INSURANCE",
+      "counterparties": [
+        "HISCOX INSURANCE"
+      ],
+      "pending": false,
+      "pending_transaction_id": null,
+      "expected": {
+        "label": "insurance",
+        "is_business": true,
+        "ambiguous": false
+      }
+    },
+    {
+      "plaid_txn_id": "plc-06-029",
+      "plaid_account_id": "biz",
+      "date": "2026-03-14",
+      "amount": 412.6,
+      "description": "UNITED AIRLINES",
+      "normalized_description": "UNITED AIRLINES",
+      "merchant_key": "united_airlines",
+      "plaid_pfc": "TRAVEL_FLIGHTS",
+      "counterparties": [
+        "UNITED AIRLINES"
+      ],
+      "pending": false,
+      "pending_transaction_id": null,
+      "expected": {
+        "label": "travel",
+        "is_business": true,
+        "ambiguous": false
+      }
+    },
+    {
+      "plaid_txn_id": "plc-06-030",
+      "plaid_account_id": "chk",
+      "date": "2026-03-20",
+      "amount": 123.4,
+      "description": "WHOLE FOODS",
+      "normalized_description": "WHOLE FOODS",
+      "merchant_key": "whole_foods",
+      "plaid_pfc": "FOOD_AND_DRINK_GROCERIES",
+      "counterparties": [
+        "WHOLE FOODS"
+      ],
+      "pending": false,
+      "pending_transaction_id": null,
+      "expected": {
+        "label": "personal",
+        "is_business": false,
+        "ambiguous": false
+      }
+    },
+    {
+      "plaid_txn_id": "plc-06-031",
+      "plaid_account_id": "chk",
+      "date": "2026-03-21",
+      "amount": 15.99,
+      "description": "NETFLIX",
+      "normalized_description": "NETFLIX",
+      "merchant_key": "netflix",
+      "plaid_pfc": "ENTERTAINMENT_TV_AND_MOVIES",
+      "counterparties": [
+        "NETFLIX"
+      ],
+      "pending": false,
+      "pending_transaction_id": null,
+      "expected": {
+        "label": "personal",
+        "is_business": false,
+        "ambiguous": false
+      }
+    },
+    {
+      "plaid_txn_id": "plc-06-032",
+      "plaid_account_id": "chk",
+      "date": "2026-03-22",
+      "amount": 45,
+      "description": "SHELL OIL",
+      "normalized_description": "SHELL OIL",
+      "merchant_key": "shell",
+      "plaid_pfc": "TRANSPORTATION_GAS",
+      "counterparties": [
+        "SHELL OIL"
+      ],
+      "pending": false,
+      "pending_transaction_id": null,
+      "expected": {
+        "label": "personal",
+        "is_business": false,
+        "ambiguous": true
+      }
+    },
+    {
+      "plaid_txn_id": "plc-06-033",
+      "plaid_account_id": "chk",
+      "date": "2026-03-23",
+      "amount": 2100,
+      "description": "RENT PAYMENT",
+      "normalized_description": "RENT PAYMENT",
+      "merchant_key": null,
+      "plaid_pfc": "RENT_AND_UTILITIES_RENT",
+      "counterparties": [],
+      "pending": false,
+      "pending_transaction_id": null,
+      "expected": {
+        "label": "personal",
+        "is_business": false,
+        "ambiguous": false
+      }
+    },
+    {
+      "plaid_txn_id": "plc-06-034",
+      "plaid_account_id": "biz",
+      "date": "2026-04-03",
+      "amount": -4583.33,
+      "description": "ACH CREDIT NORTHWIND STUDIO",
+      "normalized_description": "ACH CREDIT NORTHWIND STUDIO",
+      "merchant_key": "northwind_studio",
+      "plaid_pfc": "INCOME_OTHER_INCOME",
+      "counterparties": [
+        "Northwind Studio"
+      ],
+      "pending": false,
+      "pending_transaction_id": null,
+      "expected": {
+        "label": "income_1099",
+        "is_business": true,
+        "ambiguous": false
+      }
+    },
+    {
+      "plaid_txn_id": "plc-06-035",
+      "plaid_account_id": "biz",
+      "date": "2026-04-10",
+      "amount": 54.99,
+      "description": "ADOBE CREATIVE CLOUD",
+      "normalized_description": "ADOBE CREATIVE CLOUD",
+      "merchant_key": "adobe",
+      "plaid_pfc": "GENERAL_SERVICES_OTHER_GENERAL_SERVICES",
+      "counterparties": [
+        "ADOBE CREATIVE CLOUD"
+      ],
+      "pending": false,
+      "pending_transaction_id": null,
+      "expected": {
+        "label": "software_subscriptions",
+        "is_business": true,
+        "ambiguous": false
+      }
+    },
+    {
+      "plaid_txn_id": "plc-06-036",
+      "plaid_account_id": "biz",
+      "date": "2026-04-11",
+      "amount": 120,
+      "description": "OFFICE DEPOT",
+      "normalized_description": "OFFICE DEPOT",
+      "merchant_key": "office_depot",
+      "plaid_pfc": "GENERAL_MERCHANDISE_OFFICE_SUPPLIES",
+      "counterparties": [
+        "OFFICE DEPOT"
+      ],
+      "pending": false,
+      "pending_transaction_id": null,
+      "expected": {
+        "label": "supplies",
+        "is_business": true,
+        "ambiguous": false
+      }
+    },
+    {
+      "plaid_txn_id": "plc-06-037",
+      "plaid_account_id": "biz",
+      "date": "2026-04-12",
+      "amount": 250,
+      "description": "GOOGLE ADS",
+      "normalized_description": "GOOGLE ADS",
+      "merchant_key": "google_ads",
+      "plaid_pfc": "GENERAL_SERVICES_ADVERTISING",
+      "counterparties": [
+        "GOOGLE ADS"
+      ],
+      "pending": false,
+      "pending_transaction_id": null,
+      "expected": {
+        "label": "advertising",
+        "is_business": true,
+        "ambiguous": false
+      }
+    },
+    {
+      "plaid_txn_id": "plc-06-038",
+      "plaid_account_id": "biz",
+      "date": "2026-04-13",
+      "amount": 310,
+      "description": "HISCOX INSURANCE",
+      "normalized_description": "HISCOX INSURANCE",
+      "merchant_key": "hiscox",
+      "plaid_pfc": "GENERAL_SERVICES_INSURANCE",
+      "counterparties": [
+        "HISCOX INSURANCE"
+      ],
+      "pending": false,
+      "pending_transaction_id": null,
+      "expected": {
+        "label": "insurance",
+        "is_business": true,
+        "ambiguous": false
+      }
+    },
+    {
+      "plaid_txn_id": "plc-06-039",
+      "plaid_account_id": "biz",
+      "date": "2026-04-14",
+      "amount": 412.6,
+      "description": "UNITED AIRLINES",
+      "normalized_description": "UNITED AIRLINES",
+      "merchant_key": "united_airlines",
+      "plaid_pfc": "TRAVEL_FLIGHTS",
+      "counterparties": [
+        "UNITED AIRLINES"
+      ],
+      "pending": false,
+      "pending_transaction_id": null,
+      "expected": {
+        "label": "travel",
+        "is_business": true,
+        "ambiguous": false
+      }
+    },
+    {
+      "plaid_txn_id": "plc-06-040",
+      "plaid_account_id": "biz",
+      "date": "2026-04-15",
+      "amount": 96.2,
+      "description": "THE CAPITAL GRILLE",
+      "normalized_description": "THE CAPITAL GRILLE",
+      "merchant_key": "capital_grille",
+      "plaid_pfc": "FOOD_AND_DRINK_RESTAURANT",
+      "counterparties": [
+        "THE CAPITAL GRILLE"
+      ],
+      "pending": false,
+      "pending_transaction_id": null,
+      "expected": {
+        "label": "meals",
+        "is_business": true,
+        "ambiguous": true
+      }
+    },
+    {
+      "plaid_txn_id": "plc-06-041",
+      "plaid_account_id": "biz",
+      "date": "2026-04-16",
+      "amount": 85,
+      "description": "COMCAST BUSINESS",
+      "normalized_description": "COMCAST BUSINESS",
+      "merchant_key": "comcast",
+      "plaid_pfc": "RENT_AND_UTILITIES_INTERNET_AND_CABLE",
+      "counterparties": [
+        "COMCAST BUSINESS"
+      ],
+      "pending": false,
+      "pending_transaction_id": null,
+      "expected": {
+        "label": "utilities",
+        "is_business": true,
+        "ambiguous": false
+      }
+    },
+    {
+      "plaid_txn_id": "plc-06-042",
+      "plaid_account_id": "biz",
+      "date": "2026-04-17",
+      "amount": 64.3,
+      "description": "AMAZON MKTP",
+      "normalized_description": "AMAZON MKTP",
+      "merchant_key": "amazon",
+      "plaid_pfc": "GENERAL_MERCHANDISE_ONLINE_MARKETPLACES",
+      "counterparties": [
+        "AMAZON MKTP"
+      ],
+      "pending": false,
+      "pending_transaction_id": null,
+      "expected": {
+        "label": "supplies",
+        "is_business": true,
+        "ambiguous": true
+      }
+    },
+    {
+      "plaid_txn_id": "plc-06-043",
+      "plaid_account_id": "chk",
+      "date": "2026-04-20",
+      "amount": 123.4,
+      "description": "WHOLE FOODS",
+      "normalized_description": "WHOLE FOODS",
+      "merchant_key": "whole_foods",
+      "plaid_pfc": "FOOD_AND_DRINK_GROCERIES",
+      "counterparties": [
+        "WHOLE FOODS"
+      ],
+      "pending": false,
+      "pending_transaction_id": null,
+      "expected": {
+        "label": "personal",
+        "is_business": false,
+        "ambiguous": false
+      }
+    },
+    {
+      "plaid_txn_id": "plc-06-044",
+      "plaid_account_id": "chk",
+      "date": "2026-04-21",
+      "amount": 15.99,
+      "description": "NETFLIX",
+      "normalized_description": "NETFLIX",
+      "merchant_key": "netflix",
+      "plaid_pfc": "ENTERTAINMENT_TV_AND_MOVIES",
+      "counterparties": [
+        "NETFLIX"
+      ],
+      "pending": false,
+      "pending_transaction_id": null,
+      "expected": {
+        "label": "personal",
+        "is_business": false,
+        "ambiguous": false
+      }
+    },
+    {
+      "plaid_txn_id": "plc-06-045",
+      "plaid_account_id": "chk",
+      "date": "2026-04-22",
+      "amount": 45,
+      "description": "SHELL OIL",
+      "normalized_description": "SHELL OIL",
+      "merchant_key": "shell",
+      "plaid_pfc": "TRANSPORTATION_GAS",
+      "counterparties": [
+        "SHELL OIL"
+      ],
+      "pending": false,
+      "pending_transaction_id": null,
+      "expected": {
+        "label": "personal",
+        "is_business": false,
+        "ambiguous": true
+      }
+    },
+    {
+      "plaid_txn_id": "plc-06-046",
+      "plaid_account_id": "chk",
+      "date": "2026-04-23",
+      "amount": 2100,
+      "description": "RENT PAYMENT",
+      "normalized_description": "RENT PAYMENT",
+      "merchant_key": null,
+      "plaid_pfc": "RENT_AND_UTILITIES_RENT",
+      "counterparties": [],
+      "pending": false,
+      "pending_transaction_id": null,
+      "expected": {
+        "label": "personal",
+        "is_business": false,
+        "ambiguous": false
+      }
+    },
+    {
+      "plaid_txn_id": "plc-06-047",
+      "plaid_account_id": "biz",
+      "date": "2026-05-03",
+      "amount": -4583.33,
+      "description": "ACH CREDIT NORTHWIND STUDIO",
+      "normalized_description": "ACH CREDIT NORTHWIND STUDIO",
+      "merchant_key": "northwind_studio",
+      "plaid_pfc": "INCOME_OTHER_INCOME",
+      "counterparties": [
+        "Northwind Studio"
+      ],
+      "pending": false,
+      "pending_transaction_id": null,
+      "expected": {
+        "label": "income_1099",
+        "is_business": true,
+        "ambiguous": false
+      }
+    },
+    {
+      "plaid_txn_id": "plc-06-048",
+      "plaid_account_id": "biz",
+      "date": "2026-05-10",
+      "amount": 54.99,
+      "description": "ADOBE CREATIVE CLOUD",
+      "normalized_description": "ADOBE CREATIVE CLOUD",
+      "merchant_key": "adobe",
+      "plaid_pfc": "GENERAL_SERVICES_OTHER_GENERAL_SERVICES",
+      "counterparties": [
+        "ADOBE CREATIVE CLOUD"
+      ],
+      "pending": false,
+      "pending_transaction_id": null,
+      "expected": {
+        "label": "software_subscriptions",
+        "is_business": true,
+        "ambiguous": false
+      }
+    },
+    {
+      "plaid_txn_id": "plc-06-049",
+      "plaid_account_id": "biz",
+      "date": "2026-05-11",
+      "amount": 120,
+      "description": "OFFICE DEPOT",
+      "normalized_description": "OFFICE DEPOT",
+      "merchant_key": "office_depot",
+      "plaid_pfc": "GENERAL_MERCHANDISE_OFFICE_SUPPLIES",
+      "counterparties": [
+        "OFFICE DEPOT"
+      ],
+      "pending": false,
+      "pending_transaction_id": null,
+      "expected": {
+        "label": "supplies",
+        "is_business": true,
+        "ambiguous": false
+      }
+    },
+    {
+      "plaid_txn_id": "plc-06-050",
+      "plaid_account_id": "biz",
+      "date": "2026-05-12",
+      "amount": 250,
+      "description": "GOOGLE ADS",
+      "normalized_description": "GOOGLE ADS",
+      "merchant_key": "google_ads",
+      "plaid_pfc": "GENERAL_SERVICES_ADVERTISING",
+      "counterparties": [
+        "GOOGLE ADS"
+      ],
+      "pending": false,
+      "pending_transaction_id": null,
+      "expected": {
+        "label": "advertising",
+        "is_business": true,
+        "ambiguous": false
+      }
+    },
+    {
+      "plaid_txn_id": "plc-06-051",
+      "plaid_account_id": "biz",
+      "date": "2026-05-13",
+      "amount": 310,
+      "description": "HISCOX INSURANCE",
+      "normalized_description": "HISCOX INSURANCE",
+      "merchant_key": "hiscox",
+      "plaid_pfc": "GENERAL_SERVICES_INSURANCE",
+      "counterparties": [
+        "HISCOX INSURANCE"
+      ],
+      "pending": false,
+      "pending_transaction_id": null,
+      "expected": {
+        "label": "insurance",
+        "is_business": true,
+        "ambiguous": false
+      }
+    },
+    {
+      "plaid_txn_id": "plc-06-052",
+      "plaid_account_id": "biz",
+      "date": "2026-05-14",
+      "amount": 412.6,
+      "description": "UNITED AIRLINES",
+      "normalized_description": "UNITED AIRLINES",
+      "merchant_key": "united_airlines",
+      "plaid_pfc": "TRAVEL_FLIGHTS",
+      "counterparties": [
+        "UNITED AIRLINES"
+      ],
+      "pending": false,
+      "pending_transaction_id": null,
+      "expected": {
+        "label": "travel",
+        "is_business": true,
+        "ambiguous": false
+      }
+    },
+    {
+      "plaid_txn_id": "plc-06-053",
+      "plaid_account_id": "chk",
+      "date": "2026-05-20",
+      "amount": 123.4,
+      "description": "WHOLE FOODS",
+      "normalized_description": "WHOLE FOODS",
+      "merchant_key": "whole_foods",
+      "plaid_pfc": "FOOD_AND_DRINK_GROCERIES",
+      "counterparties": [
+        "WHOLE FOODS"
+      ],
+      "pending": false,
+      "pending_transaction_id": null,
+      "expected": {
+        "label": "personal",
+        "is_business": false,
+        "ambiguous": false
+      }
+    },
+    {
+      "plaid_txn_id": "plc-06-054",
+      "plaid_account_id": "chk",
+      "date": "2026-05-21",
+      "amount": 15.99,
+      "description": "NETFLIX",
+      "normalized_description": "NETFLIX",
+      "merchant_key": "netflix",
+      "plaid_pfc": "ENTERTAINMENT_TV_AND_MOVIES",
+      "counterparties": [
+        "NETFLIX"
+      ],
+      "pending": false,
+      "pending_transaction_id": null,
+      "expected": {
+        "label": "personal",
+        "is_business": false,
+        "ambiguous": false
+      }
+    },
+    {
+      "plaid_txn_id": "plc-06-055",
+      "plaid_account_id": "chk",
+      "date": "2026-05-22",
+      "amount": 45,
+      "description": "SHELL OIL",
+      "normalized_description": "SHELL OIL",
+      "merchant_key": "shell",
+      "plaid_pfc": "TRANSPORTATION_GAS",
+      "counterparties": [
+        "SHELL OIL"
+      ],
+      "pending": false,
+      "pending_transaction_id": null,
+      "expected": {
+        "label": "personal",
+        "is_business": false,
+        "ambiguous": true
+      }
+    },
+    {
+      "plaid_txn_id": "plc-06-056",
+      "plaid_account_id": "chk",
+      "date": "2026-05-23",
+      "amount": 2100,
+      "description": "RENT PAYMENT",
+      "normalized_description": "RENT PAYMENT",
+      "merchant_key": null,
+      "plaid_pfc": "RENT_AND_UTILITIES_RENT",
+      "counterparties": [],
+      "pending": false,
+      "pending_transaction_id": null,
+      "expected": {
+        "label": "personal",
+        "is_business": false,
+        "ambiguous": false
+      }
+    },
+    {
+      "plaid_txn_id": "plc-06-057",
+      "plaid_account_id": "biz",
+      "date": "2026-06-03",
+      "amount": -4583.33,
+      "description": "ACH CREDIT NORTHWIND STUDIO",
+      "normalized_description": "ACH CREDIT NORTHWIND STUDIO",
+      "merchant_key": "northwind_studio",
+      "plaid_pfc": "INCOME_OTHER_INCOME",
+      "counterparties": [
+        "Northwind Studio"
+      ],
+      "pending": false,
+      "pending_transaction_id": null,
+      "expected": {
+        "label": "income_1099",
+        "is_business": true,
+        "ambiguous": false
+      }
+    },
+    {
+      "plaid_txn_id": "plc-06-058",
+      "plaid_account_id": "biz",
+      "date": "2026-06-10",
+      "amount": 54.99,
+      "description": "ADOBE CREATIVE CLOUD",
+      "normalized_description": "ADOBE CREATIVE CLOUD",
+      "merchant_key": "adobe",
+      "plaid_pfc": "GENERAL_SERVICES_OTHER_GENERAL_SERVICES",
+      "counterparties": [
+        "ADOBE CREATIVE CLOUD"
+      ],
+      "pending": false,
+      "pending_transaction_id": null,
+      "expected": {
+        "label": "software_subscriptions",
+        "is_business": true,
+        "ambiguous": false
+      }
+    },
+    {
+      "plaid_txn_id": "plc-06-059",
+      "plaid_account_id": "biz",
+      "date": "2026-06-11",
+      "amount": 120,
+      "description": "OFFICE DEPOT",
+      "normalized_description": "OFFICE DEPOT",
+      "merchant_key": "office_depot",
+      "plaid_pfc": "GENERAL_MERCHANDISE_OFFICE_SUPPLIES",
+      "counterparties": [
+        "OFFICE DEPOT"
+      ],
+      "pending": false,
+      "pending_transaction_id": null,
+      "expected": {
+        "label": "supplies",
+        "is_business": true,
+        "ambiguous": false
+      }
+    },
+    {
+      "plaid_txn_id": "plc-06-060",
+      "plaid_account_id": "biz",
+      "date": "2026-06-12",
+      "amount": 250,
+      "description": "GOOGLE ADS",
+      "normalized_description": "GOOGLE ADS",
+      "merchant_key": "google_ads",
+      "plaid_pfc": "GENERAL_SERVICES_ADVERTISING",
+      "counterparties": [
+        "GOOGLE ADS"
+      ],
+      "pending": false,
+      "pending_transaction_id": null,
+      "expected": {
+        "label": "advertising",
+        "is_business": true,
+        "ambiguous": false
+      }
+    },
+    {
+      "plaid_txn_id": "plc-06-061",
+      "plaid_account_id": "biz",
+      "date": "2026-06-13",
+      "amount": 310,
+      "description": "HISCOX INSURANCE",
+      "normalized_description": "HISCOX INSURANCE",
+      "merchant_key": "hiscox",
+      "plaid_pfc": "GENERAL_SERVICES_INSURANCE",
+      "counterparties": [
+        "HISCOX INSURANCE"
+      ],
+      "pending": false,
+      "pending_transaction_id": null,
+      "expected": {
+        "label": "insurance",
+        "is_business": true,
+        "ambiguous": false
+      }
+    },
+    {
+      "plaid_txn_id": "plc-06-062",
+      "plaid_account_id": "biz",
+      "date": "2026-06-14",
+      "amount": 412.6,
+      "description": "UNITED AIRLINES",
+      "normalized_description": "UNITED AIRLINES",
+      "merchant_key": "united_airlines",
+      "plaid_pfc": "TRAVEL_FLIGHTS",
+      "counterparties": [
+        "UNITED AIRLINES"
+      ],
+      "pending": false,
+      "pending_transaction_id": null,
+      "expected": {
+        "label": "travel",
+        "is_business": true,
+        "ambiguous": false
+      }
+    },
+    {
+      "plaid_txn_id": "plc-06-063",
+      "plaid_account_id": "biz",
+      "date": "2026-06-15",
+      "amount": 96.2,
+      "description": "THE CAPITAL GRILLE",
+      "normalized_description": "THE CAPITAL GRILLE",
+      "merchant_key": "capital_grille",
+      "plaid_pfc": "FOOD_AND_DRINK_RESTAURANT",
+      "counterparties": [
+        "THE CAPITAL GRILLE"
+      ],
+      "pending": false,
+      "pending_transaction_id": null,
+      "expected": {
+        "label": "meals",
+        "is_business": true,
+        "ambiguous": true
+      }
+    },
+    {
+      "plaid_txn_id": "plc-06-064",
+      "plaid_account_id": "biz",
+      "date": "2026-06-16",
+      "amount": 85,
+      "description": "COMCAST BUSINESS",
+      "normalized_description": "COMCAST BUSINESS",
+      "merchant_key": "comcast",
+      "plaid_pfc": "RENT_AND_UTILITIES_INTERNET_AND_CABLE",
+      "counterparties": [
+        "COMCAST BUSINESS"
+      ],
+      "pending": false,
+      "pending_transaction_id": null,
+      "expected": {
+        "label": "utilities",
+        "is_business": true,
+        "ambiguous": false
+      }
+    },
+    {
+      "plaid_txn_id": "plc-06-065",
+      "plaid_account_id": "biz",
+      "date": "2026-06-17",
+      "amount": 64.3,
+      "description": "AMAZON MKTP",
+      "normalized_description": "AMAZON MKTP",
+      "merchant_key": "amazon",
+      "plaid_pfc": "GENERAL_MERCHANDISE_ONLINE_MARKETPLACES",
+      "counterparties": [
+        "AMAZON MKTP"
+      ],
+      "pending": false,
+      "pending_transaction_id": null,
+      "expected": {
+        "label": "supplies",
+        "is_business": true,
+        "ambiguous": true
+      }
+    },
+    {
+      "plaid_txn_id": "plc-06-066",
+      "plaid_account_id": "chk",
+      "date": "2026-06-20",
+      "amount": 123.4,
+      "description": "WHOLE FOODS",
+      "normalized_description": "WHOLE FOODS",
+      "merchant_key": "whole_foods",
+      "plaid_pfc": "FOOD_AND_DRINK_GROCERIES",
+      "counterparties": [
+        "WHOLE FOODS"
+      ],
+      "pending": false,
+      "pending_transaction_id": null,
+      "expected": {
+        "label": "personal",
+        "is_business": false,
+        "ambiguous": false
+      }
+    },
+    {
+      "plaid_txn_id": "plc-06-067",
+      "plaid_account_id": "chk",
+      "date": "2026-06-21",
+      "amount": 15.99,
+      "description": "NETFLIX",
+      "normalized_description": "NETFLIX",
+      "merchant_key": "netflix",
+      "plaid_pfc": "ENTERTAINMENT_TV_AND_MOVIES",
+      "counterparties": [
+        "NETFLIX"
+      ],
+      "pending": false,
+      "pending_transaction_id": null,
+      "expected": {
+        "label": "personal",
+        "is_business": false,
+        "ambiguous": false
+      }
+    },
+    {
+      "plaid_txn_id": "plc-06-068",
+      "plaid_account_id": "chk",
+      "date": "2026-06-22",
+      "amount": 45,
+      "description": "SHELL OIL",
+      "normalized_description": "SHELL OIL",
+      "merchant_key": "shell",
+      "plaid_pfc": "TRANSPORTATION_GAS",
+      "counterparties": [
+        "SHELL OIL"
+      ],
+      "pending": false,
+      "pending_transaction_id": null,
+      "expected": {
+        "label": "personal",
+        "is_business": false,
+        "ambiguous": true
+      }
+    },
+    {
+      "plaid_txn_id": "plc-06-069",
+      "plaid_account_id": "chk",
+      "date": "2026-06-23",
+      "amount": 2100,
+      "description": "RENT PAYMENT",
+      "normalized_description": "RENT PAYMENT",
+      "merchant_key": null,
+      "plaid_pfc": "RENT_AND_UTILITIES_RENT",
+      "counterparties": [],
+      "pending": false,
+      "pending_transaction_id": null,
+      "expected": {
+        "label": "personal",
+        "is_business": false,
+        "ambiguous": false
+      }
+    },
+    {
+      "plaid_txn_id": "plc-06-070",
+      "plaid_account_id": "biz",
+      "date": "2026-07-03",
+      "amount": -4583.33,
+      "description": "ACH CREDIT NORTHWIND STUDIO",
+      "normalized_description": "ACH CREDIT NORTHWIND STUDIO",
+      "merchant_key": "northwind_studio",
+      "plaid_pfc": "INCOME_OTHER_INCOME",
+      "counterparties": [
+        "Northwind Studio"
+      ],
+      "pending": false,
+      "pending_transaction_id": null,
+      "expected": {
+        "label": "income_1099",
+        "is_business": true,
+        "ambiguous": false
+      }
+    },
+    {
+      "plaid_txn_id": "plc-06-071",
+      "plaid_account_id": "biz",
+      "date": "2026-07-10",
+      "amount": 54.99,
+      "description": "ADOBE CREATIVE CLOUD",
+      "normalized_description": "ADOBE CREATIVE CLOUD",
+      "merchant_key": "adobe",
+      "plaid_pfc": "GENERAL_SERVICES_OTHER_GENERAL_SERVICES",
+      "counterparties": [
+        "ADOBE CREATIVE CLOUD"
+      ],
+      "pending": false,
+      "pending_transaction_id": null,
+      "expected": {
+        "label": "software_subscriptions",
+        "is_business": true,
+        "ambiguous": false
+      }
+    },
+    {
+      "plaid_txn_id": "plc-06-072",
+      "plaid_account_id": "biz",
+      "date": "2026-07-11",
+      "amount": 120,
+      "description": "OFFICE DEPOT",
+      "normalized_description": "OFFICE DEPOT",
+      "merchant_key": "office_depot",
+      "plaid_pfc": "GENERAL_MERCHANDISE_OFFICE_SUPPLIES",
+      "counterparties": [
+        "OFFICE DEPOT"
+      ],
+      "pending": false,
+      "pending_transaction_id": null,
+      "expected": {
+        "label": "supplies",
+        "is_business": true,
+        "ambiguous": false
+      }
+    },
+    {
+      "plaid_txn_id": "plc-06-073",
+      "plaid_account_id": "biz",
+      "date": "2026-07-12",
+      "amount": 250,
+      "description": "GOOGLE ADS",
+      "normalized_description": "GOOGLE ADS",
+      "merchant_key": "google_ads",
+      "plaid_pfc": "GENERAL_SERVICES_ADVERTISING",
+      "counterparties": [
+        "GOOGLE ADS"
+      ],
+      "pending": false,
+      "pending_transaction_id": null,
+      "expected": {
+        "label": "advertising",
+        "is_business": true,
+        "ambiguous": false
+      }
+    },
+    {
+      "plaid_txn_id": "plc-06-074",
+      "plaid_account_id": "biz",
+      "date": "2026-07-13",
+      "amount": 310,
+      "description": "HISCOX INSURANCE",
+      "normalized_description": "HISCOX INSURANCE",
+      "merchant_key": "hiscox",
+      "plaid_pfc": "GENERAL_SERVICES_INSURANCE",
+      "counterparties": [
+        "HISCOX INSURANCE"
+      ],
+      "pending": false,
+      "pending_transaction_id": null,
+      "expected": {
+        "label": "insurance",
+        "is_business": true,
+        "ambiguous": false
+      }
+    },
+    {
+      "plaid_txn_id": "plc-06-075",
+      "plaid_account_id": "biz",
+      "date": "2026-07-14",
+      "amount": 412.6,
+      "description": "UNITED AIRLINES",
+      "normalized_description": "UNITED AIRLINES",
+      "merchant_key": "united_airlines",
+      "plaid_pfc": "TRAVEL_FLIGHTS",
+      "counterparties": [
+        "UNITED AIRLINES"
+      ],
+      "pending": false,
+      "pending_transaction_id": null,
+      "expected": {
+        "label": "travel",
+        "is_business": true,
+        "ambiguous": false
+      }
+    },
+    {
+      "plaid_txn_id": "plc-06-076",
+      "plaid_account_id": "chk",
+      "date": "2026-07-20",
+      "amount": 123.4,
+      "description": "WHOLE FOODS",
+      "normalized_description": "WHOLE FOODS",
+      "merchant_key": "whole_foods",
+      "plaid_pfc": "FOOD_AND_DRINK_GROCERIES",
+      "counterparties": [
+        "WHOLE FOODS"
+      ],
+      "pending": false,
+      "pending_transaction_id": null,
+      "expected": {
+        "label": "personal",
+        "is_business": false,
+        "ambiguous": false
+      }
+    },
+    {
+      "plaid_txn_id": "plc-06-077",
+      "plaid_account_id": "chk",
+      "date": "2026-07-21",
+      "amount": 15.99,
+      "description": "NETFLIX",
+      "normalized_description": "NETFLIX",
+      "merchant_key": "netflix",
+      "plaid_pfc": "ENTERTAINMENT_TV_AND_MOVIES",
+      "counterparties": [
+        "NETFLIX"
+      ],
+      "pending": false,
+      "pending_transaction_id": null,
+      "expected": {
+        "label": "personal",
+        "is_business": false,
+        "ambiguous": false
+      }
+    },
+    {
+      "plaid_txn_id": "plc-06-078",
+      "plaid_account_id": "chk",
+      "date": "2026-07-22",
+      "amount": 45,
+      "description": "SHELL OIL",
+      "normalized_description": "SHELL OIL",
+      "merchant_key": "shell",
+      "plaid_pfc": "TRANSPORTATION_GAS",
+      "counterparties": [
+        "SHELL OIL"
+      ],
+      "pending": false,
+      "pending_transaction_id": null,
+      "expected": {
+        "label": "personal",
+        "is_business": false,
+        "ambiguous": true
+      }
+    },
+    {
+      "plaid_txn_id": "plc-06-079",
+      "plaid_account_id": "chk",
+      "date": "2026-07-23",
+      "amount": 2100,
+      "description": "RENT PAYMENT",
+      "normalized_description": "RENT PAYMENT",
+      "merchant_key": null,
+      "plaid_pfc": "RENT_AND_UTILITIES_RENT",
+      "counterparties": [],
+      "pending": false,
+      "pending_transaction_id": null,
+      "expected": {
+        "label": "personal",
+        "is_business": false,
+        "ambiguous": false
+      }
+    },
+    {
+      "plaid_txn_id": "plc-06-080",
+      "plaid_account_id": "biz",
+      "date": "2026-08-03",
+      "amount": -4583.33,
+      "description": "ACH CREDIT NORTHWIND STUDIO",
+      "normalized_description": "ACH CREDIT NORTHWIND STUDIO",
+      "merchant_key": "northwind_studio",
+      "plaid_pfc": "INCOME_OTHER_INCOME",
+      "counterparties": [
+        "Northwind Studio"
+      ],
+      "pending": false,
+      "pending_transaction_id": null,
+      "expected": {
+        "label": "income_1099",
+        "is_business": true,
+        "ambiguous": false
+      }
+    },
+    {
+      "plaid_txn_id": "plc-06-081",
+      "plaid_account_id": "biz",
+      "date": "2026-08-10",
+      "amount": 54.99,
+      "description": "ADOBE CREATIVE CLOUD",
+      "normalized_description": "ADOBE CREATIVE CLOUD",
+      "merchant_key": "adobe",
+      "plaid_pfc": "GENERAL_SERVICES_OTHER_GENERAL_SERVICES",
+      "counterparties": [
+        "ADOBE CREATIVE CLOUD"
+      ],
+      "pending": false,
+      "pending_transaction_id": null,
+      "expected": {
+        "label": "software_subscriptions",
+        "is_business": true,
+        "ambiguous": false
+      }
+    },
+    {
+      "plaid_txn_id": "plc-06-082",
+      "plaid_account_id": "biz",
+      "date": "2026-08-11",
+      "amount": 120,
+      "description": "OFFICE DEPOT",
+      "normalized_description": "OFFICE DEPOT",
+      "merchant_key": "office_depot",
+      "plaid_pfc": "GENERAL_MERCHANDISE_OFFICE_SUPPLIES",
+      "counterparties": [
+        "OFFICE DEPOT"
+      ],
+      "pending": false,
+      "pending_transaction_id": null,
+      "expected": {
+        "label": "supplies",
+        "is_business": true,
+        "ambiguous": false
+      }
+    },
+    {
+      "plaid_txn_id": "plc-06-083",
+      "plaid_account_id": "biz",
+      "date": "2026-08-12",
+      "amount": 250,
+      "description": "GOOGLE ADS",
+      "normalized_description": "GOOGLE ADS",
+      "merchant_key": "google_ads",
+      "plaid_pfc": "GENERAL_SERVICES_ADVERTISING",
+      "counterparties": [
+        "GOOGLE ADS"
+      ],
+      "pending": false,
+      "pending_transaction_id": null,
+      "expected": {
+        "label": "advertising",
+        "is_business": true,
+        "ambiguous": false
+      }
+    },
+    {
+      "plaid_txn_id": "plc-06-084",
+      "plaid_account_id": "biz",
+      "date": "2026-08-13",
+      "amount": 310,
+      "description": "HISCOX INSURANCE",
+      "normalized_description": "HISCOX INSURANCE",
+      "merchant_key": "hiscox",
+      "plaid_pfc": "GENERAL_SERVICES_INSURANCE",
+      "counterparties": [
+        "HISCOX INSURANCE"
+      ],
+      "pending": false,
+      "pending_transaction_id": null,
+      "expected": {
+        "label": "insurance",
+        "is_business": true,
+        "ambiguous": false
+      }
+    },
+    {
+      "plaid_txn_id": "plc-06-085",
+      "plaid_account_id": "biz",
+      "date": "2026-08-14",
+      "amount": 412.6,
+      "description": "UNITED AIRLINES",
+      "normalized_description": "UNITED AIRLINES",
+      "merchant_key": "united_airlines",
+      "plaid_pfc": "TRAVEL_FLIGHTS",
+      "counterparties": [
+        "UNITED AIRLINES"
+      ],
+      "pending": false,
+      "pending_transaction_id": null,
+      "expected": {
+        "label": "travel",
+        "is_business": true,
+        "ambiguous": false
+      }
+    },
+    {
+      "plaid_txn_id": "plc-06-086",
+      "plaid_account_id": "biz",
+      "date": "2026-08-15",
+      "amount": 96.2,
+      "description": "THE CAPITAL GRILLE",
+      "normalized_description": "THE CAPITAL GRILLE",
+      "merchant_key": "capital_grille",
+      "plaid_pfc": "FOOD_AND_DRINK_RESTAURANT",
+      "counterparties": [
+        "THE CAPITAL GRILLE"
+      ],
+      "pending": false,
+      "pending_transaction_id": null,
+      "expected": {
+        "label": "meals",
+        "is_business": true,
+        "ambiguous": true
+      }
+    },
+    {
+      "plaid_txn_id": "plc-06-087",
+      "plaid_account_id": "biz",
+      "date": "2026-08-16",
+      "amount": 85,
+      "description": "COMCAST BUSINESS",
+      "normalized_description": "COMCAST BUSINESS",
+      "merchant_key": "comcast",
+      "plaid_pfc": "RENT_AND_UTILITIES_INTERNET_AND_CABLE",
+      "counterparties": [
+        "COMCAST BUSINESS"
+      ],
+      "pending": false,
+      "pending_transaction_id": null,
+      "expected": {
+        "label": "utilities",
+        "is_business": true,
+        "ambiguous": false
+      }
+    },
+    {
+      "plaid_txn_id": "plc-06-088",
+      "plaid_account_id": "biz",
+      "date": "2026-08-17",
+      "amount": 64.3,
+      "description": "AMAZON MKTP",
+      "normalized_description": "AMAZON MKTP",
+      "merchant_key": "amazon",
+      "plaid_pfc": "GENERAL_MERCHANDISE_ONLINE_MARKETPLACES",
+      "counterparties": [
+        "AMAZON MKTP"
+      ],
+      "pending": false,
+      "pending_transaction_id": null,
+      "expected": {
+        "label": "supplies",
+        "is_business": true,
+        "ambiguous": true
+      }
+    },
+    {
+      "plaid_txn_id": "plc-06-089",
+      "plaid_account_id": "chk",
+      "date": "2026-08-20",
+      "amount": 123.4,
+      "description": "WHOLE FOODS",
+      "normalized_description": "WHOLE FOODS",
+      "merchant_key": "whole_foods",
+      "plaid_pfc": "FOOD_AND_DRINK_GROCERIES",
+      "counterparties": [
+        "WHOLE FOODS"
+      ],
+      "pending": false,
+      "pending_transaction_id": null,
+      "expected": {
+        "label": "personal",
+        "is_business": false,
+        "ambiguous": false
+      }
+    },
+    {
+      "plaid_txn_id": "plc-06-090",
+      "plaid_account_id": "chk",
+      "date": "2026-08-21",
+      "amount": 15.99,
+      "description": "NETFLIX",
+      "normalized_description": "NETFLIX",
+      "merchant_key": "netflix",
+      "plaid_pfc": "ENTERTAINMENT_TV_AND_MOVIES",
+      "counterparties": [
+        "NETFLIX"
+      ],
+      "pending": false,
+      "pending_transaction_id": null,
+      "expected": {
+        "label": "personal",
+        "is_business": false,
+        "ambiguous": false
+      }
+    },
+    {
+      "plaid_txn_id": "plc-06-091",
+      "plaid_account_id": "chk",
+      "date": "2026-08-22",
+      "amount": 45,
+      "description": "SHELL OIL",
+      "normalized_description": "SHELL OIL",
+      "merchant_key": "shell",
+      "plaid_pfc": "TRANSPORTATION_GAS",
+      "counterparties": [
+        "SHELL OIL"
+      ],
+      "pending": false,
+      "pending_transaction_id": null,
+      "expected": {
+        "label": "personal",
+        "is_business": false,
+        "ambiguous": true
+      }
+    },
+    {
+      "plaid_txn_id": "plc-06-092",
+      "plaid_account_id": "chk",
+      "date": "2026-08-23",
+      "amount": 2100,
+      "description": "RENT PAYMENT",
+      "normalized_description": "RENT PAYMENT",
+      "merchant_key": null,
+      "plaid_pfc": "RENT_AND_UTILITIES_RENT",
+      "counterparties": [],
+      "pending": false,
+      "pending_transaction_id": null,
+      "expected": {
+        "label": "personal",
+        "is_business": false,
+        "ambiguous": false
+      }
+    },
+    {
+      "plaid_txn_id": "plc-06-093",
+      "plaid_account_id": "biz",
+      "date": "2026-09-03",
+      "amount": -4583.33,
+      "description": "ACH CREDIT NORTHWIND STUDIO",
+      "normalized_description": "ACH CREDIT NORTHWIND STUDIO",
+      "merchant_key": "northwind_studio",
+      "plaid_pfc": "INCOME_OTHER_INCOME",
+      "counterparties": [
+        "Northwind Studio"
+      ],
+      "pending": false,
+      "pending_transaction_id": null,
+      "expected": {
+        "label": "income_1099",
+        "is_business": true,
+        "ambiguous": false
+      }
+    },
+    {
+      "plaid_txn_id": "plc-06-094",
+      "plaid_account_id": "biz",
+      "date": "2026-09-10",
+      "amount": 54.99,
+      "description": "ADOBE CREATIVE CLOUD",
+      "normalized_description": "ADOBE CREATIVE CLOUD",
+      "merchant_key": "adobe",
+      "plaid_pfc": "GENERAL_SERVICES_OTHER_GENERAL_SERVICES",
+      "counterparties": [
+        "ADOBE CREATIVE CLOUD"
+      ],
+      "pending": false,
+      "pending_transaction_id": null,
+      "expected": {
+        "label": "software_subscriptions",
+        "is_business": true,
+        "ambiguous": false
+      }
+    },
+    {
+      "plaid_txn_id": "plc-06-095",
+      "plaid_account_id": "biz",
+      "date": "2026-09-11",
+      "amount": 120,
+      "description": "OFFICE DEPOT",
+      "normalized_description": "OFFICE DEPOT",
+      "merchant_key": "office_depot",
+      "plaid_pfc": "GENERAL_MERCHANDISE_OFFICE_SUPPLIES",
+      "counterparties": [
+        "OFFICE DEPOT"
+      ],
+      "pending": false,
+      "pending_transaction_id": null,
+      "expected": {
+        "label": "supplies",
+        "is_business": true,
+        "ambiguous": false
+      }
+    },
+    {
+      "plaid_txn_id": "plc-06-096",
+      "plaid_account_id": "biz",
+      "date": "2026-09-12",
+      "amount": 250,
+      "description": "GOOGLE ADS",
+      "normalized_description": "GOOGLE ADS",
+      "merchant_key": "google_ads",
+      "plaid_pfc": "GENERAL_SERVICES_ADVERTISING",
+      "counterparties": [
+        "GOOGLE ADS"
+      ],
+      "pending": false,
+      "pending_transaction_id": null,
+      "expected": {
+        "label": "advertising",
+        "is_business": true,
+        "ambiguous": false
+      }
+    },
+    {
+      "plaid_txn_id": "plc-06-097",
+      "plaid_account_id": "biz",
+      "date": "2026-09-13",
+      "amount": 310,
+      "description": "HISCOX INSURANCE",
+      "normalized_description": "HISCOX INSURANCE",
+      "merchant_key": "hiscox",
+      "plaid_pfc": "GENERAL_SERVICES_INSURANCE",
+      "counterparties": [
+        "HISCOX INSURANCE"
+      ],
+      "pending": false,
+      "pending_transaction_id": null,
+      "expected": {
+        "label": "insurance",
+        "is_business": true,
+        "ambiguous": false
+      }
+    },
+    {
+      "plaid_txn_id": "plc-06-098",
+      "plaid_account_id": "biz",
+      "date": "2026-09-14",
+      "amount": 412.6,
+      "description": "UNITED AIRLINES",
+      "normalized_description": "UNITED AIRLINES",
+      "merchant_key": "united_airlines",
+      "plaid_pfc": "TRAVEL_FLIGHTS",
+      "counterparties": [
+        "UNITED AIRLINES"
+      ],
+      "pending": false,
+      "pending_transaction_id": null,
+      "expected": {
+        "label": "travel",
+        "is_business": true,
+        "ambiguous": false
+      }
+    },
+    {
+      "plaid_txn_id": "plc-06-099",
+      "plaid_account_id": "chk",
+      "date": "2026-09-20",
+      "amount": 123.4,
+      "description": "WHOLE FOODS",
+      "normalized_description": "WHOLE FOODS",
+      "merchant_key": "whole_foods",
+      "plaid_pfc": "FOOD_AND_DRINK_GROCERIES",
+      "counterparties": [
+        "WHOLE FOODS"
+      ],
+      "pending": false,
+      "pending_transaction_id": null,
+      "expected": {
+        "label": "personal",
+        "is_business": false,
+        "ambiguous": false
+      }
+    },
+    {
+      "plaid_txn_id": "plc-06-100",
+      "plaid_account_id": "chk",
+      "date": "2026-09-21",
+      "amount": 15.99,
+      "description": "NETFLIX",
+      "normalized_description": "NETFLIX",
+      "merchant_key": "netflix",
+      "plaid_pfc": "ENTERTAINMENT_TV_AND_MOVIES",
+      "counterparties": [
+        "NETFLIX"
+      ],
+      "pending": false,
+      "pending_transaction_id": null,
+      "expected": {
+        "label": "personal",
+        "is_business": false,
+        "ambiguous": false
+      }
+    },
+    {
+      "plaid_txn_id": "plc-06-101",
+      "plaid_account_id": "chk",
+      "date": "2026-09-22",
+      "amount": 45,
+      "description": "SHELL OIL",
+      "normalized_description": "SHELL OIL",
+      "merchant_key": "shell",
+      "plaid_pfc": "TRANSPORTATION_GAS",
+      "counterparties": [
+        "SHELL OIL"
+      ],
+      "pending": false,
+      "pending_transaction_id": null,
+      "expected": {
+        "label": "personal",
+        "is_business": false,
+        "ambiguous": true
+      }
+    },
+    {
+      "plaid_txn_id": "plc-06-102",
+      "plaid_account_id": "chk",
+      "date": "2026-09-23",
+      "amount": 2100,
+      "description": "RENT PAYMENT",
+      "normalized_description": "RENT PAYMENT",
+      "merchant_key": null,
+      "plaid_pfc": "RENT_AND_UTILITIES_RENT",
+      "counterparties": [],
+      "pending": false,
+      "pending_transaction_id": null,
+      "expected": {
+        "label": "personal",
+        "is_business": false,
+        "ambiguous": false
+      }
+    },
+    {
+      "plaid_txn_id": "plc-06-103",
+      "plaid_account_id": "biz",
+      "date": "2026-10-03",
+      "amount": -4583.33,
+      "description": "ACH CREDIT NORTHWIND STUDIO",
+      "normalized_description": "ACH CREDIT NORTHWIND STUDIO",
+      "merchant_key": "northwind_studio",
+      "plaid_pfc": "INCOME_OTHER_INCOME",
+      "counterparties": [
+        "Northwind Studio"
+      ],
+      "pending": false,
+      "pending_transaction_id": null,
+      "expected": {
+        "label": "income_1099",
+        "is_business": true,
+        "ambiguous": false
+      }
+    },
+    {
+      "plaid_txn_id": "plc-06-104",
+      "plaid_account_id": "biz",
+      "date": "2026-10-10",
+      "amount": 54.99,
+      "description": "ADOBE CREATIVE CLOUD",
+      "normalized_description": "ADOBE CREATIVE CLOUD",
+      "merchant_key": "adobe",
+      "plaid_pfc": "GENERAL_SERVICES_OTHER_GENERAL_SERVICES",
+      "counterparties": [
+        "ADOBE CREATIVE CLOUD"
+      ],
+      "pending": false,
+      "pending_transaction_id": null,
+      "expected": {
+        "label": "software_subscriptions",
+        "is_business": true,
+        "ambiguous": false
+      }
+    },
+    {
+      "plaid_txn_id": "plc-06-105",
+      "plaid_account_id": "biz",
+      "date": "2026-10-11",
+      "amount": 120,
+      "description": "OFFICE DEPOT",
+      "normalized_description": "OFFICE DEPOT",
+      "merchant_key": "office_depot",
+      "plaid_pfc": "GENERAL_MERCHANDISE_OFFICE_SUPPLIES",
+      "counterparties": [
+        "OFFICE DEPOT"
+      ],
+      "pending": false,
+      "pending_transaction_id": null,
+      "expected": {
+        "label": "supplies",
+        "is_business": true,
+        "ambiguous": false
+      }
+    },
+    {
+      "plaid_txn_id": "plc-06-106",
+      "plaid_account_id": "biz",
+      "date": "2026-10-12",
+      "amount": 250,
+      "description": "GOOGLE ADS",
+      "normalized_description": "GOOGLE ADS",
+      "merchant_key": "google_ads",
+      "plaid_pfc": "GENERAL_SERVICES_ADVERTISING",
+      "counterparties": [
+        "GOOGLE ADS"
+      ],
+      "pending": false,
+      "pending_transaction_id": null,
+      "expected": {
+        "label": "advertising",
+        "is_business": true,
+        "ambiguous": false
+      }
+    },
+    {
+      "plaid_txn_id": "plc-06-107",
+      "plaid_account_id": "biz",
+      "date": "2026-10-13",
+      "amount": 310,
+      "description": "HISCOX INSURANCE",
+      "normalized_description": "HISCOX INSURANCE",
+      "merchant_key": "hiscox",
+      "plaid_pfc": "GENERAL_SERVICES_INSURANCE",
+      "counterparties": [
+        "HISCOX INSURANCE"
+      ],
+      "pending": false,
+      "pending_transaction_id": null,
+      "expected": {
+        "label": "insurance",
+        "is_business": true,
+        "ambiguous": false
+      }
+    },
+    {
+      "plaid_txn_id": "plc-06-108",
+      "plaid_account_id": "biz",
+      "date": "2026-10-14",
+      "amount": 412.6,
+      "description": "UNITED AIRLINES",
+      "normalized_description": "UNITED AIRLINES",
+      "merchant_key": "united_airlines",
+      "plaid_pfc": "TRAVEL_FLIGHTS",
+      "counterparties": [
+        "UNITED AIRLINES"
+      ],
+      "pending": false,
+      "pending_transaction_id": null,
+      "expected": {
+        "label": "travel",
+        "is_business": true,
+        "ambiguous": false
+      }
+    },
+    {
+      "plaid_txn_id": "plc-06-109",
+      "plaid_account_id": "biz",
+      "date": "2026-10-15",
+      "amount": 96.2,
+      "description": "THE CAPITAL GRILLE",
+      "normalized_description": "THE CAPITAL GRILLE",
+      "merchant_key": "capital_grille",
+      "plaid_pfc": "FOOD_AND_DRINK_RESTAURANT",
+      "counterparties": [
+        "THE CAPITAL GRILLE"
+      ],
+      "pending": false,
+      "pending_transaction_id": null,
+      "expected": {
+        "label": "meals",
+        "is_business": true,
+        "ambiguous": true
+      }
+    },
+    {
+      "plaid_txn_id": "plc-06-110",
+      "plaid_account_id": "biz",
+      "date": "2026-10-16",
+      "amount": 85,
+      "description": "COMCAST BUSINESS",
+      "normalized_description": "COMCAST BUSINESS",
+      "merchant_key": "comcast",
+      "plaid_pfc": "RENT_AND_UTILITIES_INTERNET_AND_CABLE",
+      "counterparties": [
+        "COMCAST BUSINESS"
+      ],
+      "pending": false,
+      "pending_transaction_id": null,
+      "expected": {
+        "label": "utilities",
+        "is_business": true,
+        "ambiguous": false
+      }
+    },
+    {
+      "plaid_txn_id": "plc-06-111",
+      "plaid_account_id": "biz",
+      "date": "2026-10-17",
+      "amount": 64.3,
+      "description": "AMAZON MKTP",
+      "normalized_description": "AMAZON MKTP",
+      "merchant_key": "amazon",
+      "plaid_pfc": "GENERAL_MERCHANDISE_ONLINE_MARKETPLACES",
+      "counterparties": [
+        "AMAZON MKTP"
+      ],
+      "pending": false,
+      "pending_transaction_id": null,
+      "expected": {
+        "label": "supplies",
+        "is_business": true,
+        "ambiguous": true
+      }
+    },
+    {
+      "plaid_txn_id": "plc-06-112",
+      "plaid_account_id": "chk",
+      "date": "2026-10-20",
+      "amount": 123.4,
+      "description": "WHOLE FOODS",
+      "normalized_description": "WHOLE FOODS",
+      "merchant_key": "whole_foods",
+      "plaid_pfc": "FOOD_AND_DRINK_GROCERIES",
+      "counterparties": [
+        "WHOLE FOODS"
+      ],
+      "pending": false,
+      "pending_transaction_id": null,
+      "expected": {
+        "label": "personal",
+        "is_business": false,
+        "ambiguous": false
+      }
+    },
+    {
+      "plaid_txn_id": "plc-06-113",
+      "plaid_account_id": "chk",
+      "date": "2026-10-21",
+      "amount": 15.99,
+      "description": "NETFLIX",
+      "normalized_description": "NETFLIX",
+      "merchant_key": "netflix",
+      "plaid_pfc": "ENTERTAINMENT_TV_AND_MOVIES",
+      "counterparties": [
+        "NETFLIX"
+      ],
+      "pending": false,
+      "pending_transaction_id": null,
+      "expected": {
+        "label": "personal",
+        "is_business": false,
+        "ambiguous": false
+      }
+    },
+    {
+      "plaid_txn_id": "plc-06-114",
+      "plaid_account_id": "chk",
+      "date": "2026-10-22",
+      "amount": 45,
+      "description": "SHELL OIL",
+      "normalized_description": "SHELL OIL",
+      "merchant_key": "shell",
+      "plaid_pfc": "TRANSPORTATION_GAS",
+      "counterparties": [
+        "SHELL OIL"
+      ],
+      "pending": false,
+      "pending_transaction_id": null,
+      "expected": {
+        "label": "personal",
+        "is_business": false,
+        "ambiguous": true
+      }
+    },
+    {
+      "plaid_txn_id": "plc-06-115",
+      "plaid_account_id": "chk",
+      "date": "2026-10-23",
+      "amount": 2100,
+      "description": "RENT PAYMENT",
+      "normalized_description": "RENT PAYMENT",
+      "merchant_key": null,
+      "plaid_pfc": "RENT_AND_UTILITIES_RENT",
+      "counterparties": [],
+      "pending": false,
+      "pending_transaction_id": null,
+      "expected": {
+        "label": "personal",
+        "is_business": false,
+        "ambiguous": false
+      }
+    },
+    {
+      "plaid_txn_id": "plc-06-116",
+      "plaid_account_id": "biz",
+      "date": "2026-11-03",
+      "amount": -4583.33,
+      "description": "ACH CREDIT NORTHWIND STUDIO",
+      "normalized_description": "ACH CREDIT NORTHWIND STUDIO",
+      "merchant_key": "northwind_studio",
+      "plaid_pfc": "INCOME_OTHER_INCOME",
+      "counterparties": [
+        "Northwind Studio"
+      ],
+      "pending": false,
+      "pending_transaction_id": null,
+      "expected": {
+        "label": "income_1099",
+        "is_business": true,
+        "ambiguous": false
+      }
+    },
+    {
+      "plaid_txn_id": "plc-06-117",
+      "plaid_account_id": "biz",
+      "date": "2026-11-10",
+      "amount": 54.99,
+      "description": "ADOBE CREATIVE CLOUD",
+      "normalized_description": "ADOBE CREATIVE CLOUD",
+      "merchant_key": "adobe",
+      "plaid_pfc": "GENERAL_SERVICES_OTHER_GENERAL_SERVICES",
+      "counterparties": [
+        "ADOBE CREATIVE CLOUD"
+      ],
+      "pending": false,
+      "pending_transaction_id": null,
+      "expected": {
+        "label": "software_subscriptions",
+        "is_business": true,
+        "ambiguous": false
+      }
+    },
+    {
+      "plaid_txn_id": "plc-06-118",
+      "plaid_account_id": "biz",
+      "date": "2026-11-11",
+      "amount": 120,
+      "description": "OFFICE DEPOT",
+      "normalized_description": "OFFICE DEPOT",
+      "merchant_key": "office_depot",
+      "plaid_pfc": "GENERAL_MERCHANDISE_OFFICE_SUPPLIES",
+      "counterparties": [
+        "OFFICE DEPOT"
+      ],
+      "pending": false,
+      "pending_transaction_id": null,
+      "expected": {
+        "label": "supplies",
+        "is_business": true,
+        "ambiguous": false
+      }
+    },
+    {
+      "plaid_txn_id": "plc-06-119",
+      "plaid_account_id": "biz",
+      "date": "2026-11-12",
+      "amount": 250,
+      "description": "GOOGLE ADS",
+      "normalized_description": "GOOGLE ADS",
+      "merchant_key": "google_ads",
+      "plaid_pfc": "GENERAL_SERVICES_ADVERTISING",
+      "counterparties": [
+        "GOOGLE ADS"
+      ],
+      "pending": false,
+      "pending_transaction_id": null,
+      "expected": {
+        "label": "advertising",
+        "is_business": true,
+        "ambiguous": false
+      }
+    },
+    {
+      "plaid_txn_id": "plc-06-120",
+      "plaid_account_id": "biz",
+      "date": "2026-11-13",
+      "amount": 310,
+      "description": "HISCOX INSURANCE",
+      "normalized_description": "HISCOX INSURANCE",
+      "merchant_key": "hiscox",
+      "plaid_pfc": "GENERAL_SERVICES_INSURANCE",
+      "counterparties": [
+        "HISCOX INSURANCE"
+      ],
+      "pending": false,
+      "pending_transaction_id": null,
+      "expected": {
+        "label": "insurance",
+        "is_business": true,
+        "ambiguous": false
+      }
+    },
+    {
+      "plaid_txn_id": "plc-06-121",
+      "plaid_account_id": "biz",
+      "date": "2026-11-14",
+      "amount": 412.6,
+      "description": "UNITED AIRLINES",
+      "normalized_description": "UNITED AIRLINES",
+      "merchant_key": "united_airlines",
+      "plaid_pfc": "TRAVEL_FLIGHTS",
+      "counterparties": [
+        "UNITED AIRLINES"
+      ],
+      "pending": false,
+      "pending_transaction_id": null,
+      "expected": {
+        "label": "travel",
+        "is_business": true,
+        "ambiguous": false
+      }
+    },
+    {
+      "plaid_txn_id": "plc-06-122",
+      "plaid_account_id": "chk",
+      "date": "2026-11-20",
+      "amount": 123.4,
+      "description": "WHOLE FOODS",
+      "normalized_description": "WHOLE FOODS",
+      "merchant_key": "whole_foods",
+      "plaid_pfc": "FOOD_AND_DRINK_GROCERIES",
+      "counterparties": [
+        "WHOLE FOODS"
+      ],
+      "pending": false,
+      "pending_transaction_id": null,
+      "expected": {
+        "label": "personal",
+        "is_business": false,
+        "ambiguous": false
+      }
+    },
+    {
+      "plaid_txn_id": "plc-06-123",
+      "plaid_account_id": "chk",
+      "date": "2026-11-21",
+      "amount": 15.99,
+      "description": "NETFLIX",
+      "normalized_description": "NETFLIX",
+      "merchant_key": "netflix",
+      "plaid_pfc": "ENTERTAINMENT_TV_AND_MOVIES",
+      "counterparties": [
+        "NETFLIX"
+      ],
+      "pending": false,
+      "pending_transaction_id": null,
+      "expected": {
+        "label": "personal",
+        "is_business": false,
+        "ambiguous": false
+      }
+    },
+    {
+      "plaid_txn_id": "plc-06-124",
+      "plaid_account_id": "chk",
+      "date": "2026-11-22",
+      "amount": 45,
+      "description": "SHELL OIL",
+      "normalized_description": "SHELL OIL",
+      "merchant_key": "shell",
+      "plaid_pfc": "TRANSPORTATION_GAS",
+      "counterparties": [
+        "SHELL OIL"
+      ],
+      "pending": false,
+      "pending_transaction_id": null,
+      "expected": {
+        "label": "personal",
+        "is_business": false,
+        "ambiguous": true
+      }
+    },
+    {
+      "plaid_txn_id": "plc-06-125",
+      "plaid_account_id": "chk",
+      "date": "2026-11-23",
+      "amount": 2100,
+      "description": "RENT PAYMENT",
+      "normalized_description": "RENT PAYMENT",
+      "merchant_key": null,
+      "plaid_pfc": "RENT_AND_UTILITIES_RENT",
+      "counterparties": [],
+      "pending": false,
+      "pending_transaction_id": null,
+      "expected": {
+        "label": "personal",
+        "is_business": false,
+        "ambiguous": false
+      }
+    },
+    {
+      "plaid_txn_id": "plc-06-126",
+      "plaid_account_id": "biz",
+      "date": "2026-12-03",
+      "amount": -4583.33,
+      "description": "ACH CREDIT NORTHWIND STUDIO",
+      "normalized_description": "ACH CREDIT NORTHWIND STUDIO",
+      "merchant_key": "northwind_studio",
+      "plaid_pfc": "INCOME_OTHER_INCOME",
+      "counterparties": [
+        "Northwind Studio"
+      ],
+      "pending": false,
+      "pending_transaction_id": null,
+      "expected": {
+        "label": "income_1099",
+        "is_business": true,
+        "ambiguous": false
+      }
+    },
+    {
+      "plaid_txn_id": "plc-06-127",
+      "plaid_account_id": "biz",
+      "date": "2026-12-10",
+      "amount": 54.99,
+      "description": "ADOBE CREATIVE CLOUD",
+      "normalized_description": "ADOBE CREATIVE CLOUD",
+      "merchant_key": "adobe",
+      "plaid_pfc": "GENERAL_SERVICES_OTHER_GENERAL_SERVICES",
+      "counterparties": [
+        "ADOBE CREATIVE CLOUD"
+      ],
+      "pending": false,
+      "pending_transaction_id": null,
+      "expected": {
+        "label": "software_subscriptions",
+        "is_business": true,
+        "ambiguous": false
+      }
+    },
+    {
+      "plaid_txn_id": "plc-06-128",
+      "plaid_account_id": "biz",
+      "date": "2026-12-11",
+      "amount": 120,
+      "description": "OFFICE DEPOT",
+      "normalized_description": "OFFICE DEPOT",
+      "merchant_key": "office_depot",
+      "plaid_pfc": "GENERAL_MERCHANDISE_OFFICE_SUPPLIES",
+      "counterparties": [
+        "OFFICE DEPOT"
+      ],
+      "pending": false,
+      "pending_transaction_id": null,
+      "expected": {
+        "label": "supplies",
+        "is_business": true,
+        "ambiguous": false
+      }
+    },
+    {
+      "plaid_txn_id": "plc-06-129",
+      "plaid_account_id": "biz",
+      "date": "2026-12-12",
+      "amount": 250,
+      "description": "GOOGLE ADS",
+      "normalized_description": "GOOGLE ADS",
+      "merchant_key": "google_ads",
+      "plaid_pfc": "GENERAL_SERVICES_ADVERTISING",
+      "counterparties": [
+        "GOOGLE ADS"
+      ],
+      "pending": false,
+      "pending_transaction_id": null,
+      "expected": {
+        "label": "advertising",
+        "is_business": true,
+        "ambiguous": false
+      }
+    },
+    {
+      "plaid_txn_id": "plc-06-130",
+      "plaid_account_id": "biz",
+      "date": "2026-12-13",
+      "amount": 310,
+      "description": "HISCOX INSURANCE",
+      "normalized_description": "HISCOX INSURANCE",
+      "merchant_key": "hiscox",
+      "plaid_pfc": "GENERAL_SERVICES_INSURANCE",
+      "counterparties": [
+        "HISCOX INSURANCE"
+      ],
+      "pending": false,
+      "pending_transaction_id": null,
+      "expected": {
+        "label": "insurance",
+        "is_business": true,
+        "ambiguous": false
+      }
+    },
+    {
+      "plaid_txn_id": "plc-06-131",
+      "plaid_account_id": "biz",
+      "date": "2026-12-14",
+      "amount": 412.6,
+      "description": "UNITED AIRLINES",
+      "normalized_description": "UNITED AIRLINES",
+      "merchant_key": "united_airlines",
+      "plaid_pfc": "TRAVEL_FLIGHTS",
+      "counterparties": [
+        "UNITED AIRLINES"
+      ],
+      "pending": false,
+      "pending_transaction_id": null,
+      "expected": {
+        "label": "travel",
+        "is_business": true,
+        "ambiguous": false
+      }
+    },
+    {
+      "plaid_txn_id": "plc-06-132",
+      "plaid_account_id": "biz",
+      "date": "2026-12-15",
+      "amount": 96.2,
+      "description": "THE CAPITAL GRILLE",
+      "normalized_description": "THE CAPITAL GRILLE",
+      "merchant_key": "capital_grille",
+      "plaid_pfc": "FOOD_AND_DRINK_RESTAURANT",
+      "counterparties": [
+        "THE CAPITAL GRILLE"
+      ],
+      "pending": false,
+      "pending_transaction_id": null,
+      "expected": {
+        "label": "meals",
+        "is_business": true,
+        "ambiguous": true
+      }
+    },
+    {
+      "plaid_txn_id": "plc-06-133",
+      "plaid_account_id": "biz",
+      "date": "2026-12-16",
+      "amount": 85,
+      "description": "COMCAST BUSINESS",
+      "normalized_description": "COMCAST BUSINESS",
+      "merchant_key": "comcast",
+      "plaid_pfc": "RENT_AND_UTILITIES_INTERNET_AND_CABLE",
+      "counterparties": [
+        "COMCAST BUSINESS"
+      ],
+      "pending": false,
+      "pending_transaction_id": null,
+      "expected": {
+        "label": "utilities",
+        "is_business": true,
+        "ambiguous": false
+      }
+    },
+    {
+      "plaid_txn_id": "plc-06-134",
+      "plaid_account_id": "biz",
+      "date": "2026-12-17",
+      "amount": 64.3,
+      "description": "AMAZON MKTP",
+      "normalized_description": "AMAZON MKTP",
+      "merchant_key": "amazon",
+      "plaid_pfc": "GENERAL_MERCHANDISE_ONLINE_MARKETPLACES",
+      "counterparties": [
+        "AMAZON MKTP"
+      ],
+      "pending": false,
+      "pending_transaction_id": null,
+      "expected": {
+        "label": "supplies",
+        "is_business": true,
+        "ambiguous": true
+      }
+    },
+    {
+      "plaid_txn_id": "plc-06-135",
+      "plaid_account_id": "chk",
+      "date": "2026-12-20",
+      "amount": 123.4,
+      "description": "WHOLE FOODS",
+      "normalized_description": "WHOLE FOODS",
+      "merchant_key": "whole_foods",
+      "plaid_pfc": "FOOD_AND_DRINK_GROCERIES",
+      "counterparties": [
+        "WHOLE FOODS"
+      ],
+      "pending": false,
+      "pending_transaction_id": null,
+      "expected": {
+        "label": "personal",
+        "is_business": false,
+        "ambiguous": false
+      }
+    },
+    {
+      "plaid_txn_id": "plc-06-136",
+      "plaid_account_id": "chk",
+      "date": "2026-12-21",
+      "amount": 15.99,
+      "description": "NETFLIX",
+      "normalized_description": "NETFLIX",
+      "merchant_key": "netflix",
+      "plaid_pfc": "ENTERTAINMENT_TV_AND_MOVIES",
+      "counterparties": [
+        "NETFLIX"
+      ],
+      "pending": false,
+      "pending_transaction_id": null,
+      "expected": {
+        "label": "personal",
+        "is_business": false,
+        "ambiguous": false
+      }
+    },
+    {
+      "plaid_txn_id": "plc-06-137",
+      "plaid_account_id": "chk",
+      "date": "2026-12-22",
+      "amount": 45,
+      "description": "SHELL OIL",
+      "normalized_description": "SHELL OIL",
+      "merchant_key": "shell",
+      "plaid_pfc": "TRANSPORTATION_GAS",
+      "counterparties": [
+        "SHELL OIL"
+      ],
+      "pending": false,
+      "pending_transaction_id": null,
+      "expected": {
+        "label": "personal",
+        "is_business": false,
+        "ambiguous": true
+      }
+    },
+    {
+      "plaid_txn_id": "plc-06-138",
+      "plaid_account_id": "chk",
+      "date": "2026-12-23",
+      "amount": 2100,
+      "description": "RENT PAYMENT",
+      "normalized_description": "RENT PAYMENT",
+      "merchant_key": null,
+      "plaid_pfc": "RENT_AND_UTILITIES_RENT",
+      "counterparties": [],
+      "pending": false,
+      "pending_transaction_id": null,
+      "expected": {
+        "label": "personal",
+        "is_business": false,
+        "ambiguous": false
+      }
+    }
+  ],
+  "expectedReviewQueue": [
+    "plc-06-009",
+    "plc-06-017",
+    "plc-06-019",
+    "plc-06-022",
+    "plc-06-032",
+    "plc-06-040",
+    "plc-06-042",
+    "plc-06-045",
+    "plc-06-055",
+    "plc-06-063",
+    "plc-06-065",
+    "plc-06-068",
+    "plc-06-078",
+    "plc-06-086",
+    "plc-06-088",
+    "plc-06-091",
+    "plc-06-101",
+    "plc-06-109",
+    "plc-06-111",
+    "plc-06-114",
+    "plc-06-124",
+    "plc-06-132",
+    "plc-06-134",
+    "plc-06-137"
+  ],
+  "expectedEstimate": {
+    "quarter": 4,
+    "input": {
+      "taxYear": 2026,
+      "quarter": 4,
+      "ytdBusinessIncome": 54999.96,
+      "ytdBusinessExpenses": {
+        "8": 3000,
+        "15": 3720,
+        "22": 1825.8,
+        "25": 510,
+        "27a": 659.88,
+        "24a": 4951.2,
+        "24b": 288.6
+      },
+      "projectionMethod": "linear",
+      "w2Wages": 20000,
+      "w2WithholdingYtd": 2000,
+      "w2WithholdingExpectedAnnual": 2000,
+      "priorYear": {
+        "totalTax": 7500,
+        "agi": 52000
+      },
+      "seHealthPremiums": 0,
+      "sepContribution": 0,
+      "paymentsMadeThisYear": []
+    },
+    "result": {
+      "taxYear": 2026,
+      "quarter": 4,
+      "installmentDue": 5500,
+      "dueDate": "2027-01-15",
+      "safeHarborUsed": "priorYear",
+      "estimateNotRequired": false,
+      "lines": [
+        {
+          "id": "1",
+          "label": "Projected net profit",
+          "value": 40044.48,
+          "formula": "(ytdBusinessIncome − ytdBusinessExpenses) ÷ 1.0000 (fraction of year through 2026-12-31)",
+          "inputs": [
+            "ytdBusinessIncome",
+            "ytdBusinessExpenses",
+            "projectionMethod"
+          ]
+        },
+        {
+          "id": "2",
+          "label": "Net earnings from self-employment",
+          "value": 36981.08,
+          "formula": "max(0, line 1) × 0.9235",
+          "inputs": [
+            "1"
+          ]
+        },
+        {
+          "id": "3",
+          "label": "Social Security tax",
+          "value": 4585.65,
+          "formula": "min(line 2, 184500 − w2Wages) × 0.124",
+          "inputs": [
+            "2",
+            "w2Wages"
+          ]
+        },
+        {
+          "id": "4",
+          "label": "Medicare tax",
+          "value": 1072.45,
+          "formula": "line 2 × 0.029",
+          "inputs": [
+            "2"
+          ]
+        },
+        {
+          "id": "5",
+          "label": "Additional Medicare tax",
+          "value": 0,
+          "formula": "max(0, line 2 + w2Wages − 200000) × 0.009",
+          "inputs": [
+            "2",
+            "w2Wages"
+          ]
+        },
+        {
+          "id": "6",
+          "label": "Self-employment tax",
+          "value": 5658.1,
+          "formula": "line 3 + line 4 + line 5",
+          "inputs": [
+            "3",
+            "4",
+            "5"
+          ]
+        },
+        {
+          "id": "7",
+          "label": "Deductible half of SE tax",
+          "value": 2829.05,
+          "formula": "(line 3 + line 4) × 0.5",
+          "inputs": [
+            "3",
+            "4"
+          ]
+        },
+        {
+          "id": "8",
+          "label": "Adjusted gross income",
+          "value": 57215.43,
+          "formula": "line 1 + w2Wages − line 7 − seHealthPremiums − sepContribution",
+          "inputs": [
+            "1",
+            "w2Wages",
+            "7",
+            "seHealthPremiums",
+            "sepContribution"
+          ]
+        },
+        {
+          "id": "9",
+          "label": "Taxable income before QBI deduction",
+          "value": 41115.43,
+          "formula": "max(0, line 8 − 16100)",
+          "inputs": [
+            "8"
+          ]
+        },
+        {
+          "id": "10",
+          "label": "Qualified business income deduction",
+          "value": 7443.09,
+          "formula": "min(0.2 × (line 1 − line 7 − seHealthPremiums − sepContribution), 0.2 × line 9); at least 400 when QBI ≥ 1000",
+          "inputs": [
+            "1",
+            "7",
+            "9",
+            "seHealthPremiums",
+            "sepContribution"
+          ]
+        },
+        {
+          "id": "11",
+          "label": "Taxable income",
+          "value": 33672.34,
+          "formula": "line 9 − line 10",
+          "inputs": [
+            "9",
+            "10"
+          ]
+        },
+        {
+          "id": "12",
+          "label": "Income tax",
+          "value": 3792.68,
+          "formula": "2026 single bracket schedule applied to line 11",
+          "inputs": [
+            "11"
+          ]
+        },
+        {
+          "id": "13",
+          "label": "Total projected tax",
+          "value": 9450.78,
+          "formula": "line 12 + line 6",
+          "inputs": [
+            "12",
+            "6"
+          ]
+        },
+        {
+          "id": "14",
+          "label": "Current-year safe harbor target",
+          "value": 8505.7,
+          "formula": "line 13 × 0.9",
+          "inputs": [
+            "13"
+          ]
+        },
+        {
+          "id": "15",
+          "label": "Prior-year safe harbor target",
+          "value": 7500,
+          "formula": "priorYear.totalTax × 1",
+          "inputs": [
+            "priorYear.totalTax",
+            "priorYear.agi"
+          ]
+        },
+        {
+          "id": "16",
+          "label": "Required annual payment",
+          "value": 7500,
+          "formula": "min(line 14, line 15)",
+          "inputs": [
+            "14",
+            "15"
+          ]
+        },
+        {
+          "id": "17",
+          "label": "Cumulative required through Q4",
+          "value": 7500,
+          "formula": "line 16 × 1",
+          "inputs": [
+            "16"
+          ]
+        },
+        {
+          "id": "18",
+          "label": "Installment due",
+          "value": 5500,
+          "formula": "max(0, line 17 − w2WithholdingExpectedAnnual × 1 − paymentsMadeThisYear)",
+          "inputs": [
+            "17",
+            "w2WithholdingExpectedAnnual",
+            "paymentsMadeThisYear"
+          ]
+        },
+        {
+          "id": "19",
+          "label": "Due date",
+          "value": 0,
+          "formula": "2027-01-15",
+          "inputs": [
+            "quarter"
+          ]
+        }
+      ],
+      "flags": [
+        "skipQ4IfFiledByFeb1"
+      ],
+      "inputSnapshotId": "sha256:7218cd1d8f184d7f6079c9ed5d6b6f991f324e21c0352a1d206f7f1db4791b1b",
+      "engineVersion": "1.0.0",
+      "constantsVersion": "2026.1",
+      "disclaimer": "Estimate, not tax advice. Computed by the Taxxy engine from the inputs shown; verify before paying."
+    }
+  },
+  "turnBudget": 12
+}

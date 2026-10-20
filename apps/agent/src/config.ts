@@ -24,9 +24,9 @@ const envSchema = z.object({
   PLAID_ENV: z.enum(["sandbox", "development", "production"]).default("sandbox"),
   PLAID_WEBHOOK_URL: z.string().optional(),
   PLAID_WEBHOOK_VERIFY: z
-    .string()
+    .union([z.string(), z.boolean()])
     .optional()
-    .transform((v) => v === "true" || v === "1"),
+    .transform((v) => v === true || v === "true" || v === "1"),
   GMAIL_MODE: z.enum(["live", "fixture"]).default("fixture"),
   GOOGLE_CLIENT_ID: z.string().optional(),
   GOOGLE_CLIENT_SECRET: z.string().optional(),

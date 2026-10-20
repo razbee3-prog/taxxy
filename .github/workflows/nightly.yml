@@ -1,0 +1,43 @@
+name: Nightly evals (Tier 2 + Tier 3)
+
+on:
+  schedule:
+    - cron: "17 6 * * *"
+  workflow_dispatch:
+  pull_request:
+    paths:
+      - "apps/agent/skills/**"
+      - "apps/agent/src/agent.ts"
+      - "packages/integrations/src/categorize/**"
+      - "packages/engine/src/constants/**"
+      - "packages/evals/**"
+
+jobs:
+  evals:
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    env:
+      ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+      LANGFUSE_PUBLIC_KEY: ${{ secrets.LANGFUSE_PUBLIC_KEY }}
+      LANGFUSE_SECRET_KEY: ${{ secrets.LANGFUSE_SECRET_KEY }}
+      LANGFUSE_BASE_URL: ${{ secrets.LANGFUSE_BASE_URL }}
+      GIT_SHA: ${{ github.sha }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+        with: { version: 12.8.1 }
+      - uses: actions/setup-node@v4
+        with: { node-version: 22, cache: pnpm }
+      - name: Start SurrealDB
+        run: |
+          docker run -d --name surrealdb -p 8000:8000 surrealdb/surrealdb:v3 start --user root --pass root memory
+          for i in $(seq 1 30); do curl -sf http://127.0.0.1:8000/health && break; sleep 1; done
+      - run: pnpm install --frozen-lockfile
+      - name: Tier 2 (live categorizer on fixture labels)
+        run: pnpm --filter @taxxy/evals tier2
+        continue-on-error: true
+      - name: Tier 3 deterministic (20 profiles)
+        run: pnpm --filter @taxxy/agent tier3 deterministic
+      - name: Tier 3 agent mode (LLM in the loop)
+        if: env.ANTHROPIC_API_KEY != ''
+        run: pnpm --filter @taxxy/agent tier3 agent
