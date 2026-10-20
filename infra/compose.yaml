@@ -1,0 +1,31 @@
+services:
+  surrealdb:
+    image: surrealdb/surrealdb:v3
+    command: start --user ${SURREAL_USER:-root} --pass ${SURREAL_PASS:-root} surrealkv:/data/taxxy.kv
+    ports: ["8000:8000"]
+    volumes: [surreal-data:/data]
+    healthcheck:
+      test: ["CMD", "/surreal", "is-ready"]
+      interval: 5s
+      timeout: 3s
+      retries: 20
+
+  agent:
+    build: { context: .., dockerfile: infra/agent.Dockerfile }
+    env_file: [../.env]
+    environment:
+      SURREAL_URL: ws://surrealdb:8000/rpc
+    ports: ["8787:8787"]
+    depends_on:
+      surrealdb: { condition: service_healthy }
+
+  web:
+    build: { context: .., dockerfile: infra/web.Dockerfile }
+    env_file: [../.env]
+    environment:
+      AGENT_URL: http://agent:8787
+    ports: ["3000:3000"]
+    depends_on: [agent]
+
+volumes:
+  surreal-data:
