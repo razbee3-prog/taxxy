@@ -1,4 +1,5 @@
-import { readFileSync } from "node:fs";
+import { mkdirSync, readFileSync, writeFileSync } from "node:fs";
+import { dirname, join } from "node:path";
 import type { BaseCheckpointSaver, BaseStore } from "@langchain/langgraph-checkpoint";
 import {
   connectSurreal,
@@ -44,6 +45,27 @@ export interface AppDeps {
   ) => GmailClientLike;
   /** Model for document extraction (receipts, 1040); null = deterministic heuristics. */
   extractionModel: ReturnType<typeof chatModel> | null;
+}
+
+/**
+ * Dev only: without VAULT_KEY, generate one and keep it under FILES_DIR so sealed bank/Gmail tokens
+ * survive agent restarts (a fresh key per process would make every linked bank unreadable).
+ */
+export function devVaultKey(env: Env): string {
+  const file = join(env.FILES_DIR, "vault.dev.key");
+  try {
+    const existing = readFileSync(file, "utf8").trim();
+    if (existing) return existing;
+  } catch {
+    // first run
+  }
+  const key = Vault.generateKey();
+  mkdirSync(dirname(file), { recursive: true });
+  writeFileSync(file, `${key}\n`, { mode: 0o600 });
+  console.warn(
+    `VAULT_KEY not set: generated a dev key at ${file} (set VAULT_KEY in .env for anything real)`,
+  );
+  return key;
 }
 
 export function loadMailboxFixture(): FixtureMailbox {
@@ -99,7 +121,7 @@ export async function buildDeps(env: Env, over: Partial<AppDeps> = {}): Promise<
   const cfg = dbConfigFromEnv(env as unknown as NodeJS.ProcessEnv);
   const db = over.db ?? (await connectSurreal(cfg.app));
   await migrate(db);
-  const vaultKey = env.VAULT_KEY ?? (env.TAXXY_ENV === "dev" ? Vault.generateKey() : undefined);
+  const vaultKey = env.VAULT_KEY ?? (env.TAXXY_ENV === "dev" ? devVaultKey(env) : undefined);
   if (!vaultKey) throw new Error("VAULT_KEY is required outside dev");
   let store = over.store;
   let checkpointer = over.checkpointer;

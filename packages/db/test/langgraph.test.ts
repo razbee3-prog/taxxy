@@ -34,6 +34,13 @@ describe.skipIf(!up)("@surrealdb/langgraph store + saver", () => {
     expect(await store.get(userFilesystemNamespace("bob"), path)).toBeNull();
     const ns = await store.listNamespaces({ prefix: ["filesystem"] });
     expect(ns).toContainEqual(["filesystem", "alice"]);
+    // second write of the same key (memory update) must keep created_at and succeed
+    await store.put(userFilesystemNamespace("alice"), path, {
+      content: `${content}- Preference: terse\n`,
+    });
+    const again = await store.get(userFilesystemNamespace("alice"), path);
+    expect(again?.value).toEqual({ content: `${content}- Preference: terse\n` });
+    expect(again?.createdAt).toEqual(item?.createdAt);
   });
 
   it("saver stores a checkpoint under {userId}:{taxYear}:{quarter}", async () => {
