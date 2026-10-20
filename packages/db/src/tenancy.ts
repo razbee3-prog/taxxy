@@ -96,6 +96,27 @@ export class ScopedDb {
     return row;
   }
 
+  /** Create with a caller-chosen id (e.g. Plaid ids) so re-syncs are idempotent. */
+  async createWithId<T extends Row>(
+    id: string | RecordId,
+    data: Record<string, unknown>,
+  ): Promise<T> {
+    if ("user" in data) throw new TenancyError("user is set by the scope, not the caller");
+    const [rows] = await this.db.query<[unknown[]]>("CREATE $id CONTENT $data", {
+      id: toRecordId(id),
+      data: { ...nullsToNone(data), user: this.user },
+    });
+    return plain<T[]>(rows)[0] as T;
+  }
+
+  /** Raw SurrealQL that must reference `$user`; the binding is injected by the scope. */
+  async query<T>(surql: string, bindings: Record<string, unknown> = {}): Promise<T[]> {
+    this.assertNoUserBinding(bindings);
+    if (!/\$user\b/.test(surql)) throw new TenancyError("scoped query must filter on $user");
+    const [rows] = await this.db.query<[unknown[]]>(surql, { ...bindings, user: this.user });
+    return plain<T[]>(rows ?? []);
+  }
+
   async delete(id: string | RecordId): Promise<boolean> {
     const rid = toRecordId(id);
     const [rows] = await this.db.query<[unknown[]]>("DELETE $id WHERE user = $user RETURN BEFORE", {

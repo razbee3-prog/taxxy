@@ -1,1 +1,10 @@
-export const PACKAGE = "@taxxy/integrations"; // placeholder until its milestone lands
+export * from "./categorize/categorizer.js";
+export * from "./categorize/gate.js";
+export * from "./categorize/pipeline.js";
+export * from "./categorize/rules.js";
+export * from "./categorize/taxonomy.js";
+export type * from "./categorize/types.js";
+export * from "./plaid/client.js";
+export * from "./plaid/normalize.js";
+export * from "./plaid/types.js";
+export * from "./plaid/webhook.js";

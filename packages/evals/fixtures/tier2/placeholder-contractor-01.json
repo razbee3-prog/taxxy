@@ -1,0 +1,788 @@
+{
+  "_note": "PLACEHOLDER hand-labeled fixture, not the gated eval set",
+  "profile": "placeholder-contractor-01",
+  "context": {
+    "businessDescription": "freelance UX designer, home office, one business checking + one savings",
+    "mostlyBusinessAccounts": [
+      "chk"
+    ],
+    "linkedAccountIds": [
+      "chk",
+      "sav"
+    ],
+    "payers": [
+      {
+        "counterparty": "Brightpath LLC",
+        "is_income": true
+      }
+    ],
+    "merchantRules": [
+      {
+        "merchant_key": "adobe",
+        "label": "software_subscriptions",
+        "is_business": true
+      }
+    ],
+    "recentUserLabels": [
+      {
+        "merchant_key": "uber",
+        "description": "UBER TRIP",
+        "amount": 22.1,
+        "label": "personal",
+        "is_business": false
+      }
+    ]
+  },
+  "transactions": [
+    {
+      "plaid_txn_id": "p01-001",
+      "plaid_account_id": "chk",
+      "date": "2026-01-05",
+      "amount": -3200,
+      "description": "ACH CREDIT BRIGHTPATH LLC INV 1042",
+      "normalized_description": "ACH CREDIT BRIGHTPATH LLC INV 1042",
+      "merchant_key": "brightpath",
+      "plaid_pfc": "INCOME_OTHER_INCOME",
+      "counterparties": [
+        "Brightpath LLC"
+      ],
+      "pending": false,
+      "pending_transaction_id": null,
+      "expected": {
+        "label": "income_1099",
+        "is_business": true
+      }
+    },
+    {
+      "plaid_txn_id": "p01-002",
+      "plaid_account_id": "chk",
+      "date": "2026-01-19",
+      "amount": -2750,
+      "description": "ACH CREDIT BRIGHTPATH LLC INV 1049",
+      "normalized_description": "ACH CREDIT BRIGHTPATH LLC INV 1049",
+      "merchant_key": "brightpath",
+      "plaid_pfc": "INCOME_OTHER_INCOME",
+      "counterparties": [
+        "Brightpath LLC"
+      ],
+      "pending": false,
+      "pending_transaction_id": null,
+      "expected": {
+        "label": "income_1099",
+        "is_business": true
+      }
+    },
+    {
+      "plaid_txn_id": "p01-003",
+      "plaid_account_id": "chk",
+      "date": "2026-02-02",
+      "amount": -1800,
+      "description": "STRIPE TRANSFER ST-K3J2",
+      "normalized_description": "STRIPE TRANSFER ST-K3J2",
+      "merchant_key": "stripe",
+      "plaid_pfc": "INCOME_OTHER_INCOME",
+      "counterparties": [
+        "Stripe"
+      ],
+      "pending": false,
+      "pending_transaction_id": null,
+      "expected": {
+        "label": "income_1099",
+        "is_business": true
+      }
+    },
+    {
+      "plaid_txn_id": "p01-004",
+      "plaid_account_id": "chk",
+      "date": "2026-02-14",
+      "amount": -125.5,
+      "description": "VENMO CASHOUT",
+      "normalized_description": "VENMO CASHOUT",
+      "merchant_key": "venmo",
+      "plaid_pfc": "TRANSFER_IN_OTHER_TRANSFER_IN",
+      "counterparties": [
+        "Venmo"
+      ],
+      "pending": false,
+      "pending_transaction_id": null,
+      "expected": {
+        "label": "income_other",
+        "is_business": false
+      }
+    },
+    {
+      "plaid_txn_id": "p01-005",
+      "plaid_account_id": "chk",
+      "date": "2026-02-20",
+      "amount": -42.99,
+      "description": "AMAZON REFUND",
+      "normalized_description": "AMAZON REFUND",
+      "merchant_key": "amazon",
+      "plaid_pfc": "GENERAL_MERCHANDISE_ONLINE_MARKETPLACES",
+      "counterparties": [
+        "Amazon"
+      ],
+      "pending": false,
+      "pending_transaction_id": null,
+      "expected": {
+        "label": "refund",
+        "is_business": false
+      }
+    },
+    {
+      "plaid_txn_id": "p01-006",
+      "plaid_account_id": "chk",
+      "date": "2026-01-03",
+      "amount": 1500,
+      "description": "ONLINE TRANSFER TO SAVINGS",
+      "normalized_description": "ONLINE TRANSFER TO SAVINGS",
+      "merchant_key": null,
+      "plaid_pfc": "TRANSFER_OUT_ACCOUNT_TRANSFER",
+      "counterparties": [],
+      "pending": false,
+      "pending_transaction_id": null,
+      "expected": {
+        "label": "transfer_out",
+        "is_business": false
+      }
+    },
+    {
+      "plaid_txn_id": "p01-007",
+      "plaid_account_id": "sav",
+      "date": "2026-01-03",
+      "amount": -1500,
+      "description": "ONLINE TRANSFER FROM CHECKING",
+      "normalized_description": "ONLINE TRANSFER FROM CHECKING",
+      "merchant_key": null,
+      "plaid_pfc": "TRANSFER_IN_ACCOUNT_TRANSFER",
+      "counterparties": [],
+      "pending": false,
+      "pending_transaction_id": null,
+      "expected": {
+        "label": "transfer_in",
+        "is_business": false
+      }
+    },
+    {
+      "plaid_txn_id": "p01-008",
+      "plaid_account_id": "chk",
+      "date": "2026-01-07",
+      "amount": 54.99,
+      "description": "ADOBE CREATIVE CLOUD",
+      "normalized_description": "ADOBE CREATIVE CLOUD",
+      "merchant_key": "adobe",
+      "plaid_pfc": "GENERAL_SERVICES_OTHER_GENERAL_SERVICES",
+      "counterparties": [
+        "Adobe"
+      ],
+      "pending": false,
+      "pending_transaction_id": null,
+      "expected": {
+        "label": "software_subscriptions",
+        "is_business": true
+      }
+    },
+    {
+      "plaid_txn_id": "p01-009",
+      "plaid_account_id": "chk",
+      "date": "2026-02-07",
+      "amount": 54.99,
+      "description": "ADOBE CREATIVE CLOUD",
+      "normalized_description": "ADOBE CREATIVE CLOUD",
+      "merchant_key": "adobe",
+      "plaid_pfc": "GENERAL_SERVICES_OTHER_GENERAL_SERVICES",
+      "counterparties": [
+        "Adobe"
+      ],
+      "pending": false,
+      "pending_transaction_id": null,
+      "expected": {
+        "label": "software_subscriptions",
+        "is_business": true
+      }
+    },
+    {
+      "plaid_txn_id": "p01-010",
+      "plaid_account_id": "chk",
+      "date": "2026-01-09",
+      "amount": 12,
+      "description": "GITHUB INC",
+      "normalized_description": "GITHUB INC",
+      "merchant_key": "github",
+      "plaid_pfc": "GENERAL_SERVICES_OTHER_GENERAL_SERVICES",
+      "counterparties": [
+        "GitHub"
+      ],
+      "pending": false,
+      "pending_transaction_id": null,
+      "expected": {
+        "label": "software_subscriptions",
+        "is_business": true
+      }
+    },
+    {
+      "plaid_txn_id": "p01-011",
+      "plaid_account_id": "chk",
+      "date": "2026-01-12",
+      "amount": 89.4,
+      "description": "OFFICE DEPOT 1123",
+      "normalized_description": "OFFICE DEPOT 1123",
+      "merchant_key": "office_depot",
+      "plaid_pfc": "GENERAL_MERCHANDISE_OFFICE_SUPPLIES",
+      "counterparties": [
+        "Office Depot"
+      ],
+      "pending": false,
+      "pending_transaction_id": null,
+      "expected": {
+        "label": "supplies",
+        "is_business": true
+      }
+    },
+    {
+      "plaid_txn_id": "p01-012",
+      "plaid_account_id": "chk",
+      "date": "2026-01-15",
+      "amount": 250,
+      "description": "GOOGLE ADS 4411",
+      "normalized_description": "GOOGLE ADS 4411",
+      "merchant_key": "google_ads",
+      "plaid_pfc": "GENERAL_SERVICES_ADVERTISING",
+      "counterparties": [
+        "Google Ads"
+      ],
+      "pending": false,
+      "pending_transaction_id": null,
+      "expected": {
+        "label": "advertising",
+        "is_business": true
+      }
+    },
+    {
+      "plaid_txn_id": "p01-013",
+      "plaid_account_id": "chk",
+      "date": "2026-01-18",
+      "amount": 1200,
+      "description": "UPWORK ESCROW CONTRACTOR",
+      "normalized_description": "UPWORK ESCROW CONTRACTOR",
+      "merchant_key": "upwork",
+      "plaid_pfc": "GENERAL_SERVICES_OTHER_GENERAL_SERVICES",
+      "counterparties": [
+        "Upwork"
+      ],
+      "pending": false,
+      "pending_transaction_id": null,
+      "expected": {
+        "label": "contract_labor",
+        "is_business": true
+      }
+    },
+    {
+      "plaid_txn_id": "p01-014",
+      "plaid_account_id": "chk",
+      "date": "2026-01-22",
+      "amount": 310,
+      "description": "HISCOX INSURANCE",
+      "normalized_description": "HISCOX INSURANCE",
+      "merchant_key": "hiscox",
+      "plaid_pfc": "GENERAL_SERVICES_INSURANCE",
+      "counterparties": [
+        "Hiscox"
+      ],
+      "pending": false,
+      "pending_transaction_id": null,
+      "expected": {
+        "label": "insurance",
+        "is_business": true
+      }
+    },
+    {
+      "plaid_txn_id": "p01-015",
+      "plaid_account_id": "chk",
+      "date": "2026-01-25",
+      "amount": 412.6,
+      "description": "UNITED AIRLINES",
+      "normalized_description": "UNITED AIRLINES",
+      "merchant_key": "united_airlines",
+      "plaid_pfc": "TRAVEL_FLIGHTS",
+      "counterparties": [
+        "United Airlines"
+      ],
+      "pending": false,
+      "pending_transaction_id": null,
+      "expected": {
+        "label": "travel",
+        "is_business": true
+      }
+    },
+    {
+      "plaid_txn_id": "p01-016",
+      "plaid_account_id": "chk",
+      "date": "2026-01-26",
+      "amount": 188,
+      "description": "HILTON GARDEN INN",
+      "normalized_description": "HILTON GARDEN INN",
+      "merchant_key": "hilton",
+      "plaid_pfc": "TRAVEL_LODGING",
+      "counterparties": [
+        "Hilton"
+      ],
+      "pending": false,
+      "pending_transaction_id": null,
+      "expected": {
+        "label": "travel",
+        "is_business": true
+      }
+    },
+    {
+      "plaid_txn_id": "p01-017",
+      "plaid_account_id": "chk",
+      "date": "2026-01-26",
+      "amount": 64.2,
+      "description": "THE CAPITAL GRILLE",
+      "normalized_description": "THE CAPITAL GRILLE",
+      "merchant_key": "capital_grille",
+      "plaid_pfc": "FOOD_AND_DRINK_RESTAURANT",
+      "counterparties": [
+        "The Capital Grille"
+      ],
+      "pending": false,
+      "pending_transaction_id": null,
+      "expected": {
+        "label": "meals",
+        "is_business": true
+      }
+    },
+    {
+      "plaid_txn_id": "p01-018",
+      "plaid_account_id": "chk",
+      "date": "2026-01-30",
+      "amount": 85,
+      "description": "COMCAST BUSINESS",
+      "normalized_description": "COMCAST BUSINESS",
+      "merchant_key": "comcast",
+      "plaid_pfc": "RENT_AND_UTILITIES_INTERNET_AND_CABLE",
+      "counterparties": [
+        "Comcast"
+      ],
+      "pending": false,
+      "pending_transaction_id": null,
+      "expected": {
+        "label": "utilities",
+        "is_business": true
+      }
+    },
+    {
+      "plaid_txn_id": "p01-019",
+      "plaid_account_id": "chk",
+      "date": "2026-02-03",
+      "amount": 400,
+      "description": "LEGALZOOM",
+      "normalized_description": "LEGALZOOM",
+      "merchant_key": "legalzoom",
+      "plaid_pfc": "GENERAL_SERVICES_ACCOUNTING_AND_FINANCIAL_PLANNING",
+      "counterparties": [
+        "LegalZoom"
+      ],
+      "pending": false,
+      "pending_transaction_id": null,
+      "expected": {
+        "label": "professional_fees",
+        "is_business": true
+      }
+    },
+    {
+      "plaid_txn_id": "p01-020",
+      "plaid_account_id": "chk",
+      "date": "2026-02-05",
+      "amount": 199,
+      "description": "UDEMY COURSE",
+      "normalized_description": "UDEMY COURSE",
+      "merchant_key": "udemy",
+      "plaid_pfc": "GENERAL_SERVICES_EDUCATION",
+      "counterparties": [
+        "Udemy"
+      ],
+      "pending": false,
+      "pending_transaction_id": null,
+      "expected": {
+        "label": "education",
+        "is_business": true
+      }
+    },
+    {
+      "plaid_txn_id": "p01-021",
+      "plaid_account_id": "chk",
+      "date": "2026-02-08",
+      "amount": 45,
+      "description": "SHELL OIL 2201",
+      "normalized_description": "SHELL OIL 2201",
+      "merchant_key": "shell",
+      "plaid_pfc": "TRANSPORTATION_GAS",
+      "counterparties": [
+        "Shell"
+      ],
+      "pending": false,
+      "pending_transaction_id": null,
+      "expected": {
+        "label": "car_truck",
+        "is_business": true
+      }
+    },
+    {
+      "plaid_txn_id": "p01-022",
+      "plaid_account_id": "chk",
+      "date": "2026-02-10",
+      "amount": 32.5,
+      "description": "USPS PO 1183",
+      "normalized_description": "USPS PO 1183",
+      "merchant_key": "usps",
+      "plaid_pfc": "GENERAL_SERVICES_POSTAGE_AND_SHIPPING",
+      "counterparties": [
+        "USPS"
+      ],
+      "pending": false,
+      "pending_transaction_id": null,
+      "expected": {
+        "label": "other_business",
+        "is_business": true
+      }
+    },
+    {
+      "plaid_txn_id": "p01-023",
+      "plaid_account_id": "chk",
+      "date": "2026-01-04",
+      "amount": 6.75,
+      "description": "STARBUCKS 2210",
+      "normalized_description": "STARBUCKS 2210",
+      "merchant_key": "starbucks",
+      "plaid_pfc": "FOOD_AND_DRINK_COFFEE",
+      "counterparties": [
+        "Starbucks"
+      ],
+      "pending": false,
+      "pending_transaction_id": null,
+      "expected": {
+        "label": "personal",
+        "is_business": false
+      }
+    },
+    {
+      "plaid_txn_id": "p01-024",
+      "plaid_account_id": "chk",
+      "date": "2026-01-06",
+      "amount": 123.4,
+      "description": "WHOLE FOODS",
+      "normalized_description": "WHOLE FOODS",
+      "merchant_key": "whole_foods",
+      "plaid_pfc": "FOOD_AND_DRINK_GROCERIES",
+      "counterparties": [
+        "Whole Foods"
+      ],
+      "pending": false,
+      "pending_transaction_id": null,
+      "expected": {
+        "label": "personal",
+        "is_business": false
+      }
+    },
+    {
+      "plaid_txn_id": "p01-025",
+      "plaid_account_id": "chk",
+      "date": "2026-01-10",
+      "amount": 15.99,
+      "description": "NETFLIX",
+      "normalized_description": "NETFLIX",
+      "merchant_key": "netflix",
+      "plaid_pfc": "ENTERTAINMENT_TV_AND_MOVIES",
+      "counterparties": [
+        "Netflix"
+      ],
+      "pending": false,
+      "pending_transaction_id": null,
+      "expected": {
+        "label": "personal",
+        "is_business": false
+      }
+    },
+    {
+      "plaid_txn_id": "p01-026",
+      "plaid_account_id": "chk",
+      "date": "2026-01-14",
+      "amount": 18.3,
+      "description": "UBER TRIP",
+      "normalized_description": "UBER TRIP",
+      "merchant_key": "uber",
+      "plaid_pfc": "TRANSPORTATION_TAXIS_AND_RIDE_SHARES",
+      "counterparties": [
+        "Uber"
+      ],
+      "pending": false,
+      "pending_transaction_id": null,
+      "expected": {
+        "label": "personal",
+        "is_business": false
+      }
+    },
+    {
+      "plaid_txn_id": "p01-027",
+      "plaid_account_id": "chk",
+      "date": "2026-01-20",
+      "amount": 78.5,
+      "description": "TOUCHSTONE CLIMBING",
+      "normalized_description": "TOUCHSTONE CLIMBING",
+      "merchant_key": "touchstone_climbing",
+      "plaid_pfc": "PERSONAL_CARE_GYMS_AND_FITNESS_CENTERS",
+      "counterparties": [
+        "Touchstone Climbing"
+      ],
+      "pending": false,
+      "pending_transaction_id": null,
+      "expected": {
+        "label": "personal",
+        "is_business": false
+      }
+    },
+    {
+      "plaid_txn_id": "p01-028",
+      "plaid_account_id": "chk",
+      "date": "2026-01-28",
+      "amount": 2100,
+      "description": "RENT PAYMENT ZELLE",
+      "normalized_description": "RENT PAYMENT ZELLE",
+      "merchant_key": null,
+      "plaid_pfc": "RENT_AND_UTILITIES_RENT",
+      "counterparties": [],
+      "pending": false,
+      "pending_transaction_id": null,
+      "expected": {
+        "label": "personal",
+        "is_business": false
+      }
+    },
+    {
+      "plaid_txn_id": "p01-029",
+      "plaid_account_id": "chk",
+      "date": "2026-02-01",
+      "amount": 3000,
+      "description": "TRANSFER TO PERSONAL CHK",
+      "normalized_description": "TRANSFER TO PERSONAL CHK",
+      "merchant_key": null,
+      "plaid_pfc": "TRANSFER_OUT_OTHER_TRANSFER_OUT",
+      "counterparties": [],
+      "pending": false,
+      "pending_transaction_id": null,
+      "expected": {
+        "label": "owner_draw",
+        "is_business": false
+      }
+    },
+    {
+      "plaid_txn_id": "p01-030",
+      "plaid_account_id": "chk",
+      "date": "2026-01-15",
+      "amount": 2200,
+      "description": "IRS USATAXPYMT",
+      "normalized_description": "IRS USATAXPYMT",
+      "merchant_key": "irs",
+      "plaid_pfc": "GOVERNMENT_AND_NON_PROFIT_TAX_PAYMENT",
+      "counterparties": [
+        "IRS"
+      ],
+      "pending": false,
+      "pending_transaction_id": null,
+      "expected": {
+        "label": "tax_payment",
+        "is_business": false
+      }
+    },
+    {
+      "plaid_txn_id": "p01-031",
+      "plaid_account_id": "chk",
+      "date": "2026-02-11",
+      "amount": 350,
+      "description": "SOFI LOAN PAYMENT",
+      "normalized_description": "SOFI LOAN PAYMENT",
+      "merchant_key": "sofi",
+      "plaid_pfc": "LOAN_PAYMENTS_PERSONAL_LOAN_PAYMENT",
+      "counterparties": [
+        "SoFi"
+      ],
+      "pending": false,
+      "pending_transaction_id": null,
+      "expected": {
+        "label": "loan_principal",
+        "is_business": false
+      }
+    },
+    {
+      "plaid_txn_id": "p01-032",
+      "plaid_account_id": "chk",
+      "date": "2026-02-12",
+      "amount": 9.99,
+      "description": "APPLE.COM/BILL",
+      "normalized_description": "APPLE.COM/BILL",
+      "merchant_key": "apple",
+      "plaid_pfc": "GENERAL_SERVICES_OTHER_GENERAL_SERVICES",
+      "counterparties": [
+        "Apple"
+      ],
+      "pending": false,
+      "pending_transaction_id": null,
+      "expected": {
+        "label": "personal",
+        "is_business": false
+      }
+    },
+    {
+      "plaid_txn_id": "p01-033",
+      "plaid_account_id": "chk",
+      "date": "2026-02-13",
+      "amount": 27.8,
+      "description": "CHIPOTLE",
+      "normalized_description": "CHIPOTLE",
+      "merchant_key": "chipotle",
+      "plaid_pfc": "FOOD_AND_DRINK_FAST_FOOD",
+      "counterparties": [
+        "Chipotle"
+      ],
+      "pending": false,
+      "pending_transaction_id": null,
+      "expected": {
+        "label": "personal",
+        "is_business": false
+      }
+    },
+    {
+      "plaid_txn_id": "p01-034",
+      "plaid_account_id": "chk",
+      "date": "2026-02-15",
+      "amount": 140,
+      "description": "WEWORK DAY PASS",
+      "normalized_description": "WEWORK DAY PASS",
+      "merchant_key": "wework",
+      "plaid_pfc": "GENERAL_SERVICES_OTHER_GENERAL_SERVICES",
+      "counterparties": [
+        "WeWork"
+      ],
+      "pending": false,
+      "pending_transaction_id": null,
+      "expected": {
+        "label": "office",
+        "is_business": true
+      }
+    },
+    {
+      "plaid_txn_id": "p01-035",
+      "plaid_account_id": "chk",
+      "date": "2026-02-16",
+      "amount": 20,
+      "description": "ZOOM.US",
+      "normalized_description": "ZOOM.US",
+      "merchant_key": "zoom",
+      "plaid_pfc": "GENERAL_SERVICES_OTHER_GENERAL_SERVICES",
+      "counterparties": [
+        "Zoom"
+      ],
+      "pending": false,
+      "pending_transaction_id": null,
+      "expected": {
+        "label": "software_subscriptions",
+        "is_business": true
+      }
+    },
+    {
+      "plaid_txn_id": "p01-036",
+      "plaid_account_id": "chk",
+      "date": "2026-02-18",
+      "amount": 58,
+      "description": "DOORDASH",
+      "normalized_description": "DOORDASH",
+      "merchant_key": "doordash",
+      "plaid_pfc": "FOOD_AND_DRINK_FAST_FOOD",
+      "counterparties": [
+        "DoorDash"
+      ],
+      "pending": false,
+      "pending_transaction_id": null,
+      "expected": {
+        "label": "personal",
+        "is_business": false
+      }
+    },
+    {
+      "plaid_txn_id": "p01-037",
+      "plaid_account_id": "chk",
+      "date": "2026-02-19",
+      "amount": -4.22,
+      "description": "INTRST PYMNT",
+      "normalized_description": "INTRST PYMNT",
+      "merchant_key": null,
+      "plaid_pfc": "TRANSFER_IN_OTHER_TRANSFER_IN",
+      "counterparties": [],
+      "pending": false,
+      "pending_transaction_id": null,
+      "expected": {
+        "label": "income_other",
+        "is_business": false
+      }
+    },
+    {
+      "plaid_txn_id": "p01-038",
+      "plaid_account_id": "chk",
+      "date": "2026-02-21",
+      "amount": 300,
+      "description": "B&H PHOTO MONITOR",
+      "normalized_description": "B&H PHOTO MONITOR",
+      "merchant_key": "b_h_photo",
+      "plaid_pfc": "GENERAL_MERCHANDISE_ELECTRONICS",
+      "counterparties": [
+        "B&H Photo"
+      ],
+      "pending": false,
+      "pending_transaction_id": null,
+      "expected": {
+        "label": "office",
+        "is_business": true
+      }
+    },
+    {
+      "plaid_txn_id": "p01-039",
+      "plaid_account_id": "chk",
+      "date": "2026-02-22",
+      "amount": 74.99,
+      "description": "COSTCO",
+      "normalized_description": "COSTCO",
+      "merchant_key": "costco",
+      "plaid_pfc": "GENERAL_MERCHANDISE_SUPERSTORES",
+      "counterparties": [
+        "Costco"
+      ],
+      "pending": false,
+      "pending_transaction_id": null,
+      "expected": {
+        "label": "personal",
+        "is_business": false
+      }
+    },
+    {
+      "plaid_txn_id": "p01-040",
+      "plaid_account_id": "chk",
+      "date": "2026-02-25",
+      "amount": 110,
+      "description": "ATT WIRELESS",
+      "normalized_description": "ATT WIRELESS",
+      "merchant_key": "att",
+      "plaid_pfc": "RENT_AND_UTILITIES_TELEPHONE",
+      "counterparties": [
+        "AT&T"
+      ],
+      "pending": false,
+      "pending_transaction_id": null,
+      "expected": {
+        "label": "utilities",
+        "is_business": true
+      }
+    }
+  ]
+}

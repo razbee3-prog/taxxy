@@ -4,11 +4,11 @@ import { streamSSE } from "hono/streaming";
 import { z } from "zod";
 import { buildAgent } from "./agent.js";
 import { env } from "./config.js";
+import { type AppDeps, buildDeps } from "./deps.js";
+import { plaidRoutes } from "./routes/plaid.js";
 import { runTurn } from "./run.js";
 import { initTelemetry } from "./telemetry.js";
-
-const tracing = initTelemetry(env);
-const agent = buildAgent({ env });
+import { buildTools } from "./tools/index.js";
 
 const runBody = z.object({
   userId: z.string().min(1),
@@ -17,23 +17,46 @@ const runBody = z.object({
   quarter: z.number().int().min(1).max(4).optional(),
 });
 
-export const app = new Hono();
+export function createApp(deps: AppDeps) {
+  const tracing = initTelemetry(deps.env);
+  const agent = buildAgent({ env: deps.env, tools: buildTools(deps) });
+  const app = new Hono();
 
-app.get("/health", (c) => c.json({ ok: true, tracing, model: env.ORCHESTRATOR_MODEL }));
+  app.get("/health", (c) =>
+    c.json({
+      ok: true,
+      tracing,
+      model: deps.env.ORCHESTRATOR_MODEL,
+      plaid: deps.env.PLAID_MODE,
+      categorizer: deps.categorizer?.model ?? null,
+    }),
+  );
 
-app.post("/threads/:threadId/runs", async (c) => {
-  const parsed = runBody.safeParse(await c.req.json().catch(() => ({})));
-  if (!parsed.success) return c.json({ error: parsed.error.flatten() }, 400);
-  const threadId = c.req.param("threadId");
-  return streamSSE(c, async (stream) => {
-    for await (const ev of runTurn(agent, env, { ...parsed.data, threadId })) {
-      await stream.writeSSE({ event: ev.type, data: JSON.stringify(ev) });
-    }
+  app.post("/threads/:threadId/runs", async (c) => {
+    const parsed = runBody.safeParse(await c.req.json().catch(() => ({})));
+    if (!parsed.success) return c.json({ error: parsed.error.flatten() }, 400);
+    const threadId = c.req.param("threadId");
+    return streamSSE(c, async (stream) => {
+      for await (const ev of runTurn(agent, deps.env, { ...parsed.data, threadId })) {
+        await stream.writeSSE({ event: ev.type, data: JSON.stringify(ev) });
+      }
+    });
   });
-});
+
+  app.route("/plaid", plaidRoutes(deps));
+  app.onError((err, c) => {
+    console.error(err);
+    return c.json({ error: err.message }, 500);
+  });
+  return app;
+}
 
 if (process.argv[1]?.endsWith("server.ts") || process.argv[1]?.endsWith("server.js")) {
+  const deps = await buildDeps(env);
+  const app = createApp(deps);
   serve({ fetch: app.fetch, port: env.PORT }, (info) => {
-    console.log(`taxxy agent listening on :${info.port} (tracing ${tracing ? "on" : "off"})`);
+    console.log(
+      `taxxy agent listening on :${info.port} (plaid ${env.PLAID_MODE}, categorizer ${deps.categorizer?.model ?? "off"})`,
+    );
   });
 }

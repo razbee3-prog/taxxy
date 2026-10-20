@@ -23,7 +23,7 @@ describe.skipIf(!up)("tenancy + app tables (SurrealDB)", () => {
 
   it("applies the schema once and is idempotent", async () => {
     const [rows] = await t.db.query<[{ name: string }[]]>("SELECT name FROM _migration");
-    expect(rows?.map((r) => r.name)).toEqual(["001_init.surql"]);
+    expect(rows?.map((r) => r.name).sort()).toEqual(["001_init.surql", "002_needs_receipt.surql"]);
     const { migrate } = await import("../src/migrate.js");
     expect(await migrate(t.db)).toEqual([]);
   });

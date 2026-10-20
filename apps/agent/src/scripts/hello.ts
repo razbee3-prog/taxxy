@@ -5,6 +5,7 @@ import { initTelemetry, shutdownTelemetry } from "../telemetry.js";
 
 const tracing = initTelemetry(env);
 const agent = buildAgent({ env });
+
 let reply = "";
 for await (const ev of runTurn(agent, env, {
   userId: "hello-user",

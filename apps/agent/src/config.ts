@@ -13,16 +13,37 @@ const envSchema = z.object({
   SURREAL_URL: z.string().default("ws://127.0.0.1:8000/rpc"),
   SURREAL_NS: z.string().default("taxxy"),
   SURREAL_DB: z.string().default("taxxy"),
+  SURREAL_LANGGRAPH_NS: z.string().default("langgraph"),
   SURREAL_USER: z.string().default("root"),
   SURREAL_PASS: z.string().default("root"),
+  VAULT_KEY: z.string().optional(),
+  PLAID_MODE: z.enum(["live", "fixture"]).default("fixture"),
+  PLAID_CLIENT_ID: z.string().optional(),
+  PLAID_SECRET: z.string().optional(),
+  PLAID_SANDBOX_SECRET: z.string().optional(),
+  PLAID_ENV: z.enum(["sandbox", "development", "production"]).default("sandbox"),
+  PLAID_WEBHOOK_URL: z.string().optional(),
+  PLAID_WEBHOOK_VERIFY: z
+    .string()
+    .optional()
+    .transform((v) => v === "true" || v === "1"),
   TAXXY_ENV: z.string().default("dev"),
 });
 
-export type Env = z.infer<typeof envSchema> & { llmApiKey: string | undefined };
+export type Env = z.infer<typeof envSchema> & {
+  llmApiKey: string | undefined;
+  plaidSecret: string | undefined;
+};
 
 export function loadEnv(source: NodeJS.ProcessEnv = process.env): Env {
   const parsed = envSchema.parse(source);
-  return { ...parsed, llmApiKey: parsed.LLM_API_KEY ?? parsed.ANTHROPIC_API_KEY };
+  return {
+    ...parsed,
+    llmApiKey: parsed.LLM_API_KEY ?? parsed.ANTHROPIC_API_KEY,
+    plaidSecret:
+      parsed.PLAID_SECRET ??
+      (parsed.PLAID_ENV === "sandbox" ? parsed.PLAID_SANDBOX_SECRET : undefined),
+  };
 }
 
 export const env = loadEnv();

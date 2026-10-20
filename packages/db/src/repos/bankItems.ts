@@ -1,3 +1,4 @@
+import type { RecordId, Surreal } from "surrealdb";
 import type { Row, ScopedDb } from "../tenancy.js";
 import type { Vault } from "../vault.js";
 
@@ -21,7 +22,7 @@ export async function createBankItem(
   vault: Vault,
   item: { plaid_item_id: string; access_token: string; institution?: string },
 ): Promise<BankItemPublic> {
-  const row = await s.create<BankItemRow>("bank_item", {
+  const row = await s.createWithId<BankItemRow>(`bank_item:${item.plaid_item_id}`, {
     plaid_item_id: item.plaid_item_id,
     access_token_enc: vault.seal(item.access_token, s.userId),
     institution: item.institution,
@@ -50,4 +51,22 @@ export async function setBankItemCursor(
   cursor: string,
 ): Promise<void> {
   await s.update(itemId, { cursor });
+}
+
+export async function setBankItemStatus(
+  s: ScopedDb,
+  itemId: string,
+  status: BankItemPublic["status"],
+): Promise<void> {
+  await s.update(itemId, { status });
+}
+
+/** Webhooks arrive with only a Plaid item id: resolve the owner, then everything else is scoped. */
+export async function ownerOfPlaidItem(db: Surreal, plaidItemId: string): Promise<string | null> {
+  const [rows] = await db.query<[{ user: RecordId }[]]>(
+    "SELECT user FROM bank_item WHERE plaid_item_id = $id LIMIT 1",
+    { id: plaidItemId },
+  );
+  const u = rows?.[0]?.user;
+  return u ? String(u.id) : null;
 }
