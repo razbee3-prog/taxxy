@@ -12,8 +12,11 @@ import {
 import { MODEL_LABELS } from "@taxxy/integrations";
 import { z } from "zod";
 import type { AppDeps } from "../deps.js";
+import { appendMemory } from "../memory.js";
 import { syncAll, syncItem } from "../services/plaid.js";
 import { requireUserId } from "./context.js";
+import { estimateTools } from "./estimate.js";
+import { profileTools } from "./profile.js";
 
 const json = (v: unknown) => JSON.stringify(v);
 
@@ -138,6 +141,13 @@ export function buildTools(d: AppDeps) {
     async ({ counterparty, isIncome }, config) => {
       const userId = requireUserId(config);
       const row = await dbSetPayer(scoped(d.db, userId), counterparty, isIncome, "user");
+      if (d.store)
+        await appendMemory(
+          d.store,
+          userId,
+          "Payers",
+          `${counterparty} → ${isIncome ? "1099 income" : "not income"} (confirmed ${new Date().toISOString().slice(0, 10)})`,
+        );
       return json({
         id: row.id,
         counterparty: row.counterparty,
@@ -185,6 +195,8 @@ export function buildTools(d: AppDeps) {
     set_payer,
     list_bank_items,
     get_categorization,
+    ...profileTools(d),
+    ...estimateTools(d),
   ];
 }
 

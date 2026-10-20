@@ -1,3 +1,4 @@
+import { createHash } from "node:crypto";
 import { CallbackHandler } from "@langfuse/langchain";
 import { LangfuseSpanProcessor } from "@langfuse/otel";
 import { NodeTracerProvider } from "@opentelemetry/sdk-trace-node";
@@ -48,5 +49,6 @@ export function turnCallbacks(env: Env, id: TurnIdentity): CallbackHandler[] {
     `agent:${id.agent ?? "orchestrator"}`,
     `env:${id.env}`,
   ].filter((t): t is string => Boolean(t));
-  return [new CallbackHandler({ userId: id.userId, sessionId: id.threadId, tags })];
+  const hashedUser = createHash("sha256").update(id.userId).digest("hex").slice(0, 16);
+  return [new CallbackHandler({ userId: hashedUser, sessionId: id.threadId, tags })];
 }

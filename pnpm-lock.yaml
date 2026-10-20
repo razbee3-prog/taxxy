@@ -205,6 +205,9 @@ importers:
       '@taxxy/db':
         specifier: workspace:*
         version: link:../../packages/db
+      '@taxxy/engine':
+        specifier: workspace:*
+        version: link:../../packages/engine
       '@taxxy/integrations':
         specifier: workspace:*
         version: link:../../packages/integrations

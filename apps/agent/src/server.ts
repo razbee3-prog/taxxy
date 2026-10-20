@@ -2,13 +2,11 @@ import { serve } from "@hono/node-server";
 import { Hono } from "hono";
 import { streamSSE } from "hono/streaming";
 import { z } from "zod";
-import { buildAgent } from "./agent.js";
 import { env } from "./config.js";
 import { type AppDeps, buildDeps } from "./deps.js";
 import { plaidRoutes } from "./routes/plaid.js";
 import { runTurn } from "./run.js";
 import { initTelemetry } from "./telemetry.js";
-import { buildTools } from "./tools/index.js";
 
 const runBody = z.object({
   userId: z.string().min(1),
@@ -19,7 +17,6 @@ const runBody = z.object({
 
 export function createApp(deps: AppDeps) {
   const tracing = initTelemetry(deps.env);
-  const agent = buildAgent({ env: deps.env, tools: buildTools(deps) });
   const app = new Hono();
 
   app.get("/health", (c) =>
@@ -37,7 +34,7 @@ export function createApp(deps: AppDeps) {
     if (!parsed.success) return c.json({ error: parsed.error.flatten() }, 400);
     const threadId = c.req.param("threadId");
     return streamSSE(c, async (stream) => {
-      for await (const ev of runTurn(agent, deps.env, { ...parsed.data, threadId })) {
+      for await (const ev of runTurn(deps, { ...parsed.data, threadId })) {
         await stream.writeSSE({ event: ev.type, data: JSON.stringify(ev) });
       }
     });

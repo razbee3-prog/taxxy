@@ -1,5 +1,13 @@
 import { readFileSync } from "node:fs";
-import { connectSurreal, dbConfigFromEnv, migrate, Vault } from "@taxxy/db";
+import type { BaseCheckpointSaver, BaseStore } from "@langchain/langgraph-checkpoint";
+import {
+  connectSurreal,
+  createCheckpointer,
+  createStore,
+  dbConfigFromEnv,
+  migrate,
+  Vault,
+} from "@taxxy/db";
 import {
   type Categorizer,
   fixturePlaid,
@@ -19,6 +27,9 @@ export interface AppDeps {
   vault: Vault;
   plaid: PlaidClientLike;
   categorizer: Categorizer | null;
+  /** LangGraph store (per-user filesystem: AGENTS.md, skills) and checkpointer. */
+  store: BaseStore | null;
+  checkpointer: BaseCheckpointSaver | null;
 }
 
 export function loadPlaidFixture(): PlaidFixture {
@@ -53,11 +64,25 @@ export async function buildDeps(env: Env, over: Partial<AppDeps> = {}): Promise<
   await migrate(db);
   const vaultKey = env.VAULT_KEY ?? (env.TAXXY_ENV === "dev" ? Vault.generateKey() : undefined);
   if (!vaultKey) throw new Error("VAULT_KEY is required outside dev");
+  let store = over.store;
+  let checkpointer = over.checkpointer;
+  if (store === undefined) {
+    const s = createStore(cfg.langgraph);
+    await s.setup();
+    store = s;
+  }
+  if (checkpointer === undefined) {
+    const c = createCheckpointer(cfg.langgraph);
+    await c.setup();
+    checkpointer = c;
+  }
   return {
     env,
     db,
     vault: over.vault ?? new Vault(vaultKey),
     plaid: over.plaid ?? buildPlaid(env),
     categorizer: over.categorizer === undefined ? buildCategorizer(env) : over.categorizer,
+    store,
+    checkpointer,
   };
 }

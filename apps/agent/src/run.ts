@@ -1,71 +1,77 @@
-import type { TaxxyAgent } from "./agent.js";
-import type { Env } from "./config.js";
+import { threadId as makeThreadId } from "@taxxy/db";
+import { buildAgent } from "./agent.js";
+import type { AppDeps } from "./deps.js";
 import { flushTelemetry, turnCallbacks } from "./telemetry.js";
 
 export interface TurnRequest {
   userId: string;
-  threadId: string;
+  threadId?: string;
   message: string;
   taxYear?: number;
   quarter?: number;
 }
 
 export interface TurnEvent {
-  type: "token" | "message" | "done" | "error";
+  type: "token" | "message" | "interrupt" | "done" | "error";
   content?: string;
   error?: string;
+  interrupt?: unknown;
+  threadId?: string;
 }
 
 /** Streams one user turn. `userId` always comes from the caller (session), never from the model. */
-export async function* runTurn(
-  agent: TaxxyAgent,
-  env: Env,
-  req: TurnRequest,
-): AsyncGenerator<TurnEvent> {
+export async function* runTurn(deps: AppDeps, req: TurnRequest): AsyncGenerator<TurnEvent> {
+  const env = deps.env;
+  const taxYear = req.taxYear ?? new Date().getUTCFullYear();
+  const quarter = req.quarter ?? Math.min(4, Math.floor(new Date().getUTCMonth() / 3) + 1);
+  const threadId = req.threadId ?? makeThreadId(req.userId, taxYear, quarter);
   const callbacks = turnCallbacks(env, {
     userId: req.userId,
-    threadId: req.threadId,
-    taxYear: req.taxYear,
-    quarter: req.quarter,
+    threadId,
+    taxYear,
+    quarter,
     env: env.TAXXY_ENV,
   });
   const config = {
-    configurable: { thread_id: req.threadId, user_id: req.userId },
+    configurable: { thread_id: threadId, user_id: req.userId, tax_year: taxYear, quarter },
     callbacks,
     runName: "taxxy-turn",
-    metadata: { user_id: req.userId },
+    metadata: { tax_year: taxYear, quarter },
+    recursionLimit: 60,
   };
   try {
+    const agent = await buildAgent({ deps, userId: req.userId });
     const stream = await agent.stream(
       { messages: [{ role: "user", content: req.message }] },
-      { ...config, streamMode: "messages" },
+      { ...config, streamMode: ["messages", "updates"] },
     );
     let text = "";
     for await (const chunk of stream) {
-      const [msg] = chunk as [unknown, unknown];
-      const content = extractText(msg);
-      if (content) {
-        text += content;
-        yield { type: "token", content };
+      const [mode, payload] = chunk as [string, unknown];
+      if (mode === "messages") {
+        const [msg] = payload as [unknown, unknown];
+        const content = extractText(msg);
+        if (content) {
+          text += content;
+          yield { type: "token", content };
+        }
+      } else if (mode === "updates") {
+        const u = payload as Record<string, unknown>;
+        if (u.__interrupt__) yield { type: "interrupt", interrupt: u.__interrupt__, threadId };
       }
     }
-    yield { type: "message", content: text };
-    yield { type: "done" };
+    yield { type: "message", content: text, threadId };
+    yield { type: "done", threadId };
   } catch (err) {
-    yield { type: "error", error: err instanceof Error ? err.message : String(err) };
+    yield { type: "error", error: err instanceof Error ? err.message : String(err), threadId };
   } finally {
     await flushTelemetry();
   }
 }
 
-function extractText(msg: unknown): string {
+export function extractText(msg: unknown): string {
   if (!msg || typeof msg !== "object") return "";
-  const m = msg as {
-    type?: string;
-    getType?: () => string;
-    content?: unknown;
-    tool_call_chunks?: unknown[];
-  };
+  const m = msg as { type?: string; getType?: () => string; content?: unknown; name?: string };
   const type = typeof m.getType === "function" ? m.getType() : m.type;
   if (type && type !== "ai" && type !== "AIMessageChunk") return "";
   if (typeof m.content === "string") return m.content;
