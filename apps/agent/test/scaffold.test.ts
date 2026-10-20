@@ -19,6 +19,6 @@ describe("m0 scaffold", () => {
   it("disables tracing without Langfuse keys", () => {
     const env = loadEnv({});
     expect(telemetryEnabled(env)).toBe(false);
-    expect(turnCallbacks(env, { userId: "u", threadId: "t", env: "test" })).toEqual([]);
+    expect(turnCallbacks(env)).toEqual([]);
   });
 });
