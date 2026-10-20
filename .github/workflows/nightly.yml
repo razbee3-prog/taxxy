@@ -49,7 +49,7 @@ jobs:
         run: pnpm --filter @taxxy/evals sync-datasets
       - name: Tier 3 experiment gate (Langfuse experiment-action)
         if: env.LANGFUSE_SECRET_KEY != ''
-        uses: langfuse/experiment-action@v1
+        uses: langfuse/experiment-action@v1.0.12
         env:
           TIER3_MODE: ${{ github.event_name == 'pull_request' && 'deterministic' || 'agent' }}
         with:
