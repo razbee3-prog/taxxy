@@ -5,3 +5,6 @@ allowBuilds:
   esbuild: true
   "@biomejs/biome": true
   protobufjs: false
+publicHoistPattern:
+  - "@langfuse/*"
+  - "@opentelemetry/*"
