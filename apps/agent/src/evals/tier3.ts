@@ -14,7 +14,7 @@ import {
   setPayer,
   upsertTaxProfile,
 } from "@taxxy/db";
-import type { EstimateInput, EstimateResult } from "@taxxy/engine";
+import { CONSTANTS_2026, type EstimateInput, type EstimateResult } from "@taxxy/engine";
 import {
   type Categorizer,
   findSensitive,
@@ -147,11 +147,28 @@ export interface Tier3Result {
 const MONEY = /\$\s?(\d[\d,]*(?:\.\d{1,2})?)/g;
 
 /**
- * Dollar figures written into the agent's own skill text (e.g. the $75 receipt threshold in
- * review-queue/SKILL.md). Repeating them is not inventing a number, so the stray-figure gate
- * allows them alongside engine lines, the user's transactions, and intake answers.
+ * Dollar figures the agent may legitimately repeat without inventing a number: those written
+ * into its own skill text (the $75 receipt threshold in review-queue/SKILL.md) and the
+ * statutory thresholds in the engine constants (the $150,000 prior-year-AGI line for the 110%
+ * safe harbor). The stray-figure gate allows them alongside engine lines, the user's
+ * transactions, and intake answers.
  */
-export function skillFigures(): number[] {
+export function staticFigures(): number[] {
+  return [...skillFigures(), ...constantFigures(CONSTANTS_2026)];
+}
+
+function constantFigures(node: unknown, out: number[] = []): number[] {
+  if (typeof node === "number") {
+    if (Number.isInteger(node) && node >= 100) out.push(node);
+  } else if (Array.isArray(node)) {
+    for (const v of node) constantFigures(v, out);
+  } else if (node && typeof node === "object") {
+    for (const v of Object.values(node)) constantFigures(v, out);
+  }
+  return out;
+}
+
+function skillFigures(): number[] {
   const out: number[] = [];
   for (const name of readdirSync(SKILLS_DIR)) {
     let text = "";
@@ -292,7 +309,7 @@ export async function runProfile(p: Tier3Profile, opts: Tier3Options = {}): Prom
     for (const t of p.transactions) allowed.add(Math.abs(t.amount));
     for (const v of Object.values(p.intake)) if (typeof v === "number") allowed.add(v);
     allowed.add(0);
-    for (const v of skillFigures()) allowed.add(v);
+    for (const v of staticFigures()) allowed.add(v);
     const text = transcript.map((t) => t.split("\nTAXXY: ")[1] ?? "").join("\n");
     const stray = [...text.matchAll(MONEY)]
       .map((m) => Number((m[1] ?? "").replace(/,/g, "")))

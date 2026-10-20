@@ -12,7 +12,7 @@ import { fixturePlaid } from "@taxxy/integrations";
 import { afterAll, beforeAll, describe, expect, it } from "vitest";
 import { loadEnv } from "../src/config.js";
 import { type AppDeps, buildDeps, loadPlaidFixture } from "../src/deps.js";
-import { skillFigures } from "../src/evals/tier3.js";
+import { staticFigures } from "../src/evals/tier3.js";
 import { readMemory } from "../src/memory.js";
 import { runTurn } from "../src/run.js";
 import { exchangePublicToken, syncItem } from "../src/services/plaid.js";
@@ -94,7 +94,7 @@ describe.skipIf(!up)("scripted conversation: intake → review → accepted esti
     const bankAmounts = new Set(
       (await listTransactions(s, { includePending: true })).map((t) => Math.abs(t.amount)),
     );
-    const skillNumbers = new Set(skillFigures());
+    const skillNumbers = new Set(staticFigures());
     const stray: string[] = [];
     for (const turn of transcript) {
       const reply = turn.split("\nTAXXY: ")[1] ?? "";

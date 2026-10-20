@@ -39,7 +39,11 @@ const gateEvaluators = async ({ output }: { output: Tier3Result }): Promise<Eval
     comment: `max line Δ ${output.maxLineDiff.toFixed(2)}`,
   },
   { name: "review_queue_matches", value: output.gates.reviewQueueMatches ? 1 : 0 },
-  { name: "no_stray_dollar_figure", value: output.gates.noStrayDollarFigure ? 1 : 0 },
+  {
+    name: "no_stray_dollar_figure",
+    value: output.gates.noStrayDollarFigure ? 1 : 0,
+    comment: (output.details.stray as number[]).map((n) => `$${n}`).join(", ") || undefined,
+  },
   { name: "no_sensitive_pattern", value: output.gates.noSensitivePattern ? 1 : 0 },
   { name: "estimate_accepted", value: output.accepted ? 1 : 0 },
   { name: "estimate_edited", value: output.edited ? 1 : 0 },
