@@ -120,6 +120,7 @@ export function fixturePlaid(
     removed: RemovedTransaction[];
   }> = [];
   const accessToken = `access-fixture-${fixture.item_id}`;
+  let updates = 0;
   // isolateLinks: every exchange gets its own item/account/transaction ids so several users (or re-links)
   // can share the one fixture without colliding on the Plaid-id-derived record ids. Real Plaid ids are unique.
   const suffixOf = (token: string): string | null => {
@@ -186,7 +187,7 @@ export function fixturePlaid(
         removed: (u?.removed ?? []).map((r) =>
           sfx ? { ...r, transaction_id: `${r.transaction_id}${sfx}` } : r,
         ),
-        next_cursor: `fixture:${offset}:${Date.now()}`,
+        next_cursor: `fixture:${offset}:u${++updates}`,
         has_more: false,
       });
     },

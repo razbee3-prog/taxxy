@@ -77,7 +77,10 @@ export async function syncItem(d: AppDeps, userId: string, itemId: string): Prom
       return { itemId, added, modified, removed, cursor, categorized, status: "ok" };
     });
   } catch (err) {
-    if (err instanceof PlaidItemLoginRequired) {
+    const vaultFailure =
+      err instanceof Error && /unable to authenticate data|Unsupported state/i.test(err.message);
+    if (err instanceof PlaidItemLoginRequired || vaultFailure) {
+      // Plaid wants the user back in Link, or the sealed token can't be opened (key changed): either way, re-link.
       await setBankItemStatus(s, itemId, "login_required");
       return {
         itemId,

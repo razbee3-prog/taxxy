@@ -3,6 +3,7 @@ import {
   currentCategorization,
   setMerchantRule as dbSetMerchantRule,
   setPayer as dbSetPayer,
+  listBankAccounts,
   listBankItems,
   recordCategorization,
   reviewQueue,
@@ -167,11 +168,30 @@ export function buildTools(d: AppDeps) {
   const list_bank_items = tool(
     async (_input, config) => {
       const userId = requireUserId(config);
-      return json(await listBankItems(scoped(d.db, userId)));
+      const s = scoped(d.db, userId);
+      const [items, accounts] = await Promise.all([listBankItems(s), listBankAccounts(s)]);
+      return json(
+        items.map((i) => ({
+          itemId: i.id,
+          institution: i.institution,
+          status: i.status,
+          needsRelink: i.status === "login_required",
+          accounts: accounts
+            .filter((a) => a.bank_item === i.id)
+            .map((a) => ({
+              accountId: a.id,
+              name: a.name,
+              mask: a.mask,
+              type: a.type,
+              mostlyBusiness: a.mostly_business,
+            })),
+        })),
+      );
     },
     {
       name: "list_bank_items",
-      description: "Linked bank connections (no tokens).",
+      description:
+        "Linked bank connections with their accounts (name, last-4 mask, mostlyBusiness). Use accountId with set_mostly_business. needsRelink=true means the user must link that bank again.",
       schema: z.object({}),
     },
   );

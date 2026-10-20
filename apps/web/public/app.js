@@ -112,10 +112,42 @@ $("linkGmail").onclick = async () => {
   }
 };
 
+/** Minimal safe markdown: escape first, then **bold**, `code`, and "- " bullets. */
+function renderMarkdown(text) {
+  const lines = esc(text).split("\n");
+  let html = "";
+  let inList = false;
+  for (const line of lines) {
+    const bullet = /^\s*[-*] (.*)$/.exec(line);
+    if (bullet) {
+      if (!inList) {
+        html += "<ul>";
+        inList = true;
+      }
+      html += `<li>${bullet[1]}</li>`;
+      continue;
+    }
+    if (inList) {
+      html += "</ul>";
+      inList = false;
+    }
+    html += `${line}\n`;
+  }
+  if (inList) html += "</ul>";
+  return html
+    .replace(/\*\*(.+?)\*\*/g, "<strong>$1</strong>")
+    .replace(/`([^`]+)`/g, "<code>$1</code>")
+    .replace(/\n$/, "");
+}
+
+function setText(el, text) {
+  el.innerHTML = renderMarkdown(text);
+}
+
 function addMsg(cls, text) {
   const div = document.createElement("div");
   div.className = `msg ${cls}`;
-  div.textContent = text;
+  setText(div, text);
   $("messages").appendChild(div);
   $("messages").scrollTop = $("messages").scrollHeight;
   return div;
@@ -159,9 +191,9 @@ $("chatForm").addEventListener("submit", async (e) => {
       const payload = JSON.parse(ev.data);
       if (ev.event === "token") {
         streamed += payload.content || "";
-        ai.textContent = streamed;
+        setText(ai, streamed);
       } else if (ev.event === "message") {
-        ai.textContent = payload.content || streamed || "(no reply)";
+        setText(ai, payload.content || streamed || "(no reply)");
       } else if (ev.event === "interrupt") {
         addMsg("interrupt", `Needs your confirmation: ${JSON.stringify(payload.interrupt)}`);
       } else if (ev.event === "error") {
