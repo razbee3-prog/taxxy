@@ -147,7 +147,14 @@ export function createWebApp(d: WebDeps) {
 
   app.post("/api/gmail/auth-url", async (c) => {
     const s = c.get("session");
-    const r = await agent("/gmail/auth-url", { userId: s.userId });
+    const r = await agent("/gmail/auth-url", { userId: s.userId, displayName: s.email });
+    return c.json(await r.json(), r.status as 200);
+  });
+
+  /** Merge mode finishes out of band; the page polls this until Gmail shows as connected. */
+  app.post("/api/gmail/status", async (c) => {
+    const s = c.get("session");
+    const r = await agent("/gmail/status", { userId: s.userId });
     return c.json(await r.json(), r.status as 200);
   });
 

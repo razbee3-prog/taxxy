@@ -2,9 +2,11 @@ import {
   connectGmailAccount,
   currentCategorization,
   getGmailAccount,
+  getMergeUser,
   listCurrentCategorizations,
   recordCategorization,
   scoped,
+  setMergeUser,
   upsertReceipt,
   upsertTaxProfile,
   withGmailRefreshToken,
@@ -36,6 +38,11 @@ export async function gmailClientFor(d: AppDeps, userId: string): Promise<GmailC
     if (!(await getGmailAccount(s))) throw new GmailNotConnected();
     return d.gmailFor("fixture");
   }
+  if (d.env.GMAIL_MODE === "merge") {
+    const [acct, mu] = await Promise.all([getGmailAccount(s), getMergeUser(s)]);
+    if (acct?.provider !== "merge" || !mu) throw new GmailNotConnected();
+    return d.gmailFor(mu.registered_user_id);
+  }
   const c = await withGmailRefreshToken(s, d.vault, async (token) => d.gmailFor(token));
   if (!c) throw new GmailNotConnected();
   return c;
@@ -54,6 +61,49 @@ export async function connectGmail(
     refresh_token: tokens.refresh_token,
     scope: tokens.scope ?? GMAIL_SCOPE,
   });
+}
+
+const MERGE_GMAIL = "gmail";
+
+function mergeOf(d: AppDeps) {
+  if (!d.merge) throw new Error("Merge Agent Handler is not configured (GMAIL_MODE=merge)");
+  return d.merge;
+}
+
+/** Merge mode: make sure this user has a Merge registered user, then mint a one-time Gmail link. */
+export async function beginMergeGmail(d: AppDeps, userId: string, displayName: string) {
+  const merge = mergeOf(d);
+  const s = scoped(d.db, userId);
+  let mu = await getMergeUser(s);
+  if (!mu) {
+    const ru = await merge.ensureRegisteredUser(`taxxy:${userId}`, displayName);
+    mu = await setMergeUser(s, ru.id);
+  }
+  return { url: await merge.magicLink(mu.registered_user_id, MERGE_GMAIL) };
+}
+
+/**
+ * Merge mode: the Magic Link ends on Merge's page, not ours, so the app polls this. Once Merge
+ * reports Gmail authenticated we read the address through Merge and record the account.
+ */
+export async function syncMergeGmail(
+  d: AppDeps,
+  userId: string,
+): Promise<{ connected: boolean; email?: string; scope?: string }> {
+  const s = scoped(d.db, userId);
+  const acct = await getGmailAccount(s);
+  if (acct?.provider === "merge") return { connected: true, email: acct.email, scope: acct.scope };
+  const mu = await getMergeUser(s);
+  if (!mu) return { connected: false };
+  const ru = await mergeOf(d).registeredUser(mu.registered_user_id);
+  if (!ru.authenticated_connectors.includes(MERGE_GMAIL)) return { connected: false };
+  const email = await d.gmailFor(mu.registered_user_id).profileEmail();
+  const saved = await connectGmailAccount(s, d.vault, {
+    email,
+    scope: GMAIL_SCOPE,
+    provider: "merge",
+  });
+  return { connected: true, email: saved.email, scope: saved.scope };
 }
 
 export async function searchReceipts(

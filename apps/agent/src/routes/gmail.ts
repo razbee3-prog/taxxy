@@ -1,11 +1,20 @@
 import { randomBytes } from "node:crypto";
+import { getGmailAccount, scoped } from "@taxxy/db";
 import { exchangeAuthCode, gmailAuthUrl } from "@taxxy/integrations";
 import { Hono } from "hono";
 import { z } from "zod";
 import type { AppDeps } from "../deps.js";
-import { connectGmail, extractPriorYear1040 } from "../services/gmail.js";
+import {
+  beginMergeGmail,
+  connectGmail,
+  extractPriorYear1040,
+  syncMergeGmail,
+} from "../services/gmail.js";
 
-/** Read-only Gmail OAuth. `state` binds the callback to the user who started it. */
+/**
+ * Read-only Gmail. live/fixture: our OAuth flow, `state` binds the callback to the user who
+ * started it. merge: Merge Agent Handler's Magic Link; the app polls /status to finish.
+ */
 export function gmailRoutes(d: AppDeps) {
   const r = new Hono();
   const pending = new Map<string, { userId: string; at: number }>();
@@ -21,14 +30,28 @@ export function gmailRoutes(d: AppDeps) {
 
   r.post("/auth-url", async (c) => {
     const p = z
-      .object({ userId: z.string().min(1) })
+      .object({ userId: z.string().min(1), displayName: z.string().optional() })
       .safeParse(await c.req.json().catch(() => ({})));
     if (!p.success) return c.json({ error: p.error.flatten() }, 400);
+    if (d.env.GMAIL_MODE === "merge") {
+      const { url } = await beginMergeGmail(d, p.data.userId, p.data.displayName ?? p.data.userId);
+      return c.json({ url, mode: "merge" });
+    }
     const state = randomBytes(16).toString("hex");
     pending.set(state, { userId: p.data.userId, at: Date.now() });
     if (d.env.GMAIL_MODE === "fixture")
       return c.json({ url: `/gmail/callback?code=fixture&state=${state}`, state });
     return c.json({ url: gmailAuthUrl(google(), state), state });
+  });
+
+  r.post("/status", async (c) => {
+    const p = z
+      .object({ userId: z.string().min(1) })
+      .safeParse(await c.req.json().catch(() => ({})));
+    if (!p.success) return c.json({ error: p.error.flatten() }, 400);
+    if (d.env.GMAIL_MODE === "merge") return c.json(await syncMergeGmail(d, p.data.userId));
+    const a = await getGmailAccount(scoped(d.db, p.data.userId));
+    return c.json(a ? { connected: true, email: a.email, scope: a.scope } : { connected: false });
   });
 
   r.get("/callback", async (c) => {

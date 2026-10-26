@@ -9,6 +9,8 @@ export * from "./gmail/extract.js";
 export * from "./gmail/match.js";
 export * from "./gmail/queries.js";
 export * from "./gmail/types.js";
+export * from "./merge/client.js";
+export * from "./merge/gmail.js";
 export * from "./plaid/client.js";
 export * from "./plaid/normalize.js";
 export * from "./plaid/types.js";

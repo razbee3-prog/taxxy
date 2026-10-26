@@ -105,8 +105,31 @@ $("syncBank").onclick = async () => {
 };
 $("linkGmail").onclick = async () => {
   try {
-    const { url } = await api("/api/gmail/auth-url", {});
-    window.location.href = url;
+    const { url, mode } = await api("/api/gmail/auth-url", {});
+    if (mode !== "merge") {
+      window.location.href = url;
+      return;
+    }
+    // Merge's Magic Link ends on Merge's own page, so open it beside the app and watch for the connection.
+    const popup = window.open(url, "_blank", "noopener");
+    if (!popup) {
+      window.location.href = url;
+      return;
+    }
+    $("gmail").innerHTML =
+      `<div class="small">Finish signing in to Google in the new tab, then come back here…</div>`;
+    const started = Date.now();
+    const poll = async () => {
+      const st = await api("/api/gmail/status", {});
+      if (st.connected) return refresh();
+      if (Date.now() - started > 30 * 60_000) {
+        $("gmail").innerHTML =
+          `<div class="small">The link expired. Click Connect Gmail again.</div>`;
+        return;
+      }
+      setTimeout(poll, 3000);
+    };
+    setTimeout(poll, 3000);
   } catch (err) {
     alert(err.message);
   }

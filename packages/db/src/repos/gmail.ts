@@ -2,10 +2,14 @@ import { recordAudit } from "../audit.js";
 import { type Row, type ScopedDb, toRecordId } from "../tenancy.js";
 import type { Vault } from "../vault.js";
 
+export type GmailProvider = "google" | "merge";
+
 export interface GmailAccountPublic extends Row {
   email: string;
   scope: string;
   status: "active" | "revoked";
+  /** "google": we hold a sealed refresh token; "merge": Merge Agent Handler holds the credential. */
+  provider: GmailProvider;
 }
 type GmailRow = GmailAccountPublic & { refresh_token_enc: string };
 
@@ -14,14 +18,18 @@ const strip = ({ refresh_token_enc: _s, ...pub }: GmailRow): GmailAccountPublic 
 export async function connectGmailAccount(
   s: ScopedDb,
   vault: Vault,
-  a: { email: string; refresh_token: string; scope: string },
+  a: { email: string; refresh_token?: string; scope: string; provider?: GmailProvider },
 ): Promise<GmailAccountPublic> {
+  const provider = a.provider ?? "google";
+  if (provider === "google" && !a.refresh_token)
+    throw new Error("connectGmailAccount: google provider needs a refresh token");
   const existing = (await s.select<GmailRow>("gmail_account", "true", {}, "LIMIT 1"))[0];
   const data = {
     email: a.email,
     scope: a.scope,
     status: "active",
-    refresh_token_enc: vault.seal(a.refresh_token, s.userId),
+    provider,
+    refresh_token_enc: a.refresh_token ? vault.seal(a.refresh_token, s.userId) : "",
   };
   const row = existing
     ? await s.update<GmailRow>(existing.id, data)
@@ -30,7 +38,7 @@ export async function connectGmailAccount(
     actor: "user",
     action: "gmail.connect",
     target: row.id,
-    after: { email: a.email, scope: a.scope },
+    after: { email: a.email, scope: a.scope, provider },
   });
   return strip(row);
 }
@@ -46,7 +54,7 @@ export async function withGmailRefreshToken<T>(
   fn: (token: string, acct: GmailAccountPublic) => Promise<T>,
 ): Promise<T | null> {
   const row = (await s.select<GmailRow>("gmail_account", "status = 'active'", {}, "LIMIT 1"))[0];
-  if (!row) return null;
+  if (!row?.refresh_token_enc) return null;
   return fn(vault.open(row.refresh_token_enc, s.userId), strip(row));
 }
 

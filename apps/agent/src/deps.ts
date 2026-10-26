@@ -19,6 +19,9 @@ import {
   gmailClient,
   llmCategorizer,
   localFileStore,
+  type MergeClientLike,
+  mergeClient,
+  mergeGmail,
   type PlaidClientLike,
   type PlaidFixture,
   plaidClient,
@@ -38,9 +41,14 @@ export interface AppDeps {
   store: BaseStore | null;
   checkpointer: BaseCheckpointSaver | null;
   files: FileStore;
-  /** Builds a Gmail client for a user from their sealed refresh token (fixture mode ignores the token). */
+  /** Merge Agent Handler (GMAIL_MODE=merge); null otherwise. */
+  merge: MergeClientLike | null;
+  /**
+   * Builds a Gmail client for a user. `credential` is the sealed-then-opened refresh token in live
+   * mode, the Merge registered-user id in merge mode, and ignored in fixture mode.
+   */
   gmailFor: (
-    refreshToken: string,
+    credential: string,
     onRefresh?: (t: { access_token?: string }) => Promise<void>,
   ) => GmailClientLike;
   /** Model for document extraction (receipts, 1040); null = deterministic heuristics. */
@@ -76,7 +84,22 @@ export function loadMailboxFixture(): FixtureMailbox {
   return JSON.parse(readFileSync(url, "utf8")) as FixtureMailbox;
 }
 
-export function buildGmailFactory(env: Env): AppDeps["gmailFor"] {
+export function buildMerge(env: Env): MergeClientLike | null {
+  if (env.GMAIL_MODE !== "merge") return null;
+  if (!env.MERGE_AGENT_HANDLER_TOKEN || !env.MERGE_TOOL_PACK_ID)
+    throw new Error("GMAIL_MODE=merge needs MERGE_AGENT_HANDLER_TOKEN and MERGE_TOOL_PACK_ID");
+  return mergeClient({
+    MERGE_API_BASE: env.MERGE_API_BASE,
+    MERGE_AGENT_HANDLER_TOKEN: env.MERGE_AGENT_HANDLER_TOKEN,
+    MERGE_TOOL_PACK_ID: env.MERGE_TOOL_PACK_ID,
+  });
+}
+
+export function buildGmailFactory(env: Env, merge: MergeClientLike | null): AppDeps["gmailFor"] {
+  if (env.GMAIL_MODE === "merge") {
+    if (!merge) throw new Error("GMAIL_MODE=merge needs a Merge client");
+    return (registeredUserId) => mergeGmail(merge.tools(registeredUserId));
+  }
   if (env.GMAIL_MODE === "live") {
     if (!env.GOOGLE_CLIENT_ID || !env.GOOGLE_CLIENT_SECRET)
       throw new Error("GMAIL_MODE=live needs GOOGLE_CLIENT_ID and GOOGLE_CLIENT_SECRET");
@@ -138,16 +161,18 @@ export async function buildDeps(env: Env, over: Partial<AppDeps> = {}): Promise<
     await c.setup();
     checkpointer = c;
   }
+  const merge = over.merge === undefined ? buildMerge(env) : over.merge;
   return {
     env,
     db,
     vault: over.vault ?? new Vault(vaultKey),
+    merge,
     plaid: over.plaid ?? buildPlaid(env),
     categorizer: over.categorizer === undefined ? buildCategorizer(env) : over.categorizer,
     store,
     checkpointer,
     files: over.files ?? localFileStore(env.FILES_DIR),
-    gmailFor: over.gmailFor ?? buildGmailFactory(env),
+    gmailFor: over.gmailFor ?? buildGmailFactory(env, merge),
     extractionModel:
       over.extractionModel === undefined
         ? env.llmApiKey

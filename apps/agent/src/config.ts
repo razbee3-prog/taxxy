@@ -27,10 +27,14 @@ const envSchema = z.object({
     .union([z.string(), z.boolean()])
     .optional()
     .transform((v) => v === true || v === "true" || v === "1"),
-  GMAIL_MODE: z.enum(["live", "fixture"]).default("fixture"),
+  /** live = our Google OAuth client; merge = Merge Agent Handler holds the user's Gmail credential. */
+  GMAIL_MODE: z.enum(["live", "merge", "fixture"]).default("fixture"),
   GOOGLE_CLIENT_ID: z.string().optional(),
   GOOGLE_CLIENT_SECRET: z.string().optional(),
   GOOGLE_REDIRECT_URI: z.string().default("http://localhost:3000/gmail/callback"),
+  MERGE_AGENT_HANDLER_TOKEN: z.string().optional(),
+  MERGE_TOOL_PACK_ID: z.string().optional(),
+  MERGE_API_BASE: z.string().default("https://ah-api.merge.dev"),
   FILES_DIR: z.string().default("data/files"),
   TAXXY_ENV: z.string().default("dev"),
   APP_VERSION: z

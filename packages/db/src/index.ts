@@ -16,6 +16,7 @@ export * from "./repos/credentials.js";
 export * from "./repos/estimates.js";
 export * from "./repos/gmail.js";
 export * from "./repos/merchantRules.js";
+export * from "./repos/merge.js";
 export * from "./repos/payers.js";
 export * from "./repos/taxProfile.js";
 export * from "./repos/transactions.js";
