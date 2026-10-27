@@ -110,14 +110,21 @@ $("linkGmail").onclick = async () => {
       window.location.href = url;
       return;
     }
-    // Merge's Magic Link ends on Merge's own page, so open it beside the app and watch for the connection.
-    const popup = window.open(url, "_blank", "noopener");
-    if (!popup) {
-      window.location.href = url;
-      return;
-    }
-    $("gmail").innerHTML =
-      `<div class="small">Finish signing in to Google in the new tab, then come back here…</div>`;
+    // Merge's Magic Link ends on Merge's own page. It must load as a top-level tab (Merge sets a CSRF
+    // cookie that browsers drop in popups/embedded frames), so show a real link the user clicks, and
+    // watch for the connection from here.
+    const a = document.createElement("a");
+    a.href = url;
+    a.target = "_blank";
+    a.rel = "noopener";
+    a.textContent = "Open Google sign-in (via Merge)";
+    const box = $("gmail");
+    box.innerHTML = "";
+    box.appendChild(a);
+    box.insertAdjacentHTML(
+      "beforeend",
+      `<div class="small">Approve in the new tab, then come back here; this page updates on its own. If Merge shows a "CSRF" error, open the link in a normal browser tab (not an embedded preview).</div>`,
+    );
     const started = Date.now();
     const poll = async () => {
       const st = await api("/api/gmail/status", {});
