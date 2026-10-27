@@ -22,8 +22,17 @@ export interface AttachmentData {
   filename: string;
 }
 
+/** A message with its plain-text body, truncated to `maxChars`. */
+export interface MessageBody extends MessageSummary {
+  to: string;
+  body: string;
+  truncated: boolean;
+}
+
 export interface GmailClientLike {
+  /** Any Gmail search query (`is:unread`, `from:`, `newer_than:7d`, ...). */
   search(query: string, maxResults?: number): Promise<MessageSummary[]>;
+  getMessageText(messageId: string, maxChars?: number): Promise<MessageBody>;
   getAttachment(messageId: string, attachmentId: string): Promise<AttachmentData>;
   profileEmail(): Promise<string>;
 }

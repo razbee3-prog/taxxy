@@ -77,6 +77,14 @@ function fakeMerge() {
             };
           if (name === "gmail__get_message_text")
             return {
+              id: "m1",
+              thread_id: "t1",
+              sender: "Store <r@store.example>",
+              to: `${id}@gmail.example`,
+              subject: "Your receipt",
+              internal_date: "1792860536000",
+              text: `Hi ${id}, your order total is $120.00. Receipt attached.`,
+              truncated: false,
               attachments: [
                 {
                   attachment_id: "a1",
@@ -213,6 +221,21 @@ describe.skipIf(!up)("Gmail via Merge Agent Handler", () => {
       },
     ]);
     expect(merge.log).toContain("tool:ru-1:gmail__list_messages");
+    // general mailbox tools: any query, and the body on demand
+    const unread = JSON.parse(
+      await tools("gmail_search").invoke({ query: "is:unread", max_results: 5 }, mia),
+    ) as Array<{ id: string }>;
+    expect(unread.map((m) => m.id)).toEqual(["m1"]);
+    expect(unread[0]).not.toHaveProperty("body");
+    const read = JSON.parse(await tools("gmail_read_message").invoke({ message_id: "m1" }, mia));
+    expect(read).toMatchObject({
+      id: "m1",
+      from: "Store <r@store.example>",
+      to: "ru-1@gmail.example",
+      body: "Hi ru-1, your order total is $120.00. Receipt attached.",
+      truncated: false,
+      attachments: [{ id: "a1" }],
+    });
     // another user never touches mia's registered user
     const other = { configurable: { user_id: "noah" } };
     await ensureUser(d.db, "noah", "noah@example.com");

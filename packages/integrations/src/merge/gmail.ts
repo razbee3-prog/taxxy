@@ -1,4 +1,10 @@
-import type { AttachmentData, GmailClientLike, MessageSummary } from "../gmail/types.js";
+import type {
+  AttachmentData,
+  AttachmentRef,
+  GmailClientLike,
+  MessageBody,
+  MessageSummary,
+} from "../gmail/types.js";
 import type { MergeToolCaller } from "./client.js";
 
 interface ListedMessage {
@@ -11,6 +17,16 @@ interface ListedMessage {
   internal_date?: string | null;
 }
 interface MessageText {
+  id?: string;
+  thread_id?: string;
+  sender?: string | null;
+  to?: string | null;
+  subject?: string | null;
+  date?: string | null;
+  snippet?: string | null;
+  body?: string | null;
+  text?: string | null;
+  truncated?: boolean | null;
   attachments?: Array<{
     attachment_id: string;
     filename?: string | null;
@@ -42,10 +58,14 @@ export function attachmentMime(mime: string | null | undefined, filename: string
   return MIME_BY_EXT[ext] ?? mime ?? "application/octet-stream";
 }
 
-function isoDate(m: ListedMessage): string {
-  const ms = Number(m.internal_date);
-  const d = Number.isFinite(ms) && ms > 0 ? new Date(ms) : new Date(m.date ?? "");
+function toIsoDate(raw: string | number | null | undefined): string {
+  const ms = Number(raw);
+  const d = Number.isFinite(ms) && ms > 0 ? new Date(ms) : new Date(raw ?? "");
   return Number.isNaN(d.getTime()) ? "" : d.toISOString().slice(0, 10);
+}
+
+function isoDate(m: ListedMessage): string {
+  return toIsoDate(m.internal_date ?? m.date);
 }
 
 /**
@@ -56,19 +76,21 @@ function isoDate(m: ListedMessage): string {
 const MIN_MAX_CHARS = 200;
 
 export function mergeGmail(tools: MergeToolCaller): GmailClientLike {
-  const attachmentsOf = async (messageId: string) => {
-    const t = (await tools.call("gmail__get_message_text", {
-      message_id: messageId,
-      max_chars: MIN_MAX_CHARS,
-      include_quoted: false,
-    })) as MessageText;
-    return (t.attachments ?? []).map((a) => ({
+  const mapAttachments = (t: MessageText): AttachmentRef[] =>
+    (t.attachments ?? []).map((a) => ({
       id: a.attachment_id,
       filename: a.filename ?? "attachment",
       mime: attachmentMime(a.mime_type, a.filename ?? ""),
       size: a.size ?? 0,
     }));
-  };
+  const messageText = (messageId: string, maxChars: number) =>
+    tools.call("gmail__get_message_text", {
+      message_id: messageId,
+      max_chars: Math.max(MIN_MAX_CHARS, maxChars),
+      include_quoted: false,
+    }) as Promise<MessageText>;
+  const attachmentsOf = async (messageId: string) =>
+    mapAttachments(await messageText(messageId, MIN_MAX_CHARS));
   return {
     async search(query, maxResults = 25) {
       const r = (await tools.call("gmail__list_messages", {
@@ -94,6 +116,23 @@ export function mergeGmail(tools: MergeToolCaller): GmailClientLike {
         });
       }
       return out;
+    },
+    async getMessageText(messageId, maxChars = 20_000): Promise<MessageBody> {
+      const t = await messageText(messageId, maxChars);
+      const full = t.text ?? t.body ?? "";
+      const body = full.slice(0, maxChars);
+      return {
+        id: t.id ?? messageId,
+        threadId: t.thread_id ?? "",
+        date: toIsoDate(t.date),
+        from: t.sender ?? "",
+        to: t.to ?? "",
+        subject: t.subject ?? "",
+        snippet: t.snippet ?? body.slice(0, 120),
+        attachments: mapAttachments(t),
+        body,
+        truncated: Boolean(t.truncated) || full.length > maxChars,
+      };
     },
     async getAttachment(messageId, attachmentId): Promise<AttachmentData> {
       const r = (await tools.call("gmail__get_attachment", {

@@ -118,6 +118,22 @@ export async function searchReceipts(
 }
 
 /** Stores the attachment in object storage; returns a pointer, never bytes. */
+/** Any Gmail search, bounded; the caller's user id comes from the session, never the model. */
+export async function searchMail(d: AppDeps, userId: string, query: string, maxResults = 25) {
+  const g = await gmailClientFor(d, userId);
+  return g.search(query, Math.min(Math.max(1, maxResults), 100));
+}
+
+export async function readMessage(
+  d: AppDeps,
+  userId: string,
+  messageId: string,
+  maxChars = 20_000,
+) {
+  const g = await gmailClientFor(d, userId);
+  return g.getMessageText(messageId, Math.min(Math.max(200, maxChars), 100_000));
+}
+
 export async function fetchAttachment(
   d: AppDeps,
   userId: string,

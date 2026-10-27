@@ -5,6 +5,7 @@ import {
   GMAIL_SCOPE,
   type GmailClientLike,
   type GmailTokens,
+  type MessageBody,
   type MessageSummary,
 } from "./types.js";
 
@@ -50,6 +51,33 @@ export async function exchangeAuthCode(env: GoogleOAuthEnv, code: string): Promi
 
 function header(msg: gmail_v1.Schema$Message, name: string): string {
   return msg.payload?.headers?.find((h) => h.name?.toLowerCase() === name)?.value ?? "";
+}
+
+function textOf(payload: gmail_v1.Schema$MessagePart | undefined): string {
+  if (!payload) return "";
+  const parts: gmail_v1.Schema$MessagePart[] = [];
+  const walk = (p: gmail_v1.Schema$MessagePart) => {
+    parts.push(p);
+    for (const c of p.parts ?? []) walk(c);
+  };
+  walk(payload);
+  const decode = (p: gmail_v1.Schema$MessagePart) =>
+    Buffer.from(p.body?.data ?? "", "base64url").toString("utf8");
+  const plain = parts.find((p) => p.mimeType === "text/plain" && p.body?.data);
+  if (plain) return decode(plain);
+  const html = parts.find((p) => p.mimeType === "text/html" && p.body?.data);
+  if (html)
+    return decode(html)
+      .replace(/<(script|style)[\s\S]*?<\/\1>/gi, "")
+      .replace(/<[^>]+>/g, " ")
+      .replace(/&nbsp;/g, " ")
+      .replace(/&amp;/g, "&")
+      .replace(/&lt;/g, "<")
+      .replace(/&gt;/g, ">")
+      .replace(/[ \t]+/g, " ")
+      .replace(/\s*\n\s*/g, "\n")
+      .trim();
+  return "";
 }
 
 function attachmentsOf(
@@ -114,6 +142,22 @@ export function gmailClient(
       }
       return out;
     },
+    async getMessageText(messageId, maxChars = 20_000): Promise<MessageBody> {
+      const msg = await gmail.users.messages.get({ userId: "me", id: messageId, format: "full" });
+      const text = textOf(msg.data.payload);
+      return {
+        id: messageId,
+        threadId: msg.data.threadId ?? "",
+        date: new Date(Number(msg.data.internalDate ?? 0)).toISOString().slice(0, 10),
+        from: header(msg.data, "from"),
+        to: header(msg.data, "to"),
+        subject: header(msg.data, "subject"),
+        snippet: msg.data.snippet ?? "",
+        attachments: attachmentsOf(msg.data.payload),
+        body: text.slice(0, maxChars),
+        truncated: text.length > maxChars,
+      };
+    },
     async getAttachment(messageId, attachmentId): Promise<AttachmentData> {
       const a = await gmail.users.messages.attachments.get({
         userId: "me",
@@ -138,6 +182,8 @@ export interface FixtureMailbox {
   email: string;
   messages: Array<
     MessageSummary & {
+      to?: string;
+      body?: string;
       attachmentData: Record<string, { mime: string; filename: string; base64: string }>;
     }
   >;
@@ -145,11 +191,22 @@ export interface FixtureMailbox {
 
 /** Offline mailbox: a naive query matcher over subject/from/snippet/filenames and the date range. */
 export function fixtureGmail(box: FixtureMailbox): GmailClientLike {
+  const strip = ({
+    attachmentData: _d,
+    body: _b,
+    to: _t,
+    ...m
+  }: FixtureMailbox["messages"][number]) => m;
   return {
     async search(query, maxResults = 25) {
       const terms = [...query.matchAll(/\(([^)]+)\)/g)]
         .flatMap((m) => (m[1] ?? "").split(/\s+OR\s+/i))
         .map((t) => t.trim().toLowerCase());
+      const bare = query
+        .replace(/\([^)]*\)/g, " ")
+        .split(/\s+/)
+        .filter((w) => w && !/^(after|before|newer_than|older_than|has|is|in|label):/i.test(w))
+        .map((w) => w.toLowerCase());
       const after = /after:(\d{4})\/(\d{2})\/(\d{2})/.exec(query);
       const before = /before:(\d{4})\/(\d{2})\/(\d{2})/.exec(query);
       const wantsAttachment = /has:attachment/.test(query);
@@ -158,16 +215,26 @@ export function fixtureGmail(box: FixtureMailbox): GmailClientLike {
           if (wantsAttachment && !m.attachments.length) return false;
           if (after && m.date < `${after[1]}-${after[2]}-${after[3]}`) return false;
           if (before && m.date >= `${before[1]}-${before[2]}-${before[3]}`) return false;
-          if (!terms.length) return true;
           const hay =
             `${m.subject} ${m.from} ${m.snippet} ${m.attachments.map((a) => a.filename).join(" ")}`.toLowerCase();
-          return terms.some((t) => {
-            const bare = t.replace(/^(filename|subject):/, "").replace(/"/g, "");
-            return hay.includes(bare);
-          });
+          const hit = (t: string) =>
+            hay.includes(t.replace(/^(filename|subject|from):/, "").replace(/"/g, ""));
+          if (terms.length && !terms.some(hit)) return false;
+          return bare.every(hit);
         })
         .slice(0, maxResults)
-        .map(({ attachmentData: _d, ...m }) => m);
+        .map(strip);
+    },
+    async getMessageText(messageId, maxChars = 20_000) {
+      const m = box.messages.find((x) => x.id === messageId);
+      if (!m) throw new Error(`fixtureGmail: no message ${messageId}`);
+      const text = m.body ?? m.snippet;
+      return {
+        ...strip(m),
+        to: m.to ?? box.email,
+        body: text.slice(0, maxChars),
+        truncated: text.length > maxChars,
+      };
     },
     async getAttachment(messageId, attachmentId) {
       const m = box.messages.find((x) => x.id === messageId);
