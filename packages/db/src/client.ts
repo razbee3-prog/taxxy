@@ -1,14 +1,15 @@
 import { Surreal } from "surrealdb";
 import type { SurrealConfig } from "./config.js";
+import { retryConflict } from "./migrate.js";
 
 export async function connectSurreal(cfg: SurrealConfig): Promise<Surreal> {
   const db = new Surreal();
   await db.connect(cfg.url, { authentication: { username: cfg.username, password: cfg.password } });
   assertIdent(cfg.namespace);
   assertIdent(cfg.database);
-  await db.query(`DEFINE NAMESPACE IF NOT EXISTS ${cfg.namespace}`);
+  await retryConflict(() => db.query(`DEFINE NAMESPACE IF NOT EXISTS ${cfg.namespace}`));
   await db.use({ namespace: cfg.namespace });
-  await db.query(`DEFINE DATABASE IF NOT EXISTS ${cfg.database}`);
+  await retryConflict(() => db.query(`DEFINE DATABASE IF NOT EXISTS ${cfg.database}`));
   await db.use({ namespace: cfg.namespace, database: cfg.database });
   return db;
 }
