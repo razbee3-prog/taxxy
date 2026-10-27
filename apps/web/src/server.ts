@@ -191,7 +191,14 @@ export function createWebApp(d: WebDeps) {
       taxYear,
       quarter,
     });
-    if (!r.ok || !r.body) return c.json({ error: `agent returned ${r.status}` }, 502);
+    if (!r.ok || !r.body) {
+      const detail = await r.text().catch(() => "");
+      console.error(`agent run failed: HTTP ${r.status} ${detail.slice(0, 500)}`);
+      return c.json(
+        { error: `agent returned ${r.status}${detail ? `: ${detail.slice(0, 200)}` : ""}` },
+        502,
+      );
+    }
     return new Response(r.body, {
       headers: {
         "content-type": "text/event-stream",

@@ -11,7 +11,7 @@ import {
   searchReceipts,
 } from "../services/gmail.js";
 import { requireUserId } from "./context.js";
-import { gtool as tool } from "./guard.js";
+import { mtool, gtool as tool } from "./guard.js";
 
 const json = (v: unknown) => JSON.stringify(v);
 const guard = async <T>(fn: () => Promise<T>) => {
@@ -97,7 +97,7 @@ export function gmailTools(d: AppDeps) {
     },
   );
 
-  const gmail_search = tool(
+  const gmail_search = mtool(
     async ({ query, max_results }, config) => {
       const userId = requireUserId(config);
       return guard(() => searchMail(d, userId, query, max_results ?? 25));
@@ -113,7 +113,7 @@ export function gmailTools(d: AppDeps) {
     },
   );
 
-  const gmail_read_message = tool(
+  const gmail_read_message = mtool(
     async ({ message_id, max_chars }, config) => {
       const userId = requireUserId(config);
       return guard(() => readMessage(d, userId, message_id, max_chars ?? 20_000));

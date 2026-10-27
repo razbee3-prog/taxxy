@@ -80,6 +80,14 @@ const box = {
       [],
     ),
     msg(
+      "m-order",
+      "2026-10-17",
+      "Shop <orders@example.com>",
+      "Your order 482917364501 has shipped",
+      "Thanks for your order. Order number 482917364501 ships Monday. Questions? Call 212-555-0188.",
+      [],
+    ),
+    msg(
       "m-injection",
       "2026-10-16",
       "Totally Legit <x@example.com>",

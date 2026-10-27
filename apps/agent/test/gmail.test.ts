@@ -145,6 +145,23 @@ describe.skipIf(!up)("Gmail fixture: receipts matched, 1040 extracted and confir
     );
   });
 
+  it("gmail_search/gmail_read_message mask long digit runs in mail instead of blocking the result", async () => {
+    const raw = await tools("gmail_search").invoke({ query: "subject:order" }, alice);
+    expect(raw).not.toContain("sensitive_output_blocked");
+    expect(raw).not.toContain("482917364501");
+    const hit = (JSON.parse(raw) as Array<{ id: string; subject: string; snippet: string }>).find(
+      (m) => m.id === "m-order",
+    );
+    expect(hit).toBeDefined();
+    if (!hit) return;
+    expect(hit.subject).toBe("Your order ••••••••4501 has shipped");
+    expect(hit.snippet).toContain("••••••••4501");
+    expect(hit.snippet).toContain("212-555-0188");
+    const read = await tools("gmail_read_message").invoke({ message_id: "m-order" }, alice);
+    expect(read).not.toContain("482917364501");
+    expect(read).toContain("••••••••4501");
+  });
+
   it("search returns headers + attachment pointers, never bodies; fetch returns a fileRef, never bytes", async () => {
     const msgs = JSON.parse(
       await tools("gmail_search_receipts").invoke({ from: "2026-10-01", to: "2026-12-31" }, alice),

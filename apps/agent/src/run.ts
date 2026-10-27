@@ -104,7 +104,13 @@ export async function* runTurn(deps: AppDeps, req: TurnRequest): AsyncGenerator<
     yield { type: "message", content: text, threadId };
     yield { type: "done", threadId };
   } catch (err) {
-    yield { type: "error", error: err instanceof Error ? err.message : String(err), threadId };
+    console.error(`turn failed (thread ${threadId}):`, err);
+    const msg = err instanceof Error ? err.message : String(err);
+    yield {
+      type: "error",
+      error: msg.trim() || `${err instanceof Error ? err.name : "error"} (no message)`,
+      threadId,
+    };
   } finally {
     await Promise.all([flushTelemetry(), flushScores()]);
   }

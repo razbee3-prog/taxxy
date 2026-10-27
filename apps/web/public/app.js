@@ -196,7 +196,10 @@ $("chatForm").addEventListener("submit", async (e) => {
     body: JSON.stringify({ message: text, threadId: threadId || undefined }),
   });
   if (!r.ok) {
-    ai.textContent = `Error: ${(await r.json().catch(() => ({}))).error || r.statusText}`;
+    const detail = (await r.json().catch(() => ({}))).error;
+    ai.textContent = `Error: ${detail || `request failed (HTTP ${r.status}${r.statusText ? ` ${r.statusText}` : ""})`}${
+      r.status === 401 || r.status === 403 ? " — reload the page and sign in again" : ""
+    }`;
     return;
   }
   threadId = r.headers.get("x-thread-id") || threadId;
