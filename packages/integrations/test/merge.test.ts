@@ -88,7 +88,7 @@ describe("mergeGmail", () => {
     ]);
     // bodies are never requested
     for (const c of calls.filter((c) => c.name === "gmail__get_message_text"))
-      expect(c.input.max_chars).toBe(0);
+      expect(c.input.max_chars).toBe(200);
   });
 
   it("decodes attachments and recovers the filename/mime from the message when Merge omits them", async () => {

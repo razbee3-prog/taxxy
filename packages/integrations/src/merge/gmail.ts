@@ -50,13 +50,16 @@ function isoDate(m: ListedMessage): string {
 
 /**
  * Read-only Gmail through Merge's Tool Pack. Same contract as the direct client: headers and
- * attachment pointers only, never bodies (bodies are requested with max_chars=0).
+ * attachment pointers only; the body is truncated to Merge's minimum `max_chars` (200) and discarded.
  */
+/** Merge's `gmail__get_message_text` rejects `max_chars` below 200. */
+const MIN_MAX_CHARS = 200;
+
 export function mergeGmail(tools: MergeToolCaller): GmailClientLike {
   const attachmentsOf = async (messageId: string) => {
     const t = (await tools.call("gmail__get_message_text", {
       message_id: messageId,
-      max_chars: 0,
+      max_chars: MIN_MAX_CHARS,
       include_quoted: false,
     })) as MessageText;
     return (t.attachments ?? []).map((a) => ({
